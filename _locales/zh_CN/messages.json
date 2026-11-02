@@ -293,6 +293,9 @@
  "opt_footer": {
   "message": "设置只存于本机。更新清单时会连接至 GitHub，对方可见一般连接信息；不发送浏览纪录、白名单或自定义设置。"
  },
+ "opt_footer_github": {
+  "message": "源代码与问题反馈（GitHub）"
+ },
  "opt_footer_privacy": {
   "message": "隐私权政策"
  },
@@ -852,7 +855,7 @@
   "message": "以 GPL-3.0 授权，任何人都可以查看与改进。"
  },
  "wel_promise3_title": {
-  "message": "开放原代码"
+  "message": "开放源代码"
  },
  "wel_promise_title": {
   "message": "我们的承诺"

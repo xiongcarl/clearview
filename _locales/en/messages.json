@@ -293,6 +293,9 @@
  "opt_footer": {
   "message": "Settings stay on this device. Updating lists connects to GitHub, which sees ordinary connection details; no browsing history, allowlists or settings are sent."
  },
+ "opt_footer_github": {
+  "message": "Source code and issues (GitHub)"
+ },
  "opt_footer_privacy": {
   "message": "Privacy policy"
  },

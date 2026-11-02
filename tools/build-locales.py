@@ -182,7 +182,7 @@ EN = {
   'opt_support_desc': 'Clearview is free, ad-free and collects no browsing data. It is maintained by one person in their spare time. If it makes your web calmer, a donation keeps the list fixes and new features coming.',
   'opt_support_button': '♥ Donate',
   'opt_footer': 'Settings stay on this device. Updating lists connects to GitHub, which sees ordinary connection details; no browsing history, allowlists or settings are sent.',
-  'opt_footer_source': 'Domain list source', 'opt_footer_privacy': 'Privacy policy', 'opt_footer_readme': 'Usage and limits',
+  'opt_footer_source': 'Domain list source', 'opt_footer_privacy': 'Privacy policy', 'opt_footer_readme': 'Usage and limits', 'opt_footer_github': 'Source code and issues (GitHub)',
   'opt_save': 'Save settings',
   'opt_unsaved': 'You have unsaved changes.', 'opt_remove_aria': 'Remove $1',
   'opt_list_info': '$1 domains · source version $2 · $3', 'opt_recent_update': 'last updated $1', 'opt_builtin_list': 'using the built-in offline list',
@@ -239,7 +239,7 @@ EN = {
   'wel_done': 'Start browsing',
 }
 # OpenCC (tw2sp) handles most terms; these are the remaining mainland usages.
-CN_FIXES = [('缺省', '默认'), ('自订', '自定义'), ('扩充功能', '扩展程序'), ('插件', '扩展'), ('暂存', '缓存'), ('网域', '域名')]
+CN_FIXES = [('缺省', '默认'), ('自订', '自定义'), ('扩充功能', '扩展程序'), ('插件', '扩展'), ('暂存', '缓存'), ('网域', '域名'), ('原代码', '源代码'), ('问题回报', '问题反馈')]
 
 def page_strings():
     found = {}

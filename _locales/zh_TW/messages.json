@@ -293,6 +293,9 @@
  "opt_footer": {
   "message": "設定只存於本機。更新清單時會連線至 GitHub，對方可見一般連線資訊；不傳送瀏覽紀錄、白名單或自訂設定。"
  },
+ "opt_footer_github": {
+  "message": "原始碼與問題回報（GitHub）"
+ },
  "opt_footer_privacy": {
   "message": "隱私權政策"
  },
