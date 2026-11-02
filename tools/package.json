@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@adguard/dnr-converter": "2.0.0",
+    "@adguard/extended-css": "2.2.1",
+    "@adguard/re2-wasm": "1.2.0",
+    "@adguard/scriptlets": "2.5.1",
+    "@adguard/agtree": "4.2.1",
+    "tldts": "7.4.16"
+  }
+}

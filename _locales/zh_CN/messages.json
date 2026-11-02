@@ -1,0 +1,890 @@
+{
+ "bg_dynamic_quota": {
+  "message": "自定义规则与域名清单合计超过浏览器上限，请减少「我的过滤规则」或额外封锁的域名。"
+ },
+ "bg_invalid_tab": {
+  "message": "无效的分页"
+ },
+ "bg_list_format": {
+  "message": "清单来源或格式不符"
+ },
+ "bg_list_invalid": {
+  "message": "清单不完整或包含无效域名；已保留旧清单"
+ },
+ "bg_list_server": {
+  "message": "清单服务器回应 $1"
+ },
+ "bg_list_shrunk": {
+  "message": "清单数量异常减少；已保留旧清单"
+ },
+ "bg_list_too_big": {
+  "message": "清单过大"
+ },
+ "bg_picker_failed": {
+  "message": "无法启动元素选取"
+ },
+ "bg_regex_unsupported": {
+  "message": "浏览器不支持这个正则表达式"
+ },
+ "bg_rule_invalid": {
+  "message": "元素规则无效"
+ },
+ "bg_rule_quota": {
+  "message": "超过浏览器的规则上限（Firefox 最多 3 万条）。请关闭部分清单，例如 Fanboy 干扰元素或 HaGeZi ULTIMATE。"
+ },
+ "bg_rules_max": {
+  "message": "元素规则最多 300 条"
+ },
+ "bg_site_paused": {
+  "message": "此网站的拦截已暂停"
+ },
+ "brand_short": {
+  "message": "净页"
+ },
+ "brand_sub": {
+  "message": "Clearview"
+ },
+ "cmd_start_picker": {
+  "message": "选取并隐藏网页元素"
+ },
+ "cmd_toggle_site": {
+  "message": "暂停或恢复此网站的拦截"
+ },
+ "common_add": {
+  "message": "加入"
+ },
+ "common_disabled": {
+  "message": "未激活"
+ },
+ "common_enabled": {
+  "message": "已激活"
+ },
+ "common_init_partial": {
+  "message": "部分初始化失败：$1"
+ },
+ "common_last_update_failed": {
+  "message": "上次更新失败，仍使用旧清单：$1"
+ },
+ "common_loading": {
+  "message": "读取设置中…"
+ },
+ "common_no_response": {
+  "message": "背景服务没有回应"
+ },
+ "common_read_failed": {
+  "message": "读取失败：$1"
+ },
+ "common_remove": {
+  "message": "移除"
+ },
+ "common_save_failed": {
+  "message": "保存失败：$1"
+ },
+ "common_support": {
+  "message": "支持净页"
+ },
+ "common_support_heart": {
+  "message": "♥ 支持净页"
+ },
+ "common_update_failed": {
+  "message": "更新失败，保留原清单：$1"
+ },
+ "common_updating": {
+  "message": "正在下载并检查清单…"
+ },
+ "ext_desc": {
+  "message": "拦截广告、追踪与弹窗广告；支持台湾与中文网站、自定义过滤规则、右键隐藏元素、拦截统计与分站兼容模式。"
+ },
+ "ext_name": {
+  "message": "净页 Clearview — 广告拦截"
+ },
+ "label_allow": {
+  "message": "允许名单"
+ },
+ "label_block": {
+  "message": "封锁名单"
+ },
+ "label_compat": {
+  "message": "兼容网站"
+ },
+ "label_whitelist": {
+  "message": "白名单"
+ },
+ "log_allow": {
+  "message": "放行"
+ },
+ "log_block": {
+  "message": "封锁"
+ },
+ "log_redirect": {
+  "message": "本机替代"
+ },
+ "log_upgrade": {
+  "message": "升级 HTTPS"
+ },
+ "menu_hide_element": {
+  "message": "隐藏这个元素…"
+ },
+ "menu_toggle_site": {
+  "message": "暂停／恢复此网站的拦截"
+ },
+ "mode_balanced": {
+  "message": "一般"
+ },
+ "mode_inherit": {
+  "message": "使用默认"
+ },
+ "mode_off": {
+  "message": "关闭"
+ },
+ "mode_strict": {
+  "message": "严格"
+ },
+ "opt_add_to_block": {
+  "message": "加入封锁名单"
+ },
+ "opt_added_block": {
+  "message": "已加入封锁名单，请保存设置。"
+ },
+ "opt_advanced_info": {
+  "message": "$1 条网站脚本规则 · $2 条高端元素规则。支持部分上游语法；不保证所有网站或视频广告。"
+ },
+ "opt_allow_desc": {
+  "message": "优先于封锁规则，只影响网络请求。最多 500 个。"
+ },
+ "opt_allow_title": {
+  "message": "允许加载的域名"
+ },
+ "opt_apply_one_click": {
+  "message": "一键套用"
+ },
+ "opt_autoupdate_desc": {
+  "message": "浏览器运行时每天检查一次，需保存设置。"
+ },
+ "opt_autoupdate_title": {
+  "message": "每日自动更新"
+ },
+ "opt_backup_bad_compat": {
+  "message": "备份包含无效的兼容网站"
+ },
+ "opt_backup_bad_rules": {
+  "message": "备份包含重复、无效或超过上限的规则"
+ },
+ "opt_backup_desc": {
+  "message": "JSON 备份包含网站名单与自定义规则。导入会取代目前设置，不影响清单版本。"
+ },
+ "opt_backup_title": {
+  "message": "备份与还原"
+ },
+ "opt_backup_too_big": {
+  "message": "备份档过大"
+ },
+ "opt_backup_unsupported": {
+  "message": "不是支持的净页备份"
+ },
+ "opt_badge_desc": {
+  "message": "以小数字显示在图标上；点开面板一律可以看到。"
+ },
+ "opt_badge_title": {
+  "message": "在工具列图标显示拦截数"
+ },
+ "opt_block_desc": {
+  "message": "最多 500 个。"
+ },
+ "opt_block_title": {
+  "message": "额外封锁的域名"
+ },
+ "opt_brand_aria": {
+  "message": "净页设置页顶端"
+ },
+ "opt_builtin_list": {
+  "message": "使用内置脱机清单"
+ },
+ "opt_chart_aria": {
+  "message": "近 14 天每日拦截数"
+ },
+ "opt_clear_logs": {
+  "message": "清除纪录"
+ },
+ "opt_compat_desc": {
+  "message": "停用元素隐藏与脚本修正、放行网站自己的请求，保留第三方广告过滤。最多 200 个。"
+ },
+ "opt_compat_title": {
+  "message": "兼容模式"
+ },
+ "opt_css_invalid": {
+  "message": "CSS 选择器格式无效：$1"
+ },
+ "opt_css_selector": {
+  "message": "CSS 选择器"
+ },
+ "opt_current_list": {
+  "message": "目前清单"
+ },
+ "opt_diag_desc": {
+  "message": "记录最近 200 笔规则命中，协助找出误拦来源。只存在此浏览器工作阶段，网址会去除查找参数。"
+ },
+ "opt_diag_title": {
+  "message": "本机诊断"
+ },
+ "opt_direct_desc": {
+  "message": "直接拒绝而不是以本机空白资源替代。可能触发反拦截提示。"
+ },
+ "opt_direct_title": {
+  "message": "直接封锁广告资源"
+ },
+ "opt_edit_shortcuts": {
+  "message": "变更快捷键"
+ },
+ "opt_element_domain": {
+  "message": "元素网站域名"
+ },
+ "opt_elements_desc": {
+  "message": "在网页上按右键选「隐藏这个元素…」，或从工具列面板直接点击。规则套用于该网站及子域名，最多 300 条。"
+ },
+ "opt_elements_title": {
+  "message": "元素隐藏"
+ },
+ "opt_enabled_desc": {
+  "message": "关闭后暂停所有网络过滤、元素隐藏与防弹窗。"
+ },
+ "opt_enabled_title": {
+  "message": "激活拦截"
+ },
+ "opt_enhanced_info": {
+  "message": "$1 个广告／追踪等域名 · 版本 $2 · $3；只过滤第三方请求，可能影响网站组件，可关闭或加入允许名单。"
+ },
+ "opt_enhanced_title": {
+  "message": "加强第三方封锁（HaGeZi ULTIMATE）"
+ },
+ "opt_enter_domain": {
+  "message": "请输入有效的网站域名。"
+ },
+ "opt_exceptions_desc": {
+  "message": "每行一个域名，包含子域名。保存后重新加载网页生效。"
+ },
+ "opt_exceptions_title": {
+  "message": "网站例外"
+ },
+ "opt_export": {
+  "message": "导出设置"
+ },
+ "opt_exported": {
+  "message": "设置已导出到下载文件夹。"
+ },
+ "opt_filter_problems": {
+  "message": " · $1 行有问题"
+ },
+ "opt_filter_status": {
+  "message": "$1 条网络规则 · $2 条元素规则"
+ },
+ "opt_filters_desc": {
+  "message": "依网址路径、资源类型与网站条件过滤。清单随扩展版本更新。"
+ },
+ "opt_filters_placeholder": {
+  "message": "! 注解以惊叹号开头\n||ads.example.com^\n||example.com/banner/*$image,third-party\n@@||cdn.example.com^$script\nexample.com##.sponsored\n##.ad-slot-top"
+ },
+ "opt_filters_title": {
+  "message": "过滤清单"
+ },
+ "opt_filters_too_long": {
+  "message": "我的过滤规则过长（上限 200,000 字符）"
+ },
+ "opt_footer": {
+  "message": "设置只存于本机。更新清单时会连接至 GitHub，对方可见一般连接信息；不发送浏览纪录、白名单或自定义设置。"
+ },
+ "opt_footer_privacy": {
+  "message": "隐私权政策"
+ },
+ "opt_footer_readme": {
+  "message": "使用与限制说明"
+ },
+ "opt_footer_source": {
+  "message": "域名清单来源"
+ },
+ "opt_group_elements": {
+  "message": "元素与网站脚本"
+ },
+ "opt_group_strong": {
+  "message": "加强选项"
+ },
+ "opt_heading": {
+  "message": "设置"
+ },
+ "opt_hideads_desc": {
+  "message": "依清单隐藏网页上的广告版位与空白框；自定义元素规则另外保存。"
+ },
+ "opt_hideads_title": {
+  "message": "自动隐藏广告元素"
+ },
+ "opt_import": {
+  "message": "导入设置"
+ },
+ "opt_import_failed": {
+  "message": "导入失败：$1"
+ },
+ "opt_intro": {
+  "message": "安静地浏览，只留下你想看的内容。这里可以管理拦截方式、网站例外与自己的规则；所有数据只保存在这部设备上。"
+ },
+ "opt_invalid_domain_in": {
+  "message": "$1包含无效域名：$2"
+ },
+ "opt_language": {
+  "message": "接口语言"
+ },
+ "opt_language_auto": {
+  "message": "跟随浏览器"
+ },
+ "opt_last_error": {
+  "message": "上次更新失败，仍保留可用清单：$1"
+ },
+ "opt_list_annoy": {
+  "message": "Cookie 横幅与订阅浮层；较易误隐藏"
+ },
+ "opt_list_annoy_title": {
+  "message": "Fanboy 干扰元素"
+ },
+ "opt_list_chinese": {
+  "message": "台湾、香港与中国网站（含 EasyList China）"
+ },
+ "opt_list_chinese_title": {
+  "message": "AdGuard 中文"
+ },
+ "opt_list_easylist": {
+  "message": "国际通用广告清单"
+ },
+ "opt_list_easyprivacy": {
+  "message": "追踪与分析请求"
+ },
+ "opt_list_fixes": {
+  "message": "网站修正、反拦截处理与防误拦例外"
+ },
+ "opt_list_fixes_title": {
+  "message": "uBlock 修正"
+ },
+ "opt_list_info": {
+  "message": "$1 个域名 · 来源版本 $2 · $3"
+ },
+ "opt_list_reset": {
+  "message": "已恢复内置清单。自定义设置未变更。"
+ },
+ "opt_logging_desc": {
+  "message": "需保存设置；仅适用开发人员模式加载的扩展。"
+ },
+ "opt_logging_title": {
+  "message": "暂时记录规则命中"
+ },
+ "opt_logs_cleared": {
+  "message": "纪录已清除。"
+ },
+ "opt_logs_off": {
+  "message": "诊断记录尚未激活；勾选并保存设置后，重新加载要检查的网站。"
+ },
+ "opt_logs_shown": {
+  "message": "显示 $1 笔近期规则命中。"
+ },
+ "opt_max_domains": {
+  "message": "$1最多 $2 个域名"
+ },
+ "opt_mode_added": {
+  "message": "网站模式已加入，请保存设置。"
+ },
+ "opt_mode_balanced_long": {
+  "message": "一般：使用浏览器原生跳转（建议）"
+ },
+ "opt_mode_off_long": {
+  "message": "关闭防弹窗，保留其他拦截"
+ },
+ "opt_mode_strict_long": {
+  "message": "严格：可能影响登录与跳转"
+ },
+ "opt_myfilters_desc": {
+  "message": "用 Adblock Plus / uBlock Origin 常见语法写自己的规则，或直接粘贴域名清单。优先于内置清单，白名单仍然最优先。"
+ },
+ "opt_myfilters_title": {
+  "message": "我的过滤规则"
+ },
+ "opt_nav_aria": {
+  "message": "设置分类"
+ },
+ "opt_network_off": {
+  "message": "网络过滤未激活"
+ },
+ "opt_network_on": {
+  "message": "已激活网络过滤"
+ },
+ "opt_not_set": {
+  "message": "未设置"
+ },
+ "opt_page_title": {
+  "message": "净页 Clearview · 设置"
+ },
+ "opt_popupmode_desc": {
+  "message": "一般模式保留链接、登录窗口与表单跳转，已知的弹窗广告网络仍会被挡下。严格模式可能误拦登录及授权，建议只对个别网站打开。切换后请重新加载网页。"
+ },
+ "opt_popupmode_title": {
+  "message": "默认防弹窗模式"
+ },
+ "opt_procedural_desc": {
+  "message": "依文本、父层与样式判断广告元素。"
+ },
+ "opt_procedural_title": {
+  "message": "高端元素辨识"
+ },
+ "opt_protection_desc": {
+  "message": "整体开关与弹出窗口的处理方式。"
+ },
+ "opt_protection_title": {
+  "message": "防护与弹窗"
+ },
+ "opt_ready": {
+  "message": "设置只存于本机。修改后请按「保存设置」。"
+ },
+ "opt_recent_update": {
+  "message": "最近更新 $1"
+ },
+ "opt_recommended_desc": {
+  "message": "打开主要清单、元素处理与网站修正；不变更防弹窗、直接封锁或第三方限制，网站例外仍保留。"
+ },
+ "opt_recommended_title": {
+  "message": "建议的完整防护"
+ },
+ "opt_remove_aria": {
+  "message": "移除 $1"
+ },
+ "opt_reset_confirm": {
+  "message": "要清除所有拦截统计吗？这不会影响任何设置。"
+ },
+ "opt_reset_list": {
+  "message": "恢复内置清单"
+ },
+ "opt_reset_stats": {
+  "message": "重设统计"
+ },
+ "opt_rule_added": {
+  "message": "元素规则已加入，请保存设置。"
+ },
+ "opt_save": {
+  "message": "保存设置"
+ },
+ "opt_saved": {
+  "message": "已保存。请重新加载网页，让设置完整生效。"
+ },
+ "opt_scriptlets_desc": {
+  "message": "处理视频广告与反拦截侦测（例如 YouTube），重新加载网页后生效。"
+ },
+ "opt_scriptlets_title": {
+  "message": "网站脚本修正"
+ },
+ "opt_selector_invalid": {
+  "message": "元素选择器无效"
+ },
+ "opt_shadow_desc": {
+  "message": "也处理 Shadow DOM 封装的组件；兼容模式会暂停此项。"
+ },
+ "opt_shadow_title": {
+  "message": "隐藏网站组件内的广告"
+ },
+ "opt_shortcuts_title": {
+  "message": "键盘快捷键"
+ },
+ "opt_site_domain": {
+  "message": "网站域名"
+ },
+ "opt_site_mode": {
+  "message": "网站模式"
+ },
+ "opt_sitemodes_desc": {
+  "message": "包含子域名；更具体的域名优先。最多 50 个。"
+ },
+ "opt_sitemodes_max": {
+  "message": "网站专用设置最多 50 个。"
+ },
+ "opt_sitemodes_title": {
+  "message": "网站专用防弹窗"
+ },
+ "opt_skip": {
+  "message": "跳到设置内容"
+ },
+ "opt_sources_desc": {
+  "message": "内置 HaGeZi Multi LIGHT，涵盖广告、追踪与恶意域名。更新只下载域名文本，不运行远程代码。"
+ },
+ "opt_sources_title": {
+  "message": "域名清单"
+ },
+ "opt_stat_14": {
+  "message": "近 14 天"
+ },
+ "opt_stat_total": {
+  "message": "累计拦截"
+ },
+ "opt_stat_week": {
+  "message": "近 7 天"
+ },
+ "opt_stats_failed": {
+  "message": "统计读取失败：$1"
+ },
+ "opt_stats_local": {
+  "message": "统计只存于本机。"
+ },
+ "opt_stats_reset": {
+  "message": "统计已重设。"
+ },
+ "opt_stats_since": {
+  "message": "自 $1 起统计。数字只存于本机，不会上传。"
+ },
+ "opt_stats_title": {
+  "message": "拦截统计"
+ },
+ "opt_strict3p_desc": {
+  "message": "阻止 17 项混合用途服务从其他网站加载，可能影响视频、客服与 Cookie 同意窗口。"
+ },
+ "opt_strict3p_title": {
+  "message": "限制额外第三方服务"
+ },
+ "opt_support_button": {
+  "message": "♥ 赞助净页"
+ },
+ "opt_support_desc": {
+  "message": "净页免费、没有广告、不收集浏览数据，由个人利用空闲时间维护。如果它让你上网清爽一点，欢迎赞助开发，让清单修正与新功能持续下去。"
+ },
+ "opt_syntax_1": {
+  "message": "<code>||ads.example.com^</code> 封锁整个域名与子域名；也可以直接写 <code>ads.example.com</code> 或 hosts 格式 <code>0.0.0.0 ads.example.com</code>。"
+ },
+ "opt_syntax_2": {
+  "message": "<code>||example.com/ads/*</code>、<code>/banner\\d+\\.gif/</code> 依网址或正则表达式封锁。"
+ },
+ "opt_syntax_3": {
+  "message": "<code>@@</code> 开头为放行；<code>@@||example.com^$document</code> 在该网站停用所有网络过滤。"
+ },
+ "opt_syntax_4": {
+  "message": "选项：<code>$script</code> <code>image</code> <code>stylesheet</code> <code>xhr</code> <code>frame</code> <code>media</code> <code>font</code> <code>websocket</code> <code>ping</code> <code>popup</code> <code>third-party</code> <code>first-party</code> <code>domain=a.com|~b.com</code> <code>important</code> <code>match-case</code>，前面加 <code>~</code> 表示排除。"
+ },
+ "opt_syntax_5": {
+  "message": "<code>example.com,~shop.example.com##.ad</code> 在指定网站隐藏元素；<code>##.ad</code> 套用到所有网站。也支持 <code>:has-text()</code> 等高端选择器。"
+ },
+ "opt_syntax_6": {
+  "message": "上限 5,000 行；不支持脚本注入（<code>##+js</code>）与例外元素规则（<code>#@#</code>）。"
+ },
+ "opt_syntax_title": {
+  "message": "支持的语法"
+ },
+ "opt_top_sites": {
+  "message": "拦截最多的网站"
+ },
+ "opt_top_sites_empty": {
+  "message": "还没有数据。浏览几个网站后再回来看看。"
+ },
+ "opt_unsaved": {
+  "message": "有未保存的变更。"
+ },
+ "opt_update_done": {
+  "message": "清单更新完成。未保存的表单内容仍保留。"
+ },
+ "opt_update_now": {
+  "message": "立即更新清单"
+ },
+ "opt_version_foot": {
+  "message": "版本 $1 · 设置只存于本机"
+ },
+ "opt_view_counts": {
+  "message": "查看各清单的规则数量"
+ },
+ "opt_view_logs": {
+  "message": "查看纪录"
+ },
+ "opt_view_services": {
+  "message": "查看限制的服务（17 项）"
+ },
+ "opt_weblist_row": {
+  "message": "$1 · $2 条网络规则 · $3 条元素规则 · $4"
+ },
+ "opt_whitelist_desc": {
+  "message": "完全暂停这些网站的拦截。最多 200 个。"
+ },
+ "opt_whitelist_title": {
+  "message": "白名单"
+ },
+ "picker_cancel": {
+  "message": "取消"
+ },
+ "picker_confirm": {
+  "message": "隐藏这个元素"
+ },
+ "picker_hint": {
+  "message": "将鼠标移到广告上并点一下。Enter 确认，Esc 取消。"
+ },
+ "picker_not_unique": {
+  "message": "无法唯一识别此元素，请选择更小的范围"
+ },
+ "picker_repick": {
+  "message": "重新选择"
+ },
+ "picker_save_failed": {
+  "message": "保存失败"
+ },
+ "picker_selected": {
+  "message": "已选取。确认后会在此网站隐藏它。"
+ },
+ "picker_selected_many": {
+  "message": "已选取，同样的元素在这页共有 $1 个，会一起隐藏。"
+ },
+ "picker_title": {
+  "message": "选择要隐藏的元素"
+ },
+ "picker_too_broad": {
+  "message": "选择器过长或范围过大，请选择较小的元素"
+ },
+ "picker_too_deep": {
+  "message": "组件层数过深，请选择外层容器"
+ },
+ "picker_widen": {
+  "message": "扩大范围"
+ },
+ "picker_widen_title": {
+  "message": "改选外层容器"
+ },
+ "popup_apply_strong": {
+  "message": "套用加强拦截"
+ },
+ "popup_broken_hint": {
+  "message": "兼容模式会停用此站的自动元素隐藏与网站脚本修正，并放行本站自己的请求；第三方广告网络仍会被拦截。切换后请重新加载。"
+ },
+ "popup_broken_title": {
+  "message": "网站显示异常？"
+ },
+ "popup_builtin_list": {
+  "message": "内置脱机清单"
+ },
+ "popup_compat_full": {
+  "message": "兼容模式最多 200 个网站，请先移除不需要的项目。"
+ },
+ "popup_compat_off": {
+  "message": "关闭此网站兼容模式"
+ },
+ "popup_compat_on": {
+  "message": "此网站使用兼容模式"
+ },
+ "popup_count_label": {
+  "message": "个广告与追踪已在这个页面被挡下"
+ },
+ "popup_default_popup": {
+  "message": "默认"
+ },
+ "popup_hide_element": {
+  "message": "隐藏网页元素"
+ },
+ "popup_later": {
+  "message": "稍后再说"
+ },
+ "popup_list_info": {
+  "message": "$1 个域名 · $2 条网页规则 · $3"
+ },
+ "popup_lists_loading": {
+  "message": "清单读取中…"
+ },
+ "popup_lists_title": {
+  "message": "清单与加强选项"
+ },
+ "popup_master_label": {
+  "message": "激活广告与追踪拦截"
+ },
+ "popup_master_title": {
+  "message": "全域开关"
+ },
+ "popup_milestone": {
+  "message": "净页已经替你挡下 $1 个广告与追踪。净页免费、不追踪你；如果它让上网清爽一点，欢迎支持开发。"
+ },
+ "popup_page_protection": {
+  "message": "此页防护"
+ },
+ "popup_pause_site": {
+  "message": "暂停此网站"
+ },
+ "popup_picker_failed": {
+  "message": "无法启动"
+ },
+ "popup_reload": {
+  "message": "重新加载页面"
+ },
+ "popup_reload_first": {
+  "message": "请先重新加载网页再试：$1"
+ },
+ "popup_resume_site": {
+  "message": "恢复此网站"
+ },
+ "popup_saved": {
+  "message": "设置已保存。请重新加载页面，让弹窗与版面设置完整生效。"
+ },
+ "popup_settings": {
+  "message": "高端设置"
+ },
+ "popup_site_popup": {
+  "message": "此网站防弹窗"
+ },
+ "popup_sitemodes_full": {
+  "message": "网站防弹窗设置最多 50 个域名。"
+ },
+ "popup_stats": {
+  "message": "拦截统计"
+ },
+ "popup_strict3p_hint": {
+  "message": "阻止 17 项服务从其他网站加载，可能影响视频、客服与同意窗口。"
+ },
+ "popup_support_button": {
+  "message": "支持净页"
+ },
+ "popup_this_site": {
+  "message": "此网站"
+ },
+ "popup_today": {
+  "message": "今天"
+ },
+ "popup_total": {
+  "message": "累计"
+ },
+ "popup_update_done": {
+  "message": "清单更新完成。自定义规则与白名单已保留。"
+ },
+ "popup_update_lists": {
+  "message": "更新清单"
+ },
+ "popup_updated_on": {
+  "message": "更新于 $1"
+ },
+ "popup_whitelist_full": {
+  "message": "白名单最多 200 个域名，请先移除不需要的项目。"
+ },
+ "state_active": {
+  "message": "防护中"
+ },
+ "state_all_paused": {
+  "message": "拦截已全面暂停"
+ },
+ "state_compat": {
+  "message": "兼容模式防护中"
+ },
+ "state_na": {
+  "message": "此页面不适用"
+ },
+ "state_site_paused": {
+  "message": "此网站已暂停拦截"
+ },
+ "state_unreadable": {
+  "message": "无法读取设置"
+ },
+ "uf_bad_cosmetic": {
+  "message": "不支持这种元素规则语法（只支持 ##）"
+ },
+ "uf_bad_domain": {
+  "message": "无效的域名「$1」"
+ },
+ "uf_bad_option": {
+  "message": "不支持的选项「$1」"
+ },
+ "uf_css_invalid": {
+  "message": "CSS 选择器格式无效"
+ },
+ "uf_generic_too_broad": {
+  "message": "通用元素规则范围过大"
+ },
+ "uf_line_error": {
+  "message": "第 $1 行：$2"
+ },
+ "uf_max_lines": {
+  "message": "最多 $1 行"
+ },
+ "uf_max_network": {
+  "message": "网络规则最多 $1 条"
+ },
+ "uf_myfilters_line": {
+  "message": "我的过滤规则第 $1 行：$2"
+ },
+ "uf_no_exceptions": {
+  "message": "暂不支持例外元素规则，请改用白名单或兼容模式"
+ },
+ "uf_regex_ascii": {
+  "message": "正则表达式只能包含 ASCII 字符"
+ },
+ "uf_selector_invalid": {
+  "message": "元素选择器无效或过长"
+ },
+ "uf_too_broad": {
+  "message": "网址规则范围过大"
+ },
+ "uf_url_ascii": {
+  "message": "网址规则只能包含 ASCII 字符（中文域名请改用 punycode）"
+ },
+ "wel_done": {
+  "message": "开始浏览"
+ },
+ "wel_heading": {
+  "message": "欢迎，净页已经开始工作了"
+ },
+ "wel_lead": {
+  "message": "广告、追踪器与弹窗广告会自动拦截，台湾与中文网站也一并处理。不需要任何设置，直接上网就好。"
+ },
+ "wel_open_settings": {
+  "message": "打开设置 →"
+ },
+ "wel_page_title": {
+  "message": "欢迎使用净页 Clearview"
+ },
+ "wel_pin_desc": {
+  "message": "点浏览器右上角的拼图图标，再按「净页 Clearview」旁边的图钉。之后随时看得到这一页挡了多少东西。"
+ },
+ "wel_pin_title": {
+  "message": "先把净页钉到工具列"
+ },
+ "wel_promise1_desc": {
+  "message": "所有过滤都在你的电脑上完成，设置与统计只存于本机。"
+ },
+ "wel_promise1_title": {
+  "message": "不收集浏览纪录"
+ },
+ "wel_promise2_desc": {
+  "message": "不收广告商的钱替任何人放行。"
+ },
+ "wel_promise2_title": {
+  "message": "没有「可接受广告」"
+ },
+ "wel_promise3_desc": {
+  "message": "以 GPL-3.0 授权，任何人都可以查看与改进。"
+ },
+ "wel_promise3_title": {
+  "message": "开放原代码"
+ },
+ "wel_promise_title": {
+  "message": "我们的承诺"
+ },
+ "wel_support_desc": {
+  "message": "净页由个人利用空闲时间维护，免费提供。如果它让上网清爽一点，欢迎请我喝杯咖啡，让清单修正与新功能持续下去。"
+ },
+ "wel_support_title": {
+  "message": "喜欢净页吗？"
+ },
+ "wel_tip1_desc": {
+  "message": "在它上面按右键，选「隐藏这个元素…」，确认后这个网站就不会再出现。"
+ },
+ "wel_tip1_key": {
+  "message": "选取元素"
+ },
+ "wel_tip1_title": {
+  "message": "还有漏网的广告？"
+ },
+ "wel_tip2_desc": {
+  "message": "点工具列的净页，暂停此网站或打开兼容模式；其他网站照常防护。"
+ },
+ "wel_tip2_title": {
+  "message": "网站显示怪怪的？"
+ },
+ "wel_tip3_desc": {
+  "message": "加入自己的过滤规则、管理清单、查看拦截统计，或导出备份。"
+ },
+ "wel_tip3_title": {
+  "message": "想要更多控制"
+ },
+ "wel_tips_aria": {
+  "message": "使用技巧"
+ }
+}

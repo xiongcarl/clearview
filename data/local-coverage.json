@@ -1,0 +1,47 @@
+{
+  "network": [
+    {
+      "regexFilter": "^https?://[^/?#]+/(?:[^?#]*/)?widget/ads\\.(?:min\\.)?js(?:[?#]|$)",
+      "resourceTypes": [
+        "script",
+        "xmlhttprequest"
+      ]
+    },
+    {
+      "regexFilter": "^https?://[^/?#]+/(?:[^?#]*/)?pagead\\.js(?:[?#]|$)",
+      "resourceTypes": [
+        "script",
+        "xmlhttprequest"
+      ]
+    },
+    {
+      "regexFilter": "^https?://[^/?#]+/(?:[^?#]*/)?ads/ads\\.js(?:[?#]|$)",
+      "resourceTypes": [
+        "script",
+        "xmlhttprequest"
+      ]
+    }
+  ],
+  "cosmetic": [
+    {
+      "hosts": [],
+      "selectors": [
+        ".textads",
+        ".adsbox",
+        ".banner_ads",
+        "amp-embed[type=\"adsense\"]",
+        "amp-embed[type=\"doubleclick\"]",
+        "amp-embed[type=\"a9\"]",
+        "amp-sticky-ad:has(amp-ad, amp-embed[type=\"adsense\"], amp-embed[type=\"doubleclick\"], amp-embed[type=\"a9\"])"
+      ]
+    },
+    {
+      "hosts": [
+        "www.sina.com.cn"
+      ],
+      "selectors": [
+        "div[id^=\"ad_\"]"
+      ]
+    }
+  ]
+}

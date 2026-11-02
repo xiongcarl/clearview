@@ -1,0 +1,8 @@
+# Local test output and old snapshots
+testing-output/
+verification/
+.previous-web-lists/
+_metadata/
+tools/node_modules/
+*.zip
+.DS_Store

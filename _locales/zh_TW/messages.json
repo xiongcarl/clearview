@@ -1,0 +1,890 @@
+{
+ "bg_dynamic_quota": {
+  "message": "自訂規則與網域清單合計超過瀏覽器上限，請減少「我的過濾規則」或額外封鎖的網域。"
+ },
+ "bg_invalid_tab": {
+  "message": "無效的分頁"
+ },
+ "bg_list_format": {
+  "message": "清單來源或格式不符"
+ },
+ "bg_list_invalid": {
+  "message": "清單不完整或包含無效網域；已保留舊清單"
+ },
+ "bg_list_server": {
+  "message": "清單伺服器回應 $1"
+ },
+ "bg_list_shrunk": {
+  "message": "清單數量異常減少；已保留舊清單"
+ },
+ "bg_list_too_big": {
+  "message": "清單過大"
+ },
+ "bg_picker_failed": {
+  "message": "無法啟動元素選取"
+ },
+ "bg_regex_unsupported": {
+  "message": "瀏覽器不支援這個正規表示式"
+ },
+ "bg_rule_invalid": {
+  "message": "元素規則無效"
+ },
+ "bg_rule_quota": {
+  "message": "超過瀏覽器的規則上限（Firefox 最多 3 萬條）。請關閉部分清單，例如 Fanboy 干擾元素或 HaGeZi ULTIMATE。"
+ },
+ "bg_rules_max": {
+  "message": "元素規則最多 300 條"
+ },
+ "bg_site_paused": {
+  "message": "此網站的攔截已暫停"
+ },
+ "brand_short": {
+  "message": "淨頁"
+ },
+ "brand_sub": {
+  "message": "Clearview"
+ },
+ "cmd_start_picker": {
+  "message": "選取並隱藏網頁元素"
+ },
+ "cmd_toggle_site": {
+  "message": "暫停或恢復此網站的攔截"
+ },
+ "common_add": {
+  "message": "加入"
+ },
+ "common_disabled": {
+  "message": "未啟用"
+ },
+ "common_enabled": {
+  "message": "已啟用"
+ },
+ "common_init_partial": {
+  "message": "部分初始化失敗：$1"
+ },
+ "common_last_update_failed": {
+  "message": "上次更新失敗，仍使用舊清單：$1"
+ },
+ "common_loading": {
+  "message": "讀取設定中…"
+ },
+ "common_no_response": {
+  "message": "背景服務沒有回應"
+ },
+ "common_read_failed": {
+  "message": "讀取失敗：$1"
+ },
+ "common_remove": {
+  "message": "移除"
+ },
+ "common_save_failed": {
+  "message": "儲存失敗：$1"
+ },
+ "common_support": {
+  "message": "支持淨頁"
+ },
+ "common_support_heart": {
+  "message": "♥ 支持淨頁"
+ },
+ "common_update_failed": {
+  "message": "更新失敗，保留原清單：$1"
+ },
+ "common_updating": {
+  "message": "正在下載並檢查清單…"
+ },
+ "ext_desc": {
+  "message": "攔截廣告、追蹤與彈窗廣告；支援台灣與中文網站、自訂過濾規則、右鍵隱藏元素、攔截統計與分站相容模式。"
+ },
+ "ext_name": {
+  "message": "淨頁 Clearview — 廣告攔截"
+ },
+ "label_allow": {
+  "message": "允許名單"
+ },
+ "label_block": {
+  "message": "封鎖名單"
+ },
+ "label_compat": {
+  "message": "相容網站"
+ },
+ "label_whitelist": {
+  "message": "白名單"
+ },
+ "log_allow": {
+  "message": "放行"
+ },
+ "log_block": {
+  "message": "封鎖"
+ },
+ "log_redirect": {
+  "message": "本機替代"
+ },
+ "log_upgrade": {
+  "message": "升級 HTTPS"
+ },
+ "menu_hide_element": {
+  "message": "隱藏這個元素…"
+ },
+ "menu_toggle_site": {
+  "message": "暫停／恢復此網站的攔截"
+ },
+ "mode_balanced": {
+  "message": "一般"
+ },
+ "mode_inherit": {
+  "message": "使用預設"
+ },
+ "mode_off": {
+  "message": "關閉"
+ },
+ "mode_strict": {
+  "message": "嚴格"
+ },
+ "opt_add_to_block": {
+  "message": "加入封鎖名單"
+ },
+ "opt_added_block": {
+  "message": "已加入封鎖名單，請儲存設定。"
+ },
+ "opt_advanced_info": {
+  "message": "$1 條網站腳本規則 · $2 條進階元素規則。支援部分上游語法；不保證所有網站或影片廣告。"
+ },
+ "opt_allow_desc": {
+  "message": "優先於封鎖規則，只影響網路請求。最多 500 個。"
+ },
+ "opt_allow_title": {
+  "message": "允許載入的網域"
+ },
+ "opt_apply_one_click": {
+  "message": "一鍵套用"
+ },
+ "opt_autoupdate_desc": {
+  "message": "瀏覽器執行時每天檢查一次，需儲存設定。"
+ },
+ "opt_autoupdate_title": {
+  "message": "每日自動更新"
+ },
+ "opt_backup_bad_compat": {
+  "message": "備份包含無效的相容網站"
+ },
+ "opt_backup_bad_rules": {
+  "message": "備份包含重複、無效或超過上限的規則"
+ },
+ "opt_backup_desc": {
+  "message": "JSON 備份包含網站名單與自訂規則。匯入會取代目前設定，不影響清單版本。"
+ },
+ "opt_backup_title": {
+  "message": "備份與還原"
+ },
+ "opt_backup_too_big": {
+  "message": "備份檔過大"
+ },
+ "opt_backup_unsupported": {
+  "message": "不是支援的淨頁備份"
+ },
+ "opt_badge_desc": {
+  "message": "以小數字顯示在圖示上；點開面板一律可以看到。"
+ },
+ "opt_badge_title": {
+  "message": "在工具列圖示顯示攔截數"
+ },
+ "opt_block_desc": {
+  "message": "最多 500 個。"
+ },
+ "opt_block_title": {
+  "message": "額外封鎖的網域"
+ },
+ "opt_brand_aria": {
+  "message": "淨頁設定頁頂端"
+ },
+ "opt_builtin_list": {
+  "message": "使用內建離線清單"
+ },
+ "opt_chart_aria": {
+  "message": "近 14 天每日攔截數"
+ },
+ "opt_clear_logs": {
+  "message": "清除紀錄"
+ },
+ "opt_compat_desc": {
+  "message": "停用元素隱藏與腳本修正、放行網站自己的請求，保留第三方廣告過濾。最多 200 個。"
+ },
+ "opt_compat_title": {
+  "message": "相容模式"
+ },
+ "opt_css_invalid": {
+  "message": "CSS 選擇器格式無效：$1"
+ },
+ "opt_css_selector": {
+  "message": "CSS 選擇器"
+ },
+ "opt_current_list": {
+  "message": "目前清單"
+ },
+ "opt_diag_desc": {
+  "message": "記錄最近 200 筆規則命中，協助找出誤攔來源。只存在此瀏覽器工作階段，網址會去除查詢參數。"
+ },
+ "opt_diag_title": {
+  "message": "本機診斷"
+ },
+ "opt_direct_desc": {
+  "message": "直接拒絕而不是以本機空白資源替代。可能觸發反攔截提示。"
+ },
+ "opt_direct_title": {
+  "message": "直接封鎖廣告資源"
+ },
+ "opt_edit_shortcuts": {
+  "message": "變更快捷鍵"
+ },
+ "opt_element_domain": {
+  "message": "元素網站網域"
+ },
+ "opt_elements_desc": {
+  "message": "在網頁上按右鍵選「隱藏這個元素…」，或從工具列面板直接點選。規則套用於該網站及子網域，最多 300 條。"
+ },
+ "opt_elements_title": {
+  "message": "元素隱藏"
+ },
+ "opt_enabled_desc": {
+  "message": "關閉後暫停所有網路過濾、元素隱藏與防彈窗。"
+ },
+ "opt_enabled_title": {
+  "message": "啟用攔截"
+ },
+ "opt_enhanced_info": {
+  "message": "$1 個廣告／追蹤等網域 · 版本 $2 · $3；只過濾第三方請求，可能影響網站元件，可關閉或加入允許名單。"
+ },
+ "opt_enhanced_title": {
+  "message": "加強第三方封鎖（HaGeZi ULTIMATE）"
+ },
+ "opt_enter_domain": {
+  "message": "請輸入有效的網站網域。"
+ },
+ "opt_exceptions_desc": {
+  "message": "每行一個網域，包含子網域。儲存後重新載入網頁生效。"
+ },
+ "opt_exceptions_title": {
+  "message": "網站例外"
+ },
+ "opt_export": {
+  "message": "匯出設定"
+ },
+ "opt_exported": {
+  "message": "設定已匯出到下載資料夾。"
+ },
+ "opt_filter_problems": {
+  "message": " · $1 行有問題"
+ },
+ "opt_filter_status": {
+  "message": "$1 條網路規則 · $2 條元素規則"
+ },
+ "opt_filters_desc": {
+  "message": "依網址路徑、資源類型與網站條件過濾。清單隨插件版本更新。"
+ },
+ "opt_filters_placeholder": {
+  "message": "! 註解以驚嘆號開頭\n||ads.example.com^\n||example.com/banner/*$image,third-party\n@@||cdn.example.com^$script\nexample.com##.sponsored\n##.ad-slot-top"
+ },
+ "opt_filters_title": {
+  "message": "過濾清單"
+ },
+ "opt_filters_too_long": {
+  "message": "我的過濾規則過長（上限 200,000 字元）"
+ },
+ "opt_footer": {
+  "message": "設定只存於本機。更新清單時會連線至 GitHub，對方可見一般連線資訊；不傳送瀏覽紀錄、白名單或自訂設定。"
+ },
+ "opt_footer_privacy": {
+  "message": "隱私權政策"
+ },
+ "opt_footer_readme": {
+  "message": "使用與限制說明"
+ },
+ "opt_footer_source": {
+  "message": "網域清單來源"
+ },
+ "opt_group_elements": {
+  "message": "元素與網站腳本"
+ },
+ "opt_group_strong": {
+  "message": "加強選項"
+ },
+ "opt_heading": {
+  "message": "設定"
+ },
+ "opt_hideads_desc": {
+  "message": "依清單隱藏網頁上的廣告版位與空白框；自訂元素規則另外保存。"
+ },
+ "opt_hideads_title": {
+  "message": "自動隱藏廣告元素"
+ },
+ "opt_import": {
+  "message": "匯入設定"
+ },
+ "opt_import_failed": {
+  "message": "匯入失敗：$1"
+ },
+ "opt_intro": {
+  "message": "安靜地瀏覽，只留下你想看的內容。這裡可以管理攔截方式、網站例外與自己的規則；所有資料只保存在這部裝置上。"
+ },
+ "opt_invalid_domain_in": {
+  "message": "$1包含無效網域：$2"
+ },
+ "opt_language": {
+  "message": "介面語言"
+ },
+ "opt_language_auto": {
+  "message": "跟隨瀏覽器"
+ },
+ "opt_last_error": {
+  "message": "上次更新失敗，仍保留可用清單：$1"
+ },
+ "opt_list_annoy": {
+  "message": "Cookie 橫幅與訂閱浮層；較易誤隱藏"
+ },
+ "opt_list_annoy_title": {
+  "message": "Fanboy 干擾元素"
+ },
+ "opt_list_chinese": {
+  "message": "台灣、香港與中國網站（含 EasyList China）"
+ },
+ "opt_list_chinese_title": {
+  "message": "AdGuard 中文"
+ },
+ "opt_list_easylist": {
+  "message": "國際通用廣告清單"
+ },
+ "opt_list_easyprivacy": {
+  "message": "追蹤與分析請求"
+ },
+ "opt_list_fixes": {
+  "message": "網站修正、反攔截處理與防誤攔例外"
+ },
+ "opt_list_fixes_title": {
+  "message": "uBlock 修正"
+ },
+ "opt_list_info": {
+  "message": "$1 個網域 · 來源版本 $2 · $3"
+ },
+ "opt_list_reset": {
+  "message": "已恢復內建清單。自訂設定未變更。"
+ },
+ "opt_logging_desc": {
+  "message": "需儲存設定；僅適用開發人員模式載入的插件。"
+ },
+ "opt_logging_title": {
+  "message": "暫時記錄規則命中"
+ },
+ "opt_logs_cleared": {
+  "message": "紀錄已清除。"
+ },
+ "opt_logs_off": {
+  "message": "診斷記錄尚未啟用；勾選並儲存設定後，重新載入要檢查的網站。"
+ },
+ "opt_logs_shown": {
+  "message": "顯示 $1 筆近期規則命中。"
+ },
+ "opt_max_domains": {
+  "message": "$1最多 $2 個網域"
+ },
+ "opt_mode_added": {
+  "message": "網站模式已加入，請儲存設定。"
+ },
+ "opt_mode_balanced_long": {
+  "message": "一般：使用瀏覽器原生跳轉（建議）"
+ },
+ "opt_mode_off_long": {
+  "message": "關閉防彈窗，保留其他攔截"
+ },
+ "opt_mode_strict_long": {
+  "message": "嚴格：可能影響登入與跳轉"
+ },
+ "opt_myfilters_desc": {
+  "message": "用 Adblock Plus / uBlock Origin 常見語法寫自己的規則，或直接貼上網域清單。優先於內建清單，白名單仍然最優先。"
+ },
+ "opt_myfilters_title": {
+  "message": "我的過濾規則"
+ },
+ "opt_nav_aria": {
+  "message": "設定分類"
+ },
+ "opt_network_off": {
+  "message": "網路過濾未啟用"
+ },
+ "opt_network_on": {
+  "message": "已啟用網路過濾"
+ },
+ "opt_not_set": {
+  "message": "未設定"
+ },
+ "opt_page_title": {
+  "message": "淨頁 Clearview · 設定"
+ },
+ "opt_popupmode_desc": {
+  "message": "一般模式保留連結、登入視窗與表單跳轉，已知的彈窗廣告網路仍會被擋下。嚴格模式可能誤攔登入及授權，建議只對個別網站開啟。切換後請重新載入網頁。"
+ },
+ "opt_popupmode_title": {
+  "message": "預設防彈窗模式"
+ },
+ "opt_procedural_desc": {
+  "message": "依文字、父層與樣式判斷廣告元素。"
+ },
+ "opt_procedural_title": {
+  "message": "進階元素辨識"
+ },
+ "opt_protection_desc": {
+  "message": "整體開關與彈出視窗的處理方式。"
+ },
+ "opt_protection_title": {
+  "message": "防護與彈窗"
+ },
+ "opt_ready": {
+  "message": "設定只存於本機。修改後請按「儲存設定」。"
+ },
+ "opt_recent_update": {
+  "message": "最近更新 $1"
+ },
+ "opt_recommended_desc": {
+  "message": "開啟主要清單、元素處理與網站修正；不變更防彈窗、直接封鎖或第三方限制，網站例外仍保留。"
+ },
+ "opt_recommended_title": {
+  "message": "建議的完整防護"
+ },
+ "opt_remove_aria": {
+  "message": "移除 $1"
+ },
+ "opt_reset_confirm": {
+  "message": "要清除所有攔截統計嗎？這不會影響任何設定。"
+ },
+ "opt_reset_list": {
+  "message": "恢復內建清單"
+ },
+ "opt_reset_stats": {
+  "message": "重設統計"
+ },
+ "opt_rule_added": {
+  "message": "元素規則已加入，請儲存設定。"
+ },
+ "opt_save": {
+  "message": "儲存設定"
+ },
+ "opt_saved": {
+  "message": "已儲存。請重新載入網頁，讓設定完整生效。"
+ },
+ "opt_scriptlets_desc": {
+  "message": "處理影片廣告與反攔截偵測（例如 YouTube），重新載入網頁後生效。"
+ },
+ "opt_scriptlets_title": {
+  "message": "網站腳本修正"
+ },
+ "opt_selector_invalid": {
+  "message": "元素選擇器無效"
+ },
+ "opt_shadow_desc": {
+  "message": "也處理 Shadow DOM 封裝的元件；相容模式會暫停此項。"
+ },
+ "opt_shadow_title": {
+  "message": "隱藏網站元件內的廣告"
+ },
+ "opt_shortcuts_title": {
+  "message": "鍵盤快捷鍵"
+ },
+ "opt_site_domain": {
+  "message": "網站網域"
+ },
+ "opt_site_mode": {
+  "message": "網站模式"
+ },
+ "opt_sitemodes_desc": {
+  "message": "包含子網域；更具體的網域優先。最多 50 個。"
+ },
+ "opt_sitemodes_max": {
+  "message": "網站專用設定最多 50 個。"
+ },
+ "opt_sitemodes_title": {
+  "message": "網站專用防彈窗"
+ },
+ "opt_skip": {
+  "message": "跳到設定內容"
+ },
+ "opt_sources_desc": {
+  "message": "內建 HaGeZi Multi LIGHT，涵蓋廣告、追蹤與惡意網域。更新只下載網域文字，不執行遠端程式碼。"
+ },
+ "opt_sources_title": {
+  "message": "網域清單"
+ },
+ "opt_stat_14": {
+  "message": "近 14 天"
+ },
+ "opt_stat_total": {
+  "message": "累計攔截"
+ },
+ "opt_stat_week": {
+  "message": "近 7 天"
+ },
+ "opt_stats_failed": {
+  "message": "統計讀取失敗：$1"
+ },
+ "opt_stats_local": {
+  "message": "統計只存於本機。"
+ },
+ "opt_stats_reset": {
+  "message": "統計已重設。"
+ },
+ "opt_stats_since": {
+  "message": "自 $1 起統計。數字只存於本機，不會上傳。"
+ },
+ "opt_stats_title": {
+  "message": "攔截統計"
+ },
+ "opt_strict3p_desc": {
+  "message": "阻止 17 項混合用途服務從其他網站載入，可能影響影片、客服與 Cookie 同意視窗。"
+ },
+ "opt_strict3p_title": {
+  "message": "限制額外第三方服務"
+ },
+ "opt_support_button": {
+  "message": "♥ 贊助淨頁"
+ },
+ "opt_support_desc": {
+  "message": "淨頁免費、沒有廣告、不收集瀏覽資料，由個人利用空閒時間維護。如果它讓你上網清爽一點，歡迎贊助開發，讓清單修正與新功能持續下去。"
+ },
+ "opt_syntax_1": {
+  "message": "<code>||ads.example.com^</code> 封鎖整個網域與子網域；也可以直接寫 <code>ads.example.com</code> 或 hosts 格式 <code>0.0.0.0 ads.example.com</code>。"
+ },
+ "opt_syntax_2": {
+  "message": "<code>||example.com/ads/*</code>、<code>/banner\\d+\\.gif/</code> 依網址或正規表示式封鎖。"
+ },
+ "opt_syntax_3": {
+  "message": "<code>@@</code> 開頭為放行；<code>@@||example.com^$document</code> 在該網站停用所有網路過濾。"
+ },
+ "opt_syntax_4": {
+  "message": "選項：<code>$script</code> <code>image</code> <code>stylesheet</code> <code>xhr</code> <code>frame</code> <code>media</code> <code>font</code> <code>websocket</code> <code>ping</code> <code>popup</code> <code>third-party</code> <code>first-party</code> <code>domain=a.com|~b.com</code> <code>important</code> <code>match-case</code>，前面加 <code>~</code> 表示排除。"
+ },
+ "opt_syntax_5": {
+  "message": "<code>example.com,~shop.example.com##.ad</code> 在指定網站隱藏元素；<code>##.ad</code> 套用到所有網站。也支援 <code>:has-text()</code> 等進階選擇器。"
+ },
+ "opt_syntax_6": {
+  "message": "上限 5,000 行；不支援腳本注入（<code>##+js</code>）與例外元素規則（<code>#@#</code>）。"
+ },
+ "opt_syntax_title": {
+  "message": "支援的語法"
+ },
+ "opt_top_sites": {
+  "message": "攔截最多的網站"
+ },
+ "opt_top_sites_empty": {
+  "message": "還沒有資料。瀏覽幾個網站後再回來看看。"
+ },
+ "opt_unsaved": {
+  "message": "有未儲存的變更。"
+ },
+ "opt_update_done": {
+  "message": "清單更新完成。未儲存的表單內容仍保留。"
+ },
+ "opt_update_now": {
+  "message": "立即更新清單"
+ },
+ "opt_version_foot": {
+  "message": "版本 $1 · 設定只存於本機"
+ },
+ "opt_view_counts": {
+  "message": "檢視各清單的規則數量"
+ },
+ "opt_view_logs": {
+  "message": "查看紀錄"
+ },
+ "opt_view_services": {
+  "message": "查看限制的服務（17 項）"
+ },
+ "opt_weblist_row": {
+  "message": "$1 · $2 條網路規則 · $3 條元素規則 · $4"
+ },
+ "opt_whitelist_desc": {
+  "message": "完全暫停這些網站的攔截。最多 200 個。"
+ },
+ "opt_whitelist_title": {
+  "message": "白名單"
+ },
+ "picker_cancel": {
+  "message": "取消"
+ },
+ "picker_confirm": {
+  "message": "隱藏這個元素"
+ },
+ "picker_hint": {
+  "message": "將滑鼠移到廣告上並點一下。Enter 確認，Esc 取消。"
+ },
+ "picker_not_unique": {
+  "message": "無法唯一識別此元素，請選擇更小的範圍"
+ },
+ "picker_repick": {
+  "message": "重新選擇"
+ },
+ "picker_save_failed": {
+  "message": "保存失敗"
+ },
+ "picker_selected": {
+  "message": "已選取。確認後會在此網站隱藏它。"
+ },
+ "picker_selected_many": {
+  "message": "已選取，同樣的元素在這頁共有 $1 個，會一起隱藏。"
+ },
+ "picker_title": {
+  "message": "選擇要隱藏的元素"
+ },
+ "picker_too_broad": {
+  "message": "選擇器過長或範圍過大，請選擇較小的元素"
+ },
+ "picker_too_deep": {
+  "message": "元件層數過深，請選擇外層容器"
+ },
+ "picker_widen": {
+  "message": "擴大範圍"
+ },
+ "picker_widen_title": {
+  "message": "改選外層容器"
+ },
+ "popup_apply_strong": {
+  "message": "套用加強攔截"
+ },
+ "popup_broken_hint": {
+  "message": "相容模式會停用此站的自動元素隱藏與網站腳本修正，並放行本站自己的請求；第三方廣告網路仍會被攔截。切換後請重新載入。"
+ },
+ "popup_broken_title": {
+  "message": "網站顯示異常？"
+ },
+ "popup_builtin_list": {
+  "message": "內建離線清單"
+ },
+ "popup_compat_full": {
+  "message": "相容模式最多 200 個網站，請先移除不需要的項目。"
+ },
+ "popup_compat_off": {
+  "message": "關閉此網站相容模式"
+ },
+ "popup_compat_on": {
+  "message": "此網站使用相容模式"
+ },
+ "popup_count_label": {
+  "message": "個廣告與追蹤已在這個頁面被擋下"
+ },
+ "popup_default_popup": {
+  "message": "預設"
+ },
+ "popup_hide_element": {
+  "message": "隱藏網頁元素"
+ },
+ "popup_later": {
+  "message": "稍後再說"
+ },
+ "popup_list_info": {
+  "message": "$1 個網域 · $2 條網頁規則 · $3"
+ },
+ "popup_lists_loading": {
+  "message": "清單讀取中…"
+ },
+ "popup_lists_title": {
+  "message": "清單與加強選項"
+ },
+ "popup_master_label": {
+  "message": "啟用廣告與追蹤攔截"
+ },
+ "popup_master_title": {
+  "message": "全域開關"
+ },
+ "popup_milestone": {
+  "message": "淨頁已經替你擋下 $1 個廣告與追蹤。淨頁免費、不追蹤你；如果它讓上網清爽一點，歡迎支持開發。"
+ },
+ "popup_page_protection": {
+  "message": "此頁防護"
+ },
+ "popup_pause_site": {
+  "message": "暫停此網站"
+ },
+ "popup_picker_failed": {
+  "message": "無法啟動"
+ },
+ "popup_reload": {
+  "message": "重新載入頁面"
+ },
+ "popup_reload_first": {
+  "message": "請先重新載入網頁再試：$1"
+ },
+ "popup_resume_site": {
+  "message": "恢復此網站"
+ },
+ "popup_saved": {
+  "message": "設定已儲存。請重新載入頁面，讓彈窗與版面設定完整生效。"
+ },
+ "popup_settings": {
+  "message": "進階設定"
+ },
+ "popup_site_popup": {
+  "message": "此網站防彈窗"
+ },
+ "popup_sitemodes_full": {
+  "message": "網站防彈窗設定最多 50 個網域。"
+ },
+ "popup_stats": {
+  "message": "攔截統計"
+ },
+ "popup_strict3p_hint": {
+  "message": "阻止 17 項服務從其他網站載入，可能影響影片、客服與同意視窗。"
+ },
+ "popup_support_button": {
+  "message": "支持淨頁"
+ },
+ "popup_this_site": {
+  "message": "此網站"
+ },
+ "popup_today": {
+  "message": "今天"
+ },
+ "popup_total": {
+  "message": "累計"
+ },
+ "popup_update_done": {
+  "message": "清單更新完成。自訂規則與白名單已保留。"
+ },
+ "popup_update_lists": {
+  "message": "更新清單"
+ },
+ "popup_updated_on": {
+  "message": "更新於 $1"
+ },
+ "popup_whitelist_full": {
+  "message": "白名單最多 200 個網域，請先移除不需要的項目。"
+ },
+ "state_active": {
+  "message": "防護中"
+ },
+ "state_all_paused": {
+  "message": "攔截已全面暫停"
+ },
+ "state_compat": {
+  "message": "相容模式防護中"
+ },
+ "state_na": {
+  "message": "此頁面不適用"
+ },
+ "state_site_paused": {
+  "message": "此網站已暫停攔截"
+ },
+ "state_unreadable": {
+  "message": "無法讀取設定"
+ },
+ "uf_bad_cosmetic": {
+  "message": "不支援這種元素規則語法（只支援 ##）"
+ },
+ "uf_bad_domain": {
+  "message": "無效的網域「$1」"
+ },
+ "uf_bad_option": {
+  "message": "不支援的選項「$1」"
+ },
+ "uf_css_invalid": {
+  "message": "CSS 選擇器格式無效"
+ },
+ "uf_generic_too_broad": {
+  "message": "通用元素規則範圍過大"
+ },
+ "uf_line_error": {
+  "message": "第 $1 行：$2"
+ },
+ "uf_max_lines": {
+  "message": "最多 $1 行"
+ },
+ "uf_max_network": {
+  "message": "網路規則最多 $1 條"
+ },
+ "uf_myfilters_line": {
+  "message": "我的過濾規則第 $1 行：$2"
+ },
+ "uf_no_exceptions": {
+  "message": "暫不支援例外元素規則，請改用白名單或相容模式"
+ },
+ "uf_regex_ascii": {
+  "message": "正規表示式只能包含 ASCII 字元"
+ },
+ "uf_selector_invalid": {
+  "message": "元素選擇器無效或過長"
+ },
+ "uf_too_broad": {
+  "message": "網址規則範圍過大"
+ },
+ "uf_url_ascii": {
+  "message": "網址規則只能包含 ASCII 字元（中文網域請改用 punycode）"
+ },
+ "wel_done": {
+  "message": "開始瀏覽"
+ },
+ "wel_heading": {
+  "message": "歡迎，淨頁已經開始工作了"
+ },
+ "wel_lead": {
+  "message": "廣告、追蹤器與彈窗廣告會自動攔截，台灣與中文網站也一併處理。不需要任何設定，直接上網就好。"
+ },
+ "wel_open_settings": {
+  "message": "開啟設定 →"
+ },
+ "wel_page_title": {
+  "message": "歡迎使用淨頁 Clearview"
+ },
+ "wel_pin_desc": {
+  "message": "點瀏覽器右上角的拼圖圖示，再按「淨頁 Clearview」旁邊的圖釘。之後隨時看得到這一頁擋了多少東西。"
+ },
+ "wel_pin_title": {
+  "message": "先把淨頁釘到工具列"
+ },
+ "wel_promise1_desc": {
+  "message": "所有過濾都在你的電腦上完成，設定與統計只存於本機。"
+ },
+ "wel_promise1_title": {
+  "message": "不收集瀏覽紀錄"
+ },
+ "wel_promise2_desc": {
+  "message": "不收廣告商的錢替任何人放行。"
+ },
+ "wel_promise2_title": {
+  "message": "沒有「可接受廣告」"
+ },
+ "wel_promise3_desc": {
+  "message": "以 GPL-3.0 授權，任何人都可以檢視與改進。"
+ },
+ "wel_promise3_title": {
+  "message": "開放原始碼"
+ },
+ "wel_promise_title": {
+  "message": "我們的承諾"
+ },
+ "wel_support_desc": {
+  "message": "淨頁由個人利用空閒時間維護，免費提供。如果它讓上網清爽一點，歡迎請我喝杯咖啡，讓清單修正與新功能持續下去。"
+ },
+ "wel_support_title": {
+  "message": "喜歡淨頁嗎？"
+ },
+ "wel_tip1_desc": {
+  "message": "在它上面按右鍵，選「隱藏這個元素…」，確認後這個網站就不會再出現。"
+ },
+ "wel_tip1_key": {
+  "message": "選取元素"
+ },
+ "wel_tip1_title": {
+  "message": "還有漏網的廣告？"
+ },
+ "wel_tip2_desc": {
+  "message": "點工具列的淨頁，暫停此網站或開啟相容模式；其他網站照常防護。"
+ },
+ "wel_tip2_title": {
+  "message": "網站顯示怪怪的？"
+ },
+ "wel_tip3_desc": {
+  "message": "加入自己的過濾規則、管理清單、查看攔截統計，或匯出備份。"
+ },
+ "wel_tip3_title": {
+  "message": "想要更多控制"
+ },
+ "wel_tips_aria": {
+  "message": "使用技巧"
+ }
+}

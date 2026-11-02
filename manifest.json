@@ -1,0 +1,131 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_ext_name__",
+  "version": "5.3.1",
+  "default_locale": "zh_TW",
+  "description": "__MSG_ext_desc__",
+  "minimum_chrome_version": "121",
+  "permissions": [
+    "storage",
+    "scripting",
+    "webNavigation",
+    "declarativeNetRequest",
+    "alarms",
+    "contextMenus",
+    "declarativeNetRequestFeedback"
+  ],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "__MSG_ext_name__",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png"
+    }
+  },
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ads",
+        "enabled": true,
+        "path": "rules.json"
+      },
+      {
+        "id": "easylist",
+        "enabled": true,
+        "path": "data/web-rules/easylist.json"
+      },
+      {
+        "id": "easyprivacy",
+        "enabled": true,
+        "path": "data/web-rules/easyprivacy.json"
+      },
+      {
+        "id": "chinese",
+        "enabled": true,
+        "path": "data/web-rules/chinese.json"
+      },
+      {
+        "id": "annoyances",
+        "enabled": true,
+        "path": "data/web-rules/annoyances.json"
+      },
+      {
+        "id": "fixes",
+        "enabled": true,
+        "path": "data/web-rules/fixes.json"
+      },
+      {
+        "id": "enhanced",
+        "enabled": true,
+        "path": "data/enhanced-rules.json"
+      },
+      {
+        "id": "local_ads",
+        "enabled": true,
+        "path": "data/local-rules.json"
+      },
+      {
+        "id": "direct_easylist",
+        "enabled": false,
+        "path": "data/web-rules/direct-easylist.json"
+      },
+      {
+        "id": "direct_easyprivacy",
+        "enabled": false,
+        "path": "data/web-rules/direct-easyprivacy.json"
+      },
+      {
+        "id": "direct_chinese",
+        "enabled": false,
+        "path": "data/web-rules/direct-chinese.json"
+      },
+      {
+        "id": "direct_fixes",
+        "enabled": false,
+        "path": "data/web-rules/direct-fixes.json"
+      }
+    ]
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "commands": {
+    "start-picker": {
+      "suggested_key": {
+        "default": "Alt+Shift+H"
+      },
+      "description": "__MSG_cmd_start_picker__"
+    },
+    "toggle-site": {
+      "suggested_key": {
+        "default": "Alt+Shift+P"
+      },
+      "description": "__MSG_cmd_toggle_site__"
+    }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "vendor/redirects/*"
+      ],
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ]
+    }
+  ],
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  }
+}

@@ -1,0 +1,57 @@
+[
+  {
+    "id": "easylist",
+    "cosmeticRules": 24057,
+    "cosmeticExceptions": 337,
+    "extendedRules": 292,
+    "hidingExceptions": 153,
+    "hidingCancellations": 0,
+    "unsupportedCosmetic": 51,
+    "unsupportedExtended": 0,
+    "unsupportedExceptions": 14
+  },
+  {
+    "id": "easyprivacy",
+    "cosmeticRules": 2,
+    "cosmeticExceptions": 0,
+    "extendedRules": 0,
+    "hidingExceptions": 0,
+    "hidingCancellations": 0,
+    "unsupportedCosmetic": 4,
+    "unsupportedExtended": 1,
+    "unsupportedExceptions": 0
+  },
+  {
+    "id": "chinese",
+    "cosmeticRules": 7469,
+    "cosmeticExceptions": 251,
+    "extendedRules": 273,
+    "hidingExceptions": 194,
+    "hidingCancellations": 2,
+    "unsupportedCosmetic": 51,
+    "unsupportedExtended": 0,
+    "unsupportedExceptions": 10
+  },
+  {
+    "id": "annoyances",
+    "cosmeticRules": 44363,
+    "cosmeticExceptions": 529,
+    "extendedRules": 398,
+    "hidingExceptions": 61,
+    "hidingCancellations": 0,
+    "unsupportedCosmetic": 4,
+    "unsupportedExtended": 0,
+    "unsupportedExceptions": 0
+  },
+  {
+    "id": "fixes",
+    "cosmeticRules": 5970,
+    "cosmeticExceptions": 370,
+    "extendedRules": 459,
+    "hidingExceptions": 869,
+    "hidingCancellations": 2,
+    "unsupportedCosmetic": 940,
+    "unsupportedExtended": 147,
+    "unsupportedExceptions": 12
+  }
+]

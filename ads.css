@@ -1,0 +1,8 @@
+/* Deliberately narrow selectors: avoid deleting arbitrary dialogs or banners. */
+ins.adsbygoogle,
+[data-ad-slot][data-ad-client],
+iframe[src*="//googleads.g.doubleclick.net/"],
+iframe[src*="//tpc.googlesyndication.com/"],
+iframe[src*="//pagead2.googlesyndication.com/"] {
+  display: none !important;
+}

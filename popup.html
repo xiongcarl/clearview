@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>淨頁 Clearview</title><link rel="stylesheet" href="ui.css"><link rel="stylesheet" href="popup.css"></head>
+<body data-protection="loading">
+<header class="top">
+  <span class="wordmark"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 128 128"><path d="M64 26c3.2 20.6 11.4 28.8 32 32-20.6 3.2-28.8 11.4-32 32-3.2-20.6-11.4-28.8-32-32 20.6-3.2 28.8-11.4 32-32z" transform="translate(0 6)" fill="#faf9f5"/></svg></span><span data-i18n="brand_short">淨頁</span></span>
+  <div class="top-actions">
+    <button id="options" class="icon-button" data-i18n-title="popup_settings" title="進階設定" data-i18n-aria-label="popup_settings" aria-label="進階設定"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10m4 0h2M4 17h4m4 0h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></button>
+    <label class="master" data-i18n-title="popup_master_title" title="全域開關"><span class="sr-only" data-i18n="popup_master_label">啟用廣告與追蹤攔截</span><input id="enabled" type="checkbox" role="switch" disabled></label>
+  </div>
+</header>
+
+<main>
+  <section class="greeting" data-i18n-aria-label="popup_page_protection" aria-label="此頁防護">
+    <span class="spark" aria-hidden="true"><svg viewBox="0 0 128 128"><path d="M64 26c3.2 20.6 11.4 28.8 32 32-20.6 3.2-28.8 11.4-32 32-3.2-20.6-11.4-28.8-32-32 20.6-3.2 28.8-11.4 32-32z" transform="translate(0 6)" fill="currentColor"/></svg></span>
+    <p class="count"><span id="blocked" class="count-num">—</span></p>
+    <p class="count-label" data-i18n="popup_count_label">個廣告與追蹤已在這個頁面被擋下</p>
+    <p class="site-line"><span class="status-dot" aria-hidden="true"></span><span id="state" role="status" data-i18n="common_loading">讀取設定中…</span><span class="sep" aria-hidden="true">·</span><span id="host" class="host">—</span></p>
+  </section>
+
+  <section class="tally" id="lifetime" hidden data-i18n-aria-label="popup_stats" aria-label="攔截統計">
+    <div><span class="tally-num" id="todayCount">0</span><span class="tally-label" data-i18n="popup_today">今天</span></div>
+    <div><span class="tally-num" id="totalCount">0</span><span class="tally-label" data-i18n="popup_total">累計</span></div>
+  </section>
+
+  <section class="milestone" id="milestone" hidden>
+    <p id="milestoneText"></p>
+    <div class="milestone-actions"><a id="milestoneSupport" class="button-accent" target="_blank" rel="noopener" data-i18n="popup_support_button">支持淨頁</a><button id="milestoneClose" class="ghost" data-i18n="popup_later">稍後再說</button></div>
+  </section>
+
+  <section class="composer" data-i18n-aria-label="popup_this_site" aria-label="此網站">
+    <div class="tiles">
+      <button id="site" class="tile" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6v12m6-12v12"/></svg><span class="row-label" data-i18n="popup_pause_site">暫停此網站</span><kbd id="siteKey" hidden></kbd></button>
+      <button id="picker" class="tile" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h3M4 5v3m12-4h3m1 1v3M4 16v3m1 1h3m8 0h3m1-1v-3M9 9h6v6H9z"/></svg><span class="row-label" data-i18n="popup_hide_element">隱藏網頁元素</span><kbd id="pickerKey" hidden></kbd></button>
+    </div>
+    <div class="selects">
+      <label class="chip-select"><span data-i18n="popup_site_popup">此網站防彈窗</span><select id="siteMode" disabled><option value="inherit" data-i18n="mode_inherit">使用預設</option><option value="balanced" data-i18n="mode_balanced">一般</option><option value="strict" data-i18n="mode_strict">嚴格</option><option value="off" data-i18n="mode_off">關閉</option></select></label>
+      <label class="chip-select"><span data-i18n="popup_default_popup">預設</span><select id="mode" disabled><option value="balanced" data-i18n="mode_balanced">一般</option><option value="strict" data-i18n="mode_strict">嚴格</option><option value="off" data-i18n="mode_off">關閉</option></select></label>
+    </div>
+  </section>
+
+  <details class="fold">
+    <summary data-i18n="popup_broken_title">網站顯示異常？</summary>
+    <p class="hint" data-i18n="popup_broken_hint">相容模式會停用此站的自動元素隱藏與網站腳本修正，並放行本站自己的請求；第三方廣告網路仍會被攔截。切換後請重新載入。</p>
+    <button id="compatible" class="secondary wide" disabled data-i18n="popup_compat_on">此網站使用相容模式</button>
+  </details>
+  <details class="fold">
+    <summary data-i18n="popup_lists_title">清單與加強選項</summary>
+    <p id="listInfo" class="hint" data-i18n="popup_lists_loading">清單讀取中…</p>
+    <label class="switch-row"><span data-i18n="opt_strict3p_title">限制額外第三方服務</span><input id="strictThirdParty" type="checkbox" role="switch" disabled></label>
+    <p class="hint" data-i18n="popup_strict3p_hint">阻止 17 項服務從其他網站載入，可能影響影片、客服與同意視窗。</p>
+    <div class="pair"><button id="strong" class="secondary" data-i18n="popup_apply_strong">套用加強攔截</button><button id="update" class="secondary" disabled data-i18n="popup_update_lists">更新清單</button></div>
+  </details>
+
+  <p id="message" role="status" aria-live="polite"></p>
+</main>
+
+<footer>
+  <button id="reload" class="ghost" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12a7 7 0 1 1-2.1-5M19 4v4h-4"/></svg><span data-i18n="popup_reload">重新載入頁面</span></button>
+  <a id="support" class="support-link" target="_blank" rel="noopener" hidden data-i18n="common_support_heart">♥ 支持淨頁</a>
+</footer>
+<script src="i18n.js"></script><script src="common.js"></script><script src="popup.js"></script></body></html>

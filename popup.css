@@ -1,0 +1,79 @@
+body{width:360px;min-height:480px;background:var(--bg)}
+svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+.top{display:flex;align-items:center;justify-content:space-between;padding:12px 14px 0 16px}
+.wordmark{display:flex;align-items:center;gap:8px;font-family:var(--serif);font-size:17px}
+.wordmark .brand-mark{width:24px;height:24px;flex-basis:24px;border-radius:7px}
+.wordmark .brand-mark svg{width:24px;height:24px;stroke:none}
+.top-actions{display:flex;align-items:center;gap:6px}
+.icon-button{width:32px;height:32px;padding:0;border-radius:9px;background:transparent;color:var(--muted)}
+.icon-button:hover:enabled{opacity:1;background:var(--hover);color:var(--text)}
+.icon-button svg{width:18px;height:18px}
+.master{display:flex}
+
+main{padding:0 16px;display:grid;gap:12px}
+main>.fold+.fold{margin-top:-12px}
+
+/* Greeting: the claude.ai new-chat moment, centred sparkle and serif headline. */
+.greeting{padding:26px 0 8px;text-align:center}
+.spark{display:inline-grid;color:var(--accent)}
+.spark svg{width:30px;height:30px;stroke:none}
+[data-protection=paused] .spark,[data-protection=na] .spark,[data-protection=unavailable] .spark{color:var(--faint)}
+.count{margin:6px 0 0}
+.count-num{font-family:var(--serif);font-size:64px;line-height:1;color:var(--text);font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+[data-protection=paused] .count-num,[data-protection=unavailable] .count-num,[data-protection=na] .count-num{color:var(--faint)}
+.count-label{margin:8px 0 0;font-family:var(--serif);font-size:15px;color:var(--text-2)}
+.site-line{display:flex;justify-content:center;align-items:center;gap:7px;margin:12px auto 0;max-width:100%;font-size:12px;color:var(--muted)}
+.status-dot{flex:none;width:7px;height:7px;border-radius:50%;background:var(--faint)}
+[data-protection=active] .status-dot{background:var(--ok)}
+[data-protection=compatible] .status-dot{background:var(--warn)}
+.sep{color:var(--faint)}
+.host{font-family:var(--mono);font-size:11.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+
+.tally{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.tally div{display:flex;align-items:baseline;justify-content:center;gap:6px;padding:9px 0}
+.tally div+div{border-left:1px solid var(--line)}
+.tally-num{font-family:var(--serif);font-size:19px;font-variant-numeric:tabular-nums}
+.tally-label{font-size:12px;color:var(--muted)}
+
+.milestone{padding:13px 15px;border-radius:var(--radius);background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 20%,transparent)}
+.milestone p{margin:0;font-size:12.5px;line-height:1.6}
+.milestone-actions{display:flex;gap:6px;align-items:center;margin-top:9px}
+.milestone-actions .button-accent{padding:6px 13px;font-size:12.5px}
+.milestone-actions button{padding:6px 10px;font-size:12.5px}
+
+/* Site controls in a composer-style box. */
+.composer{padding:8px;border:1px solid var(--line-strong);border-radius:var(--radius-xl);background:var(--surface);box-shadow:var(--shadow)}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.tile{position:relative;display:grid;justify-items:start;justify-content:stretch;align-content:start;gap:10px;padding:12px 12px 11px;border:0;border-radius:13px;background:var(--surface-2);color:var(--text);font-weight:450;font-size:13px;text-align:left}
+.tile svg{width:20px;height:20px;color:var(--accent-ink)}
+.tile:hover:enabled{opacity:1;background:var(--hover)}
+.tile:active:enabled{transform:scale(.98)}
+.tile kbd{position:absolute;top:10px;right:10px;font-size:10px;padding:0 5px}
+[data-listed=true] #site{background:var(--ok-soft)}
+[data-listed=true] #site svg{color:var(--ok)}
+.selects{display:flex;flex-wrap:wrap;gap:6px;padding:8px 2px 2px}
+.chip-select{display:flex;align-items:center;gap:2px;padding-left:10px;border-radius:999px;border:1px solid var(--line);font-size:12px;color:var(--muted)}
+.chip-select select{border:0;background-color:transparent;padding:4px 26px 4px 4px;font-size:12px;color:var(--text);background-position:calc(100% - 13px) 52%,calc(100% - 9px) 52%;box-shadow:none!important}
+.chip-select:hover{background:var(--hover)}
+
+.fold{border-top:1px solid var(--line)}
+.fold+.fold{border-top:1px solid var(--line)}
+.fold summary{padding:11px 2px;cursor:pointer;font-size:13px;color:var(--text-2);list-style:none;display:flex;justify-content:space-between;align-items:center}
+.fold summary::-webkit-details-marker{display:none}
+.fold summary::after{content:"";width:6px;height:6px;border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);transform:rotate(-45deg);transition:transform .15s;margin-right:4px}
+.fold[open] summary::after{transform:rotate(45deg)}
+.fold[open]{padding-bottom:12px}
+.fold .hint{margin:0 0 10px;font-size:12px}
+.switch-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:4px 0 6px;font-size:13px}
+.wide{width:100%}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#message{margin:0;font-size:12px;color:var(--muted)}
+#message:empty{display:none}
+
+footer{display:flex;justify-content:space-between;align-items:center;margin-top:4px;padding:8px 10px 12px;border-top:1px solid var(--line)}
+footer button{padding:6px 10px;font-size:12.5px;font-weight:450}
+footer button svg{width:15px;height:15px}
+.support-link{padding:6px 10px;border-radius:9px;color:var(--accent-ink);text-decoration:none;font-weight:500;font-size:12.5px}
+.support-link:hover{background:var(--accent-soft)}
+.site-line:has(.host:empty) .sep{display:none}

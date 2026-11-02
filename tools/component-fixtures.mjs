@@ -1,0 +1,193 @@
+import {selectorIndexFixture} from './selector-index-fixtures.mjs';
+// Real browser component fixtures. GPL-3.0-or-later.
+import {writeFile} from 'node:fs/promises';
+import path from 'node:path';
+export function respondComponentFixture(req,res){
+  if(req.url.startsWith('/components') || req.url.startsWith('/csp-components')){
+    res.setHeader('Content-Type','text/html');if(req.url.startsWith('/csp-'))res.setHeader('Content-Security-Policy',"default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'none'; connect-src *");
+    res.end(`<!doctype html><meta charset="utf-8"><h1>Normal component page</h1><p id="pick-target">Ordinary page neighbor</p><input id="ordinary-input" value="working"><script>
+    window.refs={};window.nativeAttach=Element.prototype.attachShadow;
+    window.component=(id,mode,parent=document.body)=>{const host=document.createElement('div');host.id=id;const root=host.attachShadow({mode});const siteSheet=new CSSStyleSheet();siteSheet.replaceSync('p { color: rgb(31, 90, 141); } div { min-height: 26px; }');root.adoptedStyleSheets=[siteSheet];root.innerHTML='<ins class="adsbygoogle">Advertising</ins><p id="safe">Normal component text</p><div id="pick-target">Manually selected notice</div>';parent.append(host);refs[id]={host,root,siteSheet};return refs[id];};
+    component('open-host','open');component('closed-host','closed');const outer=component('nested-host','closed');outer.root.querySelector('#pick-target').remove();component('inner-host','closed',outer.root);
+    const late=document.createElement('div');late.id='late-host';document.body.append(late);window.fixtureReady=true;
+    </script>`);return true;
+  }
+  return false;
+}
+export async function runComponentTests({settings,defaults,advancedProfile,attach,url,port,evaluate,popup,waitReady,check,send,testDirectory}){
+  // Real component roots: ordinary document CSS cannot enter these boundaries.
+  const componentProfile={...defaults,shadowAds:true,popupMode:'balanced'};
+  await settings(componentProfile);
+  const components=await attach(url+'components');const cs=components.sessionId;
+  await waitReady(cs,"window.fixtureReady===true && getComputedStyle(refs['closed-host'].root.querySelector('ins')).display==='none'");
+  const rootDisplay=id=>`getComputedStyle(refs[${JSON.stringify(id)}].root.querySelector('ins')).display`;
+  check('Open component advertising is hidden',await evaluate(cs,rootDisplay('open-host')),'none');
+  check('Closed component advertising is hidden through the native extension API',await evaluate(cs,rootDisplay('closed-host')),'none');
+  check('Nested closed component advertising is hidden',await evaluate(cs,rootDisplay('inner-host')),'none');
+  await evaluate(cs,"{const ref=component('initial-important','closed');ref.root.querySelector('ins').style.setProperty('display','flex','important');}");
+  await waitReady(cs,"getComputedStyle(refs['initial-important'].root.querySelector('ins')).display==='none'");
+  check('A new component with an important inline ad is filtered while retaining normal content',await evaluate(cs,"[refs['initial-important'].root.querySelector('ins').style.getPropertyPriority('display'),getComputedStyle(refs['initial-important'].root.querySelector('#safe')).display]"),['important','block']);
+
+  await evaluate(cs,"refs['closed-host'].root.querySelector('ins').style.setProperty('display','block','important')");
+  await waitReady(cs,"getComputedStyle(refs['closed-host'].root.querySelector('ins')).display==='none'");
+  check('Important inline display is reblocked in a component',await evaluate(cs,rootDisplay('closed-host')),'none');
+  await evaluate(cs,"refs['closed-host'].root.querySelector('ins').style.removeProperty('display')");
+  await evaluate(cs,"{const element=refs['closed-host'].root.querySelector('ins');element.style.setProperty('display','grid','important');}");
+  await waitReady(cs,"getComputedStyle(refs['closed-host'].root.querySelector('ins')).display==='none'");
+  await settings({...componentProfile,shadowAds:false});
+  await waitReady(cs,"getComputedStyle(refs['closed-host'].root.querySelector('ins')).display==='grid'");
+  check('Withdrawal preserves a later website-owned important display value',await evaluate(cs,"refs['closed-host'].root.querySelector('ins').style.getPropertyValue('display')"),'grid');
+  await evaluate(cs,"refs['closed-host'].root.querySelector('ins').style.removeProperty('display')");
+  await settings(componentProfile);
+  await waitReady(cs,"getComputedStyle(refs['closed-host'].root.querySelector('ins')).display==='none'");
+  await evaluate(cs,"{const node=document.createElement('ins');node.id='reused-container';node.className='adsbygoogle';node.style.setProperty('display','block','important');refs['closed-host'].root.append(node);}");
+  await waitReady(cs,"getComputedStyle(refs['closed-host'].root.querySelector('#reused-container')).display==='none'");
+  await evaluate(cs,"refs['closed-host'].root.querySelector('#reused-container').className='normal-container'");
+  await waitReady(cs,"getComputedStyle(refs['closed-host'].root.querySelector('#reused-container')).display==='block'");
+  check('A former ad container reused for normal content is restored',await evaluate(cs,"refs['closed-host'].root.querySelector('#reused-container').style.getPropertyPriority('display')"),'important');
+  check('Normal component text keeps the website stylesheet',await evaluate(cs,"getComputedStyle(refs['closed-host'].root.querySelector('#safe')).color"),'rgb(31, 90, 141)');
+  check('Filtering leaves the site attachShadow method unchanged',await evaluate(cs,'Element.prototype.attachShadow===nativeAttach'),true);
+  check('Ordinary native input remains functional',await evaluate(cs,"document.querySelector('#ordinary-input').value='edited';document.querySelector('#ordinary-input').value"),'edited');
+  await evaluate(cs,"{const root=refs['closed-host'].root;const node=document.createElement('ins');node.className='adsbygoogle';node.id='reinserted-ad';root.append(node);}");
+  check('Reinserted component ads inherit the existing filter immediately',await evaluate(cs,"getComputedStyle(refs['closed-host'].root.querySelector('#reinserted-ad')).display"),'none');
+  await evaluate(cs,"{const host=document.querySelector('#late-host');const root=host.attachShadow({mode:'closed'});root.innerHTML='<ins class=adsbygoogle>Late attachment</ins>';refs['late-host']={host,root};}");
+  await waitReady(cs,"getComputedStyle(refs['late-host'].root.querySelector('ins')).display==='none'");
+  check('Late root attachment on an already present host is discovered',await evaluate(cs,rootDisplay('late-host')),'none');
+  await evaluate(cs,"{for(let i=0;i<150;i++){const outer=component('burst-outer-'+i,'closed');component('burst-inner-'+i,'closed',outer.root);}}");
+  await waitReady(cs,"Array.from({length:150},(_,i)=>refs['burst-inner-'+i]).every(x=>getComputedStyle(x.root.querySelector('ins')).display==='none')");
+  check('Large bursts filter all 150 outer components',await evaluate(cs,"Array.from({length:150},(_,i)=>refs['burst-outer-'+i]).filter(x=>getComputedStyle(x.root.querySelector('ins')).display==='none').length"),150);
+  check('A mutation burst retains exploration of all 150 nested closed roots',await evaluate(cs,"Array.from({length:150},(_,i)=>refs['burst-inner-'+i]).filter(x=>x.root.adoptedStyleSheets.length===2 && getComputedStyle(x.root.querySelector('ins')).display==='none').length"),150);
+  check('Nested burst filtering preserves every normal neighboring content',await evaluate(cs,"Array.from({length:150},(_,i)=>refs['burst-inner-'+i]).filter(x=>getComputedStyle(x.root.querySelector('#safe')).display==='block').length"),150);
+  await evaluate(cs,"{for(let i=0;i<150;i++)refs['burst-outer-'+i].host.remove();}");
+  await waitReady(cs,"refs['burst-inner-0'].root.adoptedStyleSheets.length===1");
+  await evaluate(cs,"{const host=document.createElement('div');host.id='late-in-shadow';refs['closed-host'].root.append(host);window.lateInShadow=host;}");
+  await new Promise(r=>setTimeout(r,200));
+  await evaluate(cs,"{const root=lateInShadow.attachShadow({mode:'closed'});root.innerHTML='<ins class=adsbygoogle>Late nested advertising</ins>';window.lateInShadowRoot=root;}");
+  await waitReady(cs,"getComputedStyle(lateInShadowRoot.querySelector('ins')).display==='none'");
+  check('Periodic exploration reaches late root attachment inside a closed root',await evaluate(cs,"getComputedStyle(lateInShadowRoot.querySelector('ins')).display"),'none');
+
+  await evaluate(cs,"refs['closed-host'].root.adoptedStyleSheets=[refs['closed-host'].siteSheet]");
+  await waitReady(cs,"refs['closed-host'].root.adoptedStyleSheets.length===2 && getComputedStyle(refs['closed-host'].root.querySelector('ins')).display==='none'");
+  check('Replacing website stylesheets does not permanently remove the component filter',await evaluate(cs,rootDisplay('closed-host')),'none');
+  await settings({...componentProfile,shadowAds:false});
+  await waitReady(cs,"getComputedStyle(refs['closed-host'].root.querySelector('ins')).display!=='none'");
+  check('Automatic component filtering has an independent control',await evaluate(cs,rootDisplay('closed-host')),'inline');
+  check('Withdrawal restores an initially important component display value',await evaluate(cs,rootDisplay('initial-important')),'flex');
+  check('Disabling component filtering preserves the original stylesheet object',await evaluate(cs,"refs['closed-host'].root.adoptedStyleSheets.length===1 && refs['closed-host'].root.adoptedStyleSheets[0]===refs['closed-host'].siteSheet"),true);
+  await settings(componentProfile);
+  await waitReady(cs,"getComputedStyle(refs['closed-host'].root.querySelector('ins')).display==='none'");
+  await settings({...componentProfile,compatSites:['127.0.0.1']});
+  await waitReady(cs,"getComputedStyle(refs['closed-host'].root.querySelector('ins')).display!=='none'");
+  check('Site compatibility withdraws automatic component styles',await evaluate(cs,rootDisplay('closed-host')),'inline');
+  await settings(componentProfile);
+  await waitReady(cs,"getComputedStyle(refs['closed-host'].root.querySelector('ins')).display==='none'");
+  await settings({...componentProfile,whitelist:['127.0.0.1']});
+  await waitReady(cs,"getComputedStyle(refs['closed-host'].root.querySelector('ins')).display!=='none'");
+  check('Site pause withdraws component filtering without reload',await evaluate(cs,rootDisplay('closed-host')),'inline');
+  await settings({...componentProfile,enabled:false});
+  check('Global pause restores the original closed component styling',await evaluate(cs,rootDisplay('closed-host')),'inline');
+  check('Withdrawal restores the original absence of a host style attribute',await evaluate(cs,"!refs['closed-host'].host.hasAttribute('style')"),true);
+  await settings({...componentProfile,shadowAds:false,cosmeticRules:[{host:'127.0.0.1',selector:'#closed-host >>> .future-ad'}]});
+  await evaluate(cs,"{const node=document.createElement('div');node.id='future-target';node.className='ordinary';node.style.setProperty('display','flex','important');refs['closed-host'].root.append(node);}");
+  await waitReady(cs,"refs['closed-host'].root.adoptedStyleSheets.some(sheet=>[...sheet.cssRules].some(rule=>rule.selectorText==='.future-ad'))");
+  await new Promise(r=>setTimeout(r,120));
+  await evaluate(cs,"refs['closed-host'].root.querySelector('#future-target').className='Future-Ad'");
+  await new Promise(r=>setTimeout(r,120));
+  check('Indexed candidates retain native case-sensitive class semantics',await evaluate(cs,"getComputedStyle(refs['closed-host'].root.querySelector('#future-target')).display"),'flex');
+  await evaluate(cs,"refs['closed-host'].root.querySelector('#future-target').className='future-ad'");
+  await waitReady(cs,"getComputedStyle(refs['closed-host'].root.querySelector('#future-target')).display==='none'");
+  check('A newly matching class invalidates the component candidate cache',await evaluate(cs,"refs['closed-host'].root.querySelector('#future-target').style.getPropertyValue('display')"),'none');
+  await evaluate(cs,"refs['closed-host'].root.querySelector('#future-target').className='ordinary'");
+  await waitReady(cs,"getComputedStyle(refs['closed-host'].root.querySelector('#future-target')).display==='flex'");
+  check('A ceased match restores the original important display after a cache update',await evaluate(cs,"refs['closed-host'].root.querySelector('#future-target').style.getPropertyPriority('display')"),'important');
+  await settings({...componentProfile,shadowAds:false,cosmeticRules:[{host:'127.0.0.1',selector:'#nested-host >>> #inner-host >>> #pick-target'}]});
+  await waitReady(cs,"getComputedStyle(refs['inner-host'].root.querySelector('#pick-target')).display==='none'");
+  check('Manual component rule reaches only its nested target',await evaluate(cs,"getComputedStyle(refs['inner-host'].root.querySelector('#pick-target')).display"),'none');
+  check('Manual component rule preserves the page neighbor with the same ID',await evaluate(cs,"getComputedStyle(document.querySelector('#pick-target')).display"),'block');
+  check('Manual component rule preserves a sibling component',await evaluate(cs,"getComputedStyle(refs['open-host'].root.querySelector('#pick-target')).display"),'block');
+  await settings({...componentProfile,shadowAds:false,cosmeticRules:[{host:'127.0.0.1',selector:'#pick-target'}]});
+  await waitReady(cs,"getComputedStyle(refs['inner-host'].root.querySelector('#pick-target')).display!=='none'");
+  check('Removing a manual component rule restores its target',await evaluate(cs,"getComputedStyle(refs['inner-host'].root.querySelector('#pick-target')).display"),'block');
+  check('An ordinary page-only custom rule does not leak into components',await evaluate(cs,"getComputedStyle(refs['open-host'].root.querySelector('#pick-target')).display"),'block');
+  for(const selector of [':root #pick-target','html body #pick-target',':is(html, body) #pick-target']){
+    await settings({...componentProfile,shadowAds:false,cosmeticRules:[{host:'127.0.0.1',selector}]});
+    // Reload to verify this persisted selector, rather than briefly observing
+    // the prior selector during asynchronous CSS replacement.
+    const rootQuery='?selector='+encodeURIComponent(selector);
+    await send('Page.navigate',{url:url+'components'+rootQuery},cs);
+    await waitReady(cs,`location.search===${JSON.stringify(rootQuery)} && window.fixtureReady===true && getComputedStyle(document.querySelector('#pick-target')).display==='none'`);
+    check('Document scope preserves an explicit root selector '+selector,await evaluate(cs,"getComputedStyle(document.querySelector('#pick-target')).display"),'none');
+    check('Explicit document root selector remains outside components '+selector,await evaluate(cs,"getComputedStyle(refs['open-host'].root.querySelector('#pick-target')).display"),'block');
+  }
+  await settings({...componentProfile,shadowAds:false});
+  await send('Page.navigate',{url:url+'components'},cs);
+  await waitReady(cs,"location.search==='' && window.fixtureReady===true");
+  const componentTab=await evaluate(popup.sessionId,`chrome.tabs.query({}).then(x=>x.find(t=>t.url===${JSON.stringify(url+'components')}).id)`);
+  await send('Emulation.setDeviceMetricsOverride',{width:1200,height:1000,deviceScaleFactor:1,mobile:false},cs);
+  const pickerResult=await evaluate(popup.sessionId,`chrome.tabs.sendMessage(${componentTab},{type:'START_PICKER'},{frameId:0})`);
+  check('Picker starts for a nested closed component',pickerResult.ok,true);
+  const pickPoint=await evaluate(cs,"(()=>{const r=refs['inner-host'].root.querySelector('#pick-target').getBoundingClientRect();return{x:r.x+r.width/2,y:r.y+r.height/2}})()");
+  await send('Input.dispatchMouseEvent',{type:'mousePressed',...pickPoint,button:'left',clickCount:1},cs);
+  await send('Input.dispatchMouseEvent',{type:'mouseReleased',...pickPoint,button:'left',clickCount:1},cs);
+  const pickerShot=await send('Page.captureScreenshot',{format:'png'},cs);
+  await writeFile(path.join(testDirectory,'component-picker-preview.png'),Buffer.from(pickerShot.data,'base64'));
+  await send('Input.dispatchKeyEvent',{type:'keyDown',key:'Enter',code:'Enter',windowsVirtualKeyCode:13},cs);
+  await send('Input.dispatchKeyEvent',{type:'keyUp',key:'Enter',code:'Enter',windowsVirtualKeyCode:13},cs);
+  await waitReady(cs,"!document.querySelector('#ad-shield-picker-root') && getComputedStyle(refs['inner-host'].root.querySelector('#pick-target')).display==='none'");
+  check('Real click and Enter save a nested component selector',await evaluate(popup.sessionId,"chrome.runtime.sendMessage({type:'GET_SETTINGS'}).then(r=>r.settings.cosmeticRules[0].selector)"),'#nested-host >>> #inner-host >>> #pick-target');
+  await send('Page.navigate',{url:url+'components?reload'},cs);
+  await waitReady(cs,"window.fixtureReady===true && getComputedStyle(refs['inner-host'].root.querySelector('#pick-target')).display==='none'");
+  check('Picked component target remains hidden after reload',await evaluate(cs,"getComputedStyle(refs['inner-host'].root.querySelector('#pick-target')).display"),'none');
+  await settings({...componentProfile,shadowAds:false,compatSites:['127.0.0.1'],cosmeticRules:[{host:'127.0.0.1',selector:'#nested-host >>> #inner-host >>> #pick-target'}]});
+  check('Site compatibility preserves intentional manual component rules',await evaluate(cs,"getComputedStyle(refs['inner-host'].root.querySelector('#pick-target')).display"),'none');
+  await settings(componentProfile);
+  await evaluate(cs,"history.pushState({},'', '/components/spa-route');component('spa-host','closed')");
+  await waitReady(cs,"getComputedStyle(refs['spa-host'].root.querySelector('ins')).display==='none'");
+  check('Component advertising is filtered after a same-document SPA route change',await evaluate(cs,rootDisplay('spa-host')),'none');
+  await evaluate(cs,"refs['spa-host'].host.remove()");
+  await waitReady(cs,"refs['spa-host'].root.adoptedStyleSheets.length===1");
+  check('Removed components release extension styles while preserving the site sheet',await evaluate(cs,"refs['spa-host'].root.adoptedStyleSheets[0]===refs['spa-host'].siteSheet"),true);
+  await evaluate(cs,"document.body.append(refs['spa-host'].host)");
+  await waitReady(cs,"getComputedStyle(refs['spa-host'].root.querySelector('ins')).display==='none'");
+  check('Reconnected components regain filtering',await evaluate(cs,rootDisplay('spa-host')),'none');
+  await evaluate(cs,`{const frame=document.createElement('iframe');frame.src='http://components.example.test:${port}/components';document.body.append(frame);}`);
+  let componentFrameSession;
+  for(let i=0;i<80;i++){const target=(await send('Target.getTargets')).targetInfos.find(x=>x.type==='iframe' && x.url.includes('components.example.test'));if(target){componentFrameSession=(await send('Target.attachToTarget',{targetId:target.targetId,flatten:true})).sessionId;break;}await new Promise(r=>setTimeout(r,50));}
+  if(!componentFrameSession)throw new Error('Component frame target unavailable');
+  await waitReady(componentFrameSession,"window.fixtureReady===true && getComputedStyle(refs['closed-host'].root.querySelector('ins')).display==='none'");
+  check('Closed component filtering also works in cross-origin frames',await evaluate(componentFrameSession,rootDisplay('closed-host')),'none');
+  await settings({...componentProfile,whitelist:['127.0.0.1']});
+  await waitReady(componentFrameSession,"getComputedStyle(refs['closed-host'].root.querySelector('ins')).display!=='none'");
+  check('Top-level pause restores component ads inside a foreign frame',await evaluate(componentFrameSession,rootDisplay('closed-host')),'inline');
+  await settings(componentProfile);
+  const cspComponents=await attach(url+'csp-components');
+  await waitReady(cspComponents.sessionId,"window.fixtureReady===true && getComputedStyle(refs['closed-host'].root.querySelector('ins')).display==='none'");
+  check('Component hiding works under restrictive style CSP',await evaluate(cspComponents.sessionId,rootDisplay('closed-host')),'none');
+  const parity=await evaluate(popup.sessionId,`(async()=>{const tab=(await chrome.tabs.query({})).find(x=>x.url===${JSON.stringify(url+'csp-components')});const result=await chrome.scripting.executeScript({target:{tabId:tab.id},world:'ISOLATED',func:${selectorIndexFixture.toString()}});return result[0].result;})()`);
+  check('Indexed candidates match native CSS across 36 selector cases',parity.mismatches,[]);
+  check('Selector equivalence includes 34 actual matching cases',parity.positiveCases,34);
+  await evaluate(cspComponents.sessionId,"{const node=document.createElement('ins');node.id='cssom-ad';node.className='adsbygoogle';refs['closed-host'].root.append(node);}");
+  await waitReady(cspComponents.sessionId,"getComputedStyle(refs['closed-host'].root.querySelector('#cssom-ad')).display==='none'");
+  await new Promise(r=>setTimeout(r,150));
+  check('CSSOM-only replacement reproduces a visible component ad',await evaluate(cspComponents.sessionId,"{const rule=refs['closed-host'].siteSheet.cssRules[1];rule.selectorText='ins#cssom-ad.adsbygoogle';rule.style.setProperty('display','flex','important');getComputedStyle(refs['closed-host'].root.querySelector('#cssom-ad')).display}"),'flex');
+  await waitReady(cspComponents.sessionId,"refs['closed-host'].root.querySelector('#cssom-ad').style.getPropertyValue('display')==='none'");
+  check('Periodic protection still reblocks CSSOM-only site stylesheet changes',await evaluate(cspComponents.sessionId,rootDisplay('closed-host')),'none');
+  check('Periodic component protection preserves normal site stylesheet content',await evaluate(cspComponents.sessionId,"getComputedStyle(refs['closed-host'].root.querySelector('#safe')).color"),'rgb(31, 90, 141)');
+  await evaluate(cspComponents.sessionId,"refs['closed-host'].siteSheet.replaceSync('p { color: rgb(31, 90, 141); } div { min-height: 26px; }')");
+
+  // Observe all children and completion, not just the page load event.
+  const componentPerf=await evaluate(cspComponents.sessionId,"(()=>{window.componentStarted=performance.now();for(let i=0;i<150;i++)component('bench-'+i,i%2?'open':'closed');return 150})()");
+  await waitReady(cspComponents.sessionId,"Array.from({length:150},(_,i)=>refs['bench-'+i]).every(x=>getComputedStyle(x.root.querySelector('ins')).display==='none')");
+  const componentMetrics=await evaluate(cspComponents.sessionId,"({components:150,elapsedMs:performance.now()-componentStarted,normalVisible:Array.from({length:150},(_,i)=>refs['bench-'+i]).filter(x=>getComputedStyle(x.root.querySelector('#safe')).display!=='none').length})");
+  check('Component batch retains all 150 normal neighboring contents',componentMetrics.normalVisible,componentPerf);
+  componentMetrics.configuration='basic advertising CSS; all five optional web lists off';
+  await settings(advancedProfile);
+  await waitReady(cspComponents.sessionId,"refs['closed-host'].root.adoptedStyleSheets.some(s=>s.cssRules.length>0)");
+  await evaluate(cspComponents.sessionId,"{window.fullStarted=performance.now();for(let i=0;i<150;i++)component('full-'+i,i%2?'open':'closed');}");
+  await waitReady(cspComponents.sessionId,"Array.from({length:150},(_,i)=>refs['full-'+i]).every(x=>getComputedStyle(x.root.querySelector('ins')).display==='none')");
+  const fullMetrics=await evaluate(cspComponents.sessionId,"({components:150,elapsedMs:performance.now()-fullStarted,normalVisible:Array.from({length:150},(_,i)=>refs['full-'+i]).filter(x=>getComputedStyle(x.root.querySelector('#safe')).display!=='none').length})");
+  fullMetrics.configuration='all five web lists, enhanced protection, scriptlets, automatic component filtering; direct denial off';
+  check('Full profile component batch preserves all 150 normal contents',fullMetrics.normalVisible,150);
+  await writeFile(path.join(testDirectory,'component-benchmark.json'),JSON.stringify({basic:componentMetrics,full:fullMetrics},null,2));
+  await settings(advancedProfile);
+}

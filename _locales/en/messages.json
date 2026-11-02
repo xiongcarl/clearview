@@ -1,0 +1,890 @@
+{
+ "bg_dynamic_quota": {
+  "message": "Your rules and the domain list exceed the browser limit. Remove some of “My filter rules” or extra blocked domains."
+ },
+ "bg_invalid_tab": {
+  "message": "Invalid tab"
+ },
+ "bg_list_format": {
+  "message": "Unexpected list source or format"
+ },
+ "bg_list_invalid": {
+  "message": "The list is incomplete or has invalid domains; the previous list is kept"
+ },
+ "bg_list_server": {
+  "message": "List server responded $1"
+ },
+ "bg_list_shrunk": {
+  "message": "The list shrank unexpectedly; the previous list is kept"
+ },
+ "bg_list_too_big": {
+  "message": "The list is too large"
+ },
+ "bg_picker_failed": {
+  "message": "Could not start the element picker"
+ },
+ "bg_regex_unsupported": {
+  "message": "the browser does not support this regular expression"
+ },
+ "bg_rule_invalid": {
+  "message": "Invalid element rule"
+ },
+ "bg_rule_quota": {
+  "message": "Too many rules for this browser (Firefox allows 30,000). Turn off a list such as Fanboy Annoyances or HaGeZi ULTIMATE."
+ },
+ "bg_rules_max": {
+  "message": "Up to 300 element rules"
+ },
+ "bg_site_paused": {
+  "message": "Blocking is paused on this site"
+ },
+ "brand_short": {
+  "message": "Clearview"
+ },
+ "brand_sub": {
+  "message": "Ad blocker"
+ },
+ "cmd_start_picker": {
+  "message": "Pick and hide an element"
+ },
+ "cmd_toggle_site": {
+  "message": "Pause or resume blocking on this site"
+ },
+ "common_add": {
+  "message": "Add"
+ },
+ "common_disabled": {
+  "message": "off"
+ },
+ "common_enabled": {
+  "message": "on"
+ },
+ "common_init_partial": {
+  "message": "Partly failed to start: $1"
+ },
+ "common_last_update_failed": {
+  "message": "Last update failed; still using the previous list: $1"
+ },
+ "common_loading": {
+  "message": "Loading settings…"
+ },
+ "common_no_response": {
+  "message": "The background service did not respond"
+ },
+ "common_read_failed": {
+  "message": "Could not load: $1"
+ },
+ "common_remove": {
+  "message": "Remove"
+ },
+ "common_save_failed": {
+  "message": "Could not save: $1"
+ },
+ "common_support": {
+  "message": "Support Clearview"
+ },
+ "common_support_heart": {
+  "message": "♥ Support Clearview"
+ },
+ "common_update_failed": {
+  "message": "Update failed; the previous list is kept: $1"
+ },
+ "common_updating": {
+  "message": "Downloading and checking the list…"
+ },
+ "ext_desc": {
+  "message": "Blocks ads, trackers and pop-ups. Great on Chinese sites, with custom rules, right-click hiding and statistics."
+ },
+ "ext_name": {
+  "message": "Clearview — Ad Blocker"
+ },
+ "label_allow": {
+  "message": "Allow list"
+ },
+ "label_block": {
+  "message": "Block list"
+ },
+ "label_compat": {
+  "message": "Compatibility sites"
+ },
+ "label_whitelist": {
+  "message": "Allowlist"
+ },
+ "log_allow": {
+  "message": "Allowed"
+ },
+ "log_block": {
+  "message": "Blocked"
+ },
+ "log_redirect": {
+  "message": "Local stand-in"
+ },
+ "log_upgrade": {
+  "message": "Upgraded to HTTPS"
+ },
+ "menu_hide_element": {
+  "message": "Hide this element…"
+ },
+ "menu_toggle_site": {
+  "message": "Pause / resume blocking on this site"
+ },
+ "mode_balanced": {
+  "message": "Standard"
+ },
+ "mode_inherit": {
+  "message": "Use default"
+ },
+ "mode_off": {
+  "message": "Off"
+ },
+ "mode_strict": {
+  "message": "Strict"
+ },
+ "opt_add_to_block": {
+  "message": "Add to block list"
+ },
+ "opt_added_block": {
+  "message": "Added to the block list. Save to apply."
+ },
+ "opt_advanced_info": {
+  "message": "$1 site script rules · $2 advanced element rules. Supports part of the upstream syntax; not every site or video ad is guaranteed."
+ },
+ "opt_allow_desc": {
+  "message": "Wins over block rules; network requests only. Up to 500."
+ },
+ "opt_allow_title": {
+  "message": "Domains to allow"
+ },
+ "opt_apply_one_click": {
+  "message": "Apply"
+ },
+ "opt_autoupdate_desc": {
+  "message": "Checked once a day while the browser runs. Requires saving."
+ },
+ "opt_autoupdate_title": {
+  "message": "Update daily"
+ },
+ "opt_backup_bad_compat": {
+  "message": "The backup has invalid compatibility sites"
+ },
+ "opt_backup_bad_rules": {
+  "message": "The backup has duplicate, invalid or too many rules"
+ },
+ "opt_backup_desc": {
+  "message": "The JSON backup includes your site lists and rules. Importing replaces current settings but not the list version."
+ },
+ "opt_backup_title": {
+  "message": "Backup & restore"
+ },
+ "opt_backup_too_big": {
+  "message": "The backup file is too large"
+ },
+ "opt_backup_unsupported": {
+  "message": "Not a supported Clearview backup"
+ },
+ "opt_badge_desc": {
+  "message": "A small number on the icon. The panel always shows it."
+ },
+ "opt_badge_title": {
+  "message": "Show the blocked count on the toolbar icon"
+ },
+ "opt_block_desc": {
+  "message": "Up to 500."
+ },
+ "opt_block_title": {
+  "message": "Extra domains to block"
+ },
+ "opt_brand_aria": {
+  "message": "Top of Clearview settings"
+ },
+ "opt_builtin_list": {
+  "message": "using the built-in offline list"
+ },
+ "opt_chart_aria": {
+  "message": "Blocked per day over the last 14 days"
+ },
+ "opt_clear_logs": {
+  "message": "Clear records"
+ },
+ "opt_compat_desc": {
+  "message": "Turns off element hiding and site fixes and lets the site load its own requests; third-party ad filtering stays on. Up to 200."
+ },
+ "opt_compat_title": {
+  "message": "Compatibility mode"
+ },
+ "opt_css_invalid": {
+  "message": "Invalid CSS selector: $1"
+ },
+ "opt_css_selector": {
+  "message": "CSS selector"
+ },
+ "opt_current_list": {
+  "message": "Current list"
+ },
+ "opt_diag_desc": {
+  "message": "Records the last 200 rule matches to help find false positives. Kept for this browser session only, with query strings removed."
+ },
+ "opt_diag_title": {
+  "message": "Diagnostics"
+ },
+ "opt_direct_desc": {
+  "message": "Rejects them instead of serving an empty local stand-in. May trigger anti-adblock notices."
+ },
+ "opt_direct_title": {
+  "message": "Block ad resources outright"
+ },
+ "opt_edit_shortcuts": {
+  "message": "Change shortcuts"
+ },
+ "opt_element_domain": {
+  "message": "Element site domain"
+ },
+ "opt_elements_desc": {
+  "message": "Right-click a page and choose “Hide this element…”, or pick from the toolbar panel. Rules apply to that site and its subdomains, up to 300."
+ },
+ "opt_elements_title": {
+  "message": "Element hiding"
+ },
+ "opt_enabled_desc": {
+  "message": "When off, all network filtering, element hiding and pop-up blocking pause."
+ },
+ "opt_enabled_title": {
+  "message": "Enable blocking"
+ },
+ "opt_enhanced_info": {
+  "message": "$1 ad and tracking domains · version $2 · $3. Filters third-party requests only and may affect site widgets; turn it off or allow domains if needed."
+ },
+ "opt_enhanced_title": {
+  "message": "Stronger third-party blocking (HaGeZi ULTIMATE)"
+ },
+ "opt_enter_domain": {
+  "message": "Enter a valid site domain."
+ },
+ "opt_exceptions_desc": {
+  "message": "One domain per line, including subdomains. Reload pages after saving."
+ },
+ "opt_exceptions_title": {
+  "message": "Site exceptions"
+ },
+ "opt_export": {
+  "message": "Export settings"
+ },
+ "opt_exported": {
+  "message": "Settings exported to your Downloads folder."
+ },
+ "opt_filter_problems": {
+  "message": " · $1 lines need fixing"
+ },
+ "opt_filter_status": {
+  "message": "$1 network rules · $2 element rules"
+ },
+ "opt_filters_desc": {
+  "message": "Filtering by URL path, resource type and site. Lists update with each release."
+ },
+ "opt_filters_placeholder": {
+  "message": "! Comments start with an exclamation mark\n||ads.example.com^\n||example.com/banner/*$image,third-party\n@@||cdn.example.com^$script\nexample.com##.sponsored\n##.ad-slot-top"
+ },
+ "opt_filters_title": {
+  "message": "Filter lists"
+ },
+ "opt_filters_too_long": {
+  "message": "My filter rules are too long (200,000 characters max)"
+ },
+ "opt_footer": {
+  "message": "Settings stay on this device. Updating lists connects to GitHub, which sees ordinary connection details; no browsing history, allowlists or settings are sent."
+ },
+ "opt_footer_privacy": {
+  "message": "Privacy policy"
+ },
+ "opt_footer_readme": {
+  "message": "Usage and limits"
+ },
+ "opt_footer_source": {
+  "message": "Domain list source"
+ },
+ "opt_group_elements": {
+  "message": "Elements and site scripts"
+ },
+ "opt_group_strong": {
+  "message": "Extra protection"
+ },
+ "opt_heading": {
+  "message": "Settings"
+ },
+ "opt_hideads_desc": {
+  "message": "Hides ad slots and empty frames from the lists; your own element rules are kept separately."
+ },
+ "opt_hideads_title": {
+  "message": "Hide ad elements automatically"
+ },
+ "opt_import": {
+  "message": "Import settings"
+ },
+ "opt_import_failed": {
+  "message": "Import failed: $1"
+ },
+ "opt_intro": {
+  "message": "Browse quietly and keep only what you came for. Manage blocking, site exceptions and your own rules here; everything stays on this device."
+ },
+ "opt_invalid_domain_in": {
+  "message": "$1 has an invalid domain: $2"
+ },
+ "opt_language": {
+  "message": "Interface language"
+ },
+ "opt_language_auto": {
+  "message": "Browser language"
+ },
+ "opt_last_error": {
+  "message": "Last update failed; the working list is kept: $1"
+ },
+ "opt_list_annoy": {
+  "message": "Cookie banners and newsletter pop-overs; more likely to over-hide"
+ },
+ "opt_list_annoy_title": {
+  "message": "Fanboy Annoyances"
+ },
+ "opt_list_chinese": {
+  "message": "Sites in Taiwan, Hong Kong and China (includes EasyList China)"
+ },
+ "opt_list_chinese_title": {
+  "message": "AdGuard Chinese"
+ },
+ "opt_list_easylist": {
+  "message": "The standard international ad list"
+ },
+ "opt_list_easyprivacy": {
+  "message": "Tracking and analytics requests"
+ },
+ "opt_list_fixes": {
+  "message": "Site fixes, anti-adblock handling and false-positive exceptions"
+ },
+ "opt_list_fixes_title": {
+  "message": "uBlock fixes"
+ },
+ "opt_list_info": {
+  "message": "$1 domains · source version $2 · $3"
+ },
+ "opt_list_reset": {
+  "message": "Built-in list restored. Your settings are unchanged."
+ },
+ "opt_logging_desc": {
+  "message": "Requires saving; works only when the extension is loaded unpacked (developer mode)."
+ },
+ "opt_logging_title": {
+  "message": "Record rule matches"
+ },
+ "opt_logs_cleared": {
+  "message": "Records cleared."
+ },
+ "opt_logs_off": {
+  "message": "Recording is off. Turn it on, save, then reload the site to check."
+ },
+ "opt_logs_shown": {
+  "message": "Showing $1 recent rule matches."
+ },
+ "opt_max_domains": {
+  "message": "$1 holds up to $2 domains"
+ },
+ "opt_mode_added": {
+  "message": "Site mode added. Save to apply."
+ },
+ "opt_mode_balanced_long": {
+  "message": "Standard: native browser navigation (recommended)"
+ },
+ "opt_mode_off_long": {
+  "message": "Off (other blocking stays on)"
+ },
+ "opt_mode_strict_long": {
+  "message": "Strict: may affect sign-in and redirects"
+ },
+ "opt_myfilters_desc": {
+  "message": "Write your own rules in common Adblock Plus / uBlock Origin syntax, or paste a domain list. They take priority over the built-in lists; the allowlist still wins."
+ },
+ "opt_myfilters_title": {
+  "message": "My filter rules"
+ },
+ "opt_nav_aria": {
+  "message": "Settings sections"
+ },
+ "opt_network_off": {
+  "message": "network filtering off"
+ },
+ "opt_network_on": {
+  "message": "network filtering on"
+ },
+ "opt_not_set": {
+  "message": "Not set"
+ },
+ "opt_page_title": {
+  "message": "Clearview · Settings"
+ },
+ "opt_popupmode_desc": {
+  "message": "Standard keeps links, sign-in windows and form redirects working while known pop-up ad networks are still blocked. Strict may block sign-in and authorisation, so turn it on only for specific sites. Reload pages after switching."
+ },
+ "opt_popupmode_title": {
+  "message": "Default pop-up blocking"
+ },
+ "opt_procedural_desc": {
+  "message": "Finds ad elements by text, parent and style."
+ },
+ "opt_procedural_title": {
+  "message": "Advanced element matching"
+ },
+ "opt_protection_desc": {
+  "message": "The master switch and how pop-ups are handled."
+ },
+ "opt_protection_title": {
+  "message": "Protection & pop-ups"
+ },
+ "opt_ready": {
+  "message": "Settings stay on this device. Press “Save settings” after making changes."
+ },
+ "opt_recent_update": {
+  "message": "last updated $1"
+ },
+ "opt_recommended_desc": {
+  "message": "Turns on the main lists, element handling and site fixes. Pop-up mode, outright blocking, third-party restrictions and site exceptions are left as they are."
+ },
+ "opt_recommended_title": {
+  "message": "Recommended full protection"
+ },
+ "opt_remove_aria": {
+  "message": "Remove $1"
+ },
+ "opt_reset_confirm": {
+  "message": "Clear all statistics? Your settings are not affected."
+ },
+ "opt_reset_list": {
+  "message": "Restore built-in list"
+ },
+ "opt_reset_stats": {
+  "message": "Reset statistics"
+ },
+ "opt_rule_added": {
+  "message": "Element rule added. Save to apply."
+ },
+ "opt_save": {
+  "message": "Save settings"
+ },
+ "opt_saved": {
+  "message": "Saved. Reload pages for the settings to take full effect."
+ },
+ "opt_scriptlets_desc": {
+  "message": "Handles video ads and anti-adblock detection (for example YouTube). Takes effect after reloading."
+ },
+ "opt_scriptlets_title": {
+  "message": "Site script fixes"
+ },
+ "opt_selector_invalid": {
+  "message": "Invalid element selector"
+ },
+ "opt_shadow_desc": {
+  "message": "Also covers Shadow DOM components; paused in compatibility mode."
+ },
+ "opt_shadow_title": {
+  "message": "Hide ads inside site components"
+ },
+ "opt_shortcuts_title": {
+  "message": "Keyboard shortcuts"
+ },
+ "opt_site_domain": {
+  "message": "Site domain"
+ },
+ "opt_site_mode": {
+  "message": "Site mode"
+ },
+ "opt_sitemodes_desc": {
+  "message": "Includes subdomains; the more specific domain wins. Up to 50."
+ },
+ "opt_sitemodes_max": {
+  "message": "Up to 50 per-site settings."
+ },
+ "opt_sitemodes_title": {
+  "message": "Per-site pop-up blocking"
+ },
+ "opt_skip": {
+  "message": "Skip to settings"
+ },
+ "opt_sources_desc": {
+  "message": "Built-in HaGeZi Multi LIGHT covers ad, tracking and malicious domains. Updates download plain domain text only and never run remote code."
+ },
+ "opt_sources_title": {
+  "message": "Domain list"
+ },
+ "opt_stat_14": {
+  "message": "Last 14 days"
+ },
+ "opt_stat_total": {
+  "message": "All time"
+ },
+ "opt_stat_week": {
+  "message": "Last 7 days"
+ },
+ "opt_stats_failed": {
+  "message": "Could not load statistics: $1"
+ },
+ "opt_stats_local": {
+  "message": "Statistics stay on this device."
+ },
+ "opt_stats_reset": {
+  "message": "Statistics reset."
+ },
+ "opt_stats_since": {
+  "message": "Counting since $1. Numbers stay on this device and are never uploaded."
+ },
+ "opt_stats_title": {
+  "message": "Statistics"
+ },
+ "opt_strict3p_desc": {
+  "message": "Stops 17 mixed-use services from loading on other sites. May affect videos, support chats and cookie consent dialogs."
+ },
+ "opt_strict3p_title": {
+  "message": "Restrict extra third-party services"
+ },
+ "opt_support_button": {
+  "message": "♥ Donate"
+ },
+ "opt_support_desc": {
+  "message": "Clearview is free, ad-free and collects no browsing data. It is maintained by one person in their spare time. If it makes your web calmer, a donation keeps the list fixes and new features coming."
+ },
+ "opt_syntax_1": {
+  "message": "<code>||ads.example.com^</code> blocks a domain and its subdomains; you can also write <code>ads.example.com</code> or the hosts format <code>0.0.0.0 ads.example.com</code>."
+ },
+ "opt_syntax_2": {
+  "message": "<code>||example.com/ads/*</code> and <code>/banner\\d+\\.gif/</code> block by URL or regular expression."
+ },
+ "opt_syntax_3": {
+  "message": "Lines starting with <code>@@</code> allow; <code>@@||example.com^$document</code> turns off network filtering on that site."
+ },
+ "opt_syntax_4": {
+  "message": "Options: <code>$script</code> <code>image</code> <code>stylesheet</code> <code>xhr</code> <code>frame</code> <code>media</code> <code>font</code> <code>websocket</code> <code>ping</code> <code>popup</code> <code>third-party</code> <code>first-party</code> <code>domain=a.com|~b.com</code> <code>important</code> <code>match-case</code>; prefix with <code>~</code> to exclude."
+ },
+ "opt_syntax_5": {
+  "message": "<code>example.com,~shop.example.com##.ad</code> hides elements on given sites; <code>##.ad</code> applies everywhere. Advanced selectors such as <code>:has-text()</code> work too."
+ },
+ "opt_syntax_6": {
+  "message": "Up to 5,000 lines. Script injection (<code>##+js</code>) and element exceptions (<code>#@#</code>) are not supported."
+ },
+ "opt_syntax_title": {
+  "message": "Supported syntax"
+ },
+ "opt_top_sites": {
+  "message": "Sites with the most blocking"
+ },
+ "opt_top_sites_empty": {
+  "message": "No data yet. Browse a few sites and come back."
+ },
+ "opt_unsaved": {
+  "message": "You have unsaved changes."
+ },
+ "opt_update_done": {
+  "message": "Lists updated. Unsaved form changes are kept."
+ },
+ "opt_update_now": {
+  "message": "Update now"
+ },
+ "opt_version_foot": {
+  "message": "Version $1 · Settings stay on this device"
+ },
+ "opt_view_counts": {
+  "message": "Show rule counts per list"
+ },
+ "opt_view_logs": {
+  "message": "Show records"
+ },
+ "opt_view_services": {
+  "message": "Show the restricted services (17)"
+ },
+ "opt_weblist_row": {
+  "message": "$1 · $2 network rules · $3 element rules · $4"
+ },
+ "opt_whitelist_desc": {
+  "message": "Turns blocking off completely on these sites. Up to 200."
+ },
+ "opt_whitelist_title": {
+  "message": "Allowlist"
+ },
+ "picker_cancel": {
+  "message": "Cancel"
+ },
+ "picker_confirm": {
+  "message": "Hide this element"
+ },
+ "picker_hint": {
+  "message": "Point at the ad and click. Enter to confirm, Esc to cancel."
+ },
+ "picker_not_unique": {
+  "message": "This element cannot be identified uniquely; pick a smaller area"
+ },
+ "picker_repick": {
+  "message": "Pick again"
+ },
+ "picker_save_failed": {
+  "message": "Could not save"
+ },
+ "picker_selected": {
+  "message": "Selected. Confirm to hide it on this site."
+ },
+ "picker_selected_many": {
+  "message": "Selected. $1 matching elements on this page will be hidden together."
+ },
+ "picker_title": {
+  "message": "Pick an element to hide"
+ },
+ "picker_too_broad": {
+  "message": "The selector is too long or too broad; pick a smaller element"
+ },
+ "picker_too_deep": {
+  "message": "Components are nested too deeply; pick an outer container"
+ },
+ "picker_widen": {
+  "message": "Widen"
+ },
+ "picker_widen_title": {
+  "message": "Select the surrounding container"
+ },
+ "popup_apply_strong": {
+  "message": "Apply stronger blocking"
+ },
+ "popup_broken_hint": {
+  "message": "Compatibility mode turns off element hiding and site fixes here and lets this site load its own requests; third-party ad networks stay blocked. Reload the page after switching."
+ },
+ "popup_broken_title": {
+  "message": "Site looks broken?"
+ },
+ "popup_builtin_list": {
+  "message": "built-in offline list"
+ },
+ "popup_compat_full": {
+  "message": "Compatibility mode holds up to 200 sites. Remove some first."
+ },
+ "popup_compat_off": {
+  "message": "Turn off compatibility mode here"
+ },
+ "popup_compat_on": {
+  "message": "Use compatibility mode here"
+ },
+ "popup_count_label": {
+  "message": "ads and trackers blocked on this page"
+ },
+ "popup_default_popup": {
+  "message": "Default"
+ },
+ "popup_hide_element": {
+  "message": "Hide an element"
+ },
+ "popup_later": {
+  "message": "Maybe later"
+ },
+ "popup_list_info": {
+  "message": "$1 domains · $2 web rules · $3"
+ },
+ "popup_lists_loading": {
+  "message": "Loading lists…"
+ },
+ "popup_lists_title": {
+  "message": "Lists and extra protection"
+ },
+ "popup_master_label": {
+  "message": "Block ads and trackers"
+ },
+ "popup_master_title": {
+  "message": "Master switch"
+ },
+ "popup_milestone": {
+  "message": "Clearview has blocked $1 ads and trackers for you. It is free and never tracks you; if it makes the web calmer, please consider supporting it."
+ },
+ "popup_page_protection": {
+  "message": "This page"
+ },
+ "popup_pause_site": {
+  "message": "Pause on this site"
+ },
+ "popup_picker_failed": {
+  "message": "Could not start"
+ },
+ "popup_reload": {
+  "message": "Reload page"
+ },
+ "popup_reload_first": {
+  "message": "Reload the page and try again: $1"
+ },
+ "popup_resume_site": {
+  "message": "Resume on this site"
+ },
+ "popup_saved": {
+  "message": "Saved. Reload the page for pop-up and layout settings to take full effect."
+ },
+ "popup_settings": {
+  "message": "Settings"
+ },
+ "popup_site_popup": {
+  "message": "Pop-ups here"
+ },
+ "popup_sitemodes_full": {
+  "message": "Per-site pop-up settings hold up to 50 domains."
+ },
+ "popup_stats": {
+  "message": "Statistics"
+ },
+ "popup_strict3p_hint": {
+  "message": "Stops 17 services from loading on other sites. May affect videos, support chats and consent dialogs."
+ },
+ "popup_support_button": {
+  "message": "Support Clearview"
+ },
+ "popup_this_site": {
+  "message": "This site"
+ },
+ "popup_today": {
+  "message": "Today"
+ },
+ "popup_total": {
+  "message": "All time"
+ },
+ "popup_update_done": {
+  "message": "Lists updated. Your rules and allowlist are kept."
+ },
+ "popup_update_lists": {
+  "message": "Update lists"
+ },
+ "popup_updated_on": {
+  "message": "updated $1"
+ },
+ "popup_whitelist_full": {
+  "message": "The allowlist holds up to 200 domains. Remove some first."
+ },
+ "state_active": {
+  "message": "Protected"
+ },
+ "state_all_paused": {
+  "message": "Blocking is paused everywhere"
+ },
+ "state_compat": {
+  "message": "Protected (compatibility mode)"
+ },
+ "state_na": {
+  "message": "Not available on this page"
+ },
+ "state_site_paused": {
+  "message": "Paused on this site"
+ },
+ "state_unreadable": {
+  "message": "Settings unavailable"
+ },
+ "uf_bad_cosmetic": {
+  "message": "Unsupported element rule syntax (only ## is supported)"
+ },
+ "uf_bad_domain": {
+  "message": "Invalid domain “$1”"
+ },
+ "uf_bad_option": {
+  "message": "Unsupported option “$1”"
+ },
+ "uf_css_invalid": {
+  "message": "Invalid CSS selector"
+ },
+ "uf_generic_too_broad": {
+  "message": "Generic element rule is too broad"
+ },
+ "uf_line_error": {
+  "message": "Line $1: $2"
+ },
+ "uf_max_lines": {
+  "message": "Up to $1 lines"
+ },
+ "uf_max_network": {
+  "message": "Up to $1 network rules"
+ },
+ "uf_myfilters_line": {
+  "message": "My filter rules, line $1: $2"
+ },
+ "uf_no_exceptions": {
+  "message": "Element exceptions are not supported yet; use the allowlist or compatibility mode"
+ },
+ "uf_regex_ascii": {
+  "message": "Regular expressions must be ASCII"
+ },
+ "uf_selector_invalid": {
+  "message": "Element selector is invalid or too long"
+ },
+ "uf_too_broad": {
+  "message": "URL rule is too broad"
+ },
+ "uf_url_ascii": {
+  "message": "URL rules must be ASCII (use punycode for non-Latin domains)"
+ },
+ "wel_done": {
+  "message": "Start browsing"
+ },
+ "wel_heading": {
+  "message": "Welcome — Clearview is already at work"
+ },
+ "wel_lead": {
+  "message": "Ads, trackers and pop-up ads are blocked automatically, including on Chinese-language sites. No setup needed; just browse."
+ },
+ "wel_open_settings": {
+  "message": "Open settings →"
+ },
+ "wel_page_title": {
+  "message": "Welcome to Clearview"
+ },
+ "wel_pin_desc": {
+  "message": "Click the puzzle-piece icon at the top right of your browser, then the pin next to “Clearview”. You will always see how much each page blocked."
+ },
+ "wel_pin_title": {
+  "message": "Pin Clearview to the toolbar first"
+ },
+ "wel_promise1_desc": {
+  "message": "All filtering happens on your computer; settings and statistics stay on this device."
+ },
+ "wel_promise1_title": {
+  "message": "No browsing data collected"
+ },
+ "wel_promise2_desc": {
+  "message": "We never take money from advertisers to let anyone through."
+ },
+ "wel_promise2_title": {
+  "message": "No “acceptable ads”"
+ },
+ "wel_promise3_desc": {
+  "message": "Licensed under GPL-3.0; anyone can read and improve it."
+ },
+ "wel_promise3_title": {
+  "message": "Open source"
+ },
+ "wel_promise_title": {
+  "message": "Our promise"
+ },
+ "wel_support_desc": {
+  "message": "Clearview is free and maintained by one person in their spare time. If it makes your web calmer, buy me a coffee to keep list fixes and new features coming."
+ },
+ "wel_support_title": {
+  "message": "Enjoying Clearview?"
+ },
+ "wel_tip1_desc": {
+  "message": "Right-click it, choose “Hide this element…” and confirm. It will not come back on that site."
+ },
+ "wel_tip1_key": {
+  "message": "Pick an element"
+ },
+ "wel_tip1_title": {
+  "message": "An ad slipped through?"
+ },
+ "wel_tip2_desc": {
+  "message": "Click Clearview in the toolbar to pause this site or use compatibility mode; other sites stay protected."
+ },
+ "wel_tip2_title": {
+  "message": "Site looks odd?"
+ },
+ "wel_tip3_desc": {
+  "message": "Add your own filter rules, manage lists, see statistics or export a backup."
+ },
+ "wel_tip3_title": {
+  "message": "Want more control?"
+ },
+ "wel_tips_aria": {
+  "message": "Tips"
+ }
+}

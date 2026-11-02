@@ -1,0 +1,10 @@
+import {readFile,writeFile} from 'node:fs/promises';
+import vm from 'node:vm';
+const root=new URL('../',import.meta.url);
+const context=vm.createContext({URL});
+vm.runInContext(await readFile(new URL('common.js',root),'utf8'),context);
+const A=context.AdShield;
+const parsed=A.parseList(await readFile(new URL('data/source-domains.txt',root),'utf8'));
+await writeFile(new URL('rules.json',root),JSON.stringify(A.domainRules(parsed.domains,1))+'\n');
+await writeFile(new URL('data/seed-meta.json',root),JSON.stringify({name:'HaGeZi Multi LIGHT + core',source:A.LIST_URL,sourceVersion:parsed.sourceVersion,domainCount:parsed.domains.length})+'\n');
+console.log('Bundled '+parsed.domains.length+' domains in '+A.domainRules(parsed.domains,1).length+' browser rules.');
