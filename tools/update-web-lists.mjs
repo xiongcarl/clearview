@@ -28,15 +28,15 @@ try{
     }}
   }
   const env={...process.env,AD_SHIELD_DEPENDENCIES:dependencies.href,AD_SHIELD_CONVERTER:new URL('@adguard/dnr-converter/dist/index.js',dependencies).href};
-  for(const name of ['build-web-filters.mjs','build-advanced.mjs','build-enhanced.mjs','build-local-coverage.mjs','build-cosmetics.mjs']){const result=spawnSync(process.execPath,[path.join(stage,'tools',name)],{env,stdio:'inherit'});if(result.status!==0)throw new Error('Build failed: '+name);}
-  const result=spawnSync(process.execPath,['--check',path.join(stage,'advanced-main.js')],{stdio:'inherit'});if(result.status!==0)throw new Error('Generated script syntax invalid');
+  for(const name of ['build-web-filters.mjs','build-advanced.mjs','build-enhanced.mjs','build-local-coverage.mjs','build-cosmetics.mjs','build-engine.mjs']){const result=spawnSync(process.execPath,[path.join(stage,'tools',name)],{env,stdio:'inherit'});if(result.status!==0)throw new Error('Build failed: '+name);}
+  const result=spawnSync(process.execPath,['--check',path.join(stage,'fixes/lib.js')],{stdio:'inherit'});if(result.status!==0)throw new Error('Generated script syntax invalid');
   const meta=JSON.parse(await readFile(path.join(stage,'data/web-meta.json'),'utf8'));if(meta.length!==5 || meta.some(x=>x.networkRules<100))throw new Error('Incomplete rulesets');
   if(dryRun){console.log('重建驗證成功；原插件未變更。');}
   else{
     // Keep one previous version; all replacements stay on the same filesystem.
     await rm(backup+'.older',{recursive:true,force:true});try{await rename(backup,backup+'.older');oldBackupMoved=true;}catch(error){if(error.code!=='ENOENT')throw error;}
     await mkdir(backup,{recursive:true});
-    for(const name of ['data','advanced-main.js','vendor/publicsuffix.js','vendor/redirects']){
+    for(const name of ['data','fixes','vendor/publicsuffix.js','vendor/redirects']){
       await mkdir(path.dirname(path.join(backup,name)),{recursive:true});await rename(path.join(root,name),path.join(backup,name));
       committed.push(name);await rename(path.join(stage,name),path.join(root,name));
     }

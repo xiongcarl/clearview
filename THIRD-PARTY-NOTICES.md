@@ -63,7 +63,7 @@ Derived network, standard cosmetic and scriptlet records are compiled by `tools/
 
 AdGuard Team, `@adguard/scriptlets` 2.5.1, GPL-3.0. Project: https://github.com/AdguardTeam/Scriptlets. License reproduced in `vendor/SCRIPTLETS-LICENSE.txt`.
 
-The selected self-contained function implementations are emitted into `advanced-main.js` without minification, deduplicated by implementation while preserving the original rule name for compatibility. Known redirect files are copied unchanged to `vendor/redirects/`. Corresponding original source archive for tag v2.5.1 is supplied in `vendor/source/Scriptlets-2.5.1.tar.gz`, obtained from https://codeload.github.com/AdguardTeam/Scriptlets/tar.gz/refs/tags/v2.5.1. Pinned dependency manifests and local build scripts reproduce the generated code. Raw filter JavaScript is not executed.
+The selected self-contained function implementations are emitted into `fixes/lib.js` without minification, deduplicated by implementation while preserving the original rule name for compatibility. Known redirect files are copied unchanged to `vendor/redirects/`. Corresponding original source archive for tag v2.5.1 is supplied in `vendor/source/Scriptlets-2.5.1.tar.gz`, obtained from https://codeload.github.com/AdguardTeam/Scriptlets/tar.gz/refs/tags/v2.5.1. Pinned dependency manifests and local build scripts reproduce the generated code. Raw filter JavaScript is not executed.
 
 ## Runtime AdGuard ExtendedCss (4.0)
 

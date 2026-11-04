@@ -80,7 +80,7 @@ try{
   check('Fresh install preserves native navigation by default',fresh.settings.popupMode,'balanced');
   check('Fresh install enables core lists with annoyances optional',fresh.info.webLists.length===5 && fresh.info.webLists.every(x=>x.enabled===(x.id!=='annoyances')),true);
   const defaults={enabled:true,strict:false,directBlocking:false,whitelist:[],webFilters:{easylist:false,easyprivacy:false,chinese:false,annoyances:false,fixes:false}};await settings(defaults);
-  check('Balanced mode registers content filtering without a popup override',(await evaluate(popup.sessionId,'chrome.scripting.getRegisteredContentScripts().then(x=>x.length)')),1);
+  check('Balanced mode registers content filtering without a popup override',(await evaluate(popup.sessionId,'chrome.scripting.getRegisteredContentScripts().then(x=>x.map(s=>s.id).sort().join())')),'ad-style,generic-css');
   const page=await attach(url);const s=page.sessionId;
   await waitReady(s,`document.readyState==='complete' && !!document.querySelector('#open')`);
   async function navigate(){await send('Page.navigate',{url:'about:blank'},s);await waitReady(s,`location.href==='about:blank'`);await send('Page.navigate',{url},s);await waitReady(s,`document.readyState==='complete' && !!document.querySelector('#open')`);}
@@ -203,6 +203,7 @@ try{
   check('EasyList blocks same-origin advertising path',await evaluate(s,fetchExpr(url+'88/tag.min.js')),'BLOCKED');
   check('EasyPrivacy blocks same-origin tracking path',await evaluate(s,fetchExpr(url+'.webscale/rum?test=1')),'BLOCKED');
   check('Annoyance list blocks newsletter script path',await evaluate(s,fetchExpr(url+'1-popupally-pro-code.js')),'BLOCKED');
+  await navigate(); // Global selectors are a stylesheet injected at page start.
   await evaluate(s,"{const el=document.createElement('div');el.id='web-ad';el.className='ADBAR';el.textContent='test';document.body.append(el);}");
   await waitReady(s,"getComputedStyle(document.querySelector('#web-ad')).display==='none'");
   check('Generic EasyList cosmetic filtering hides inserted ads',await evaluate(s,"getComputedStyle(document.querySelector('#web-ad')).display"),'none');
@@ -262,7 +263,7 @@ try{
     }
   }`);
   async function armRace(method){await evaluate(raceWorkerSession,`queue.then(()=>{globalThis.__race={method:${JSON.stringify(method)},tabId:${raceTabId},hit:false};})`);workerErrors.length=0;}
-  async function releaseRace(){await evaluate(raceWorkerSession,'__race.release()');await evaluate(raceWorkerSession,'queue.then(()=>true)');console.log('RACE '+JSON.stringify(await evaluate(raceWorkerSession,"({method:__race.method,target:__race.target,nativeError:__race.nativeError,completed:__race.completed})")));}
+  async function releaseRace(){await evaluate(raceWorkerSession,'__race.release()');await evaluate(raceWorkerSession,'Promise.all([queue,...pageChains.values()]).then(()=>true)');console.log('RACE '+JSON.stringify(await evaluate(raceWorkerSession,"({method:__race.method,target:__race.target,nativeError:__race.nativeError,completed:__race.completed})")));}
   async function detachedFrameRace(method){
     await armRace(method);
     await evaluate(rs,`{const frame=document.createElement('iframe');frame.id='race-frame';frame.src=${JSON.stringify(url+'?race-frame')};document.body.append(frame);}`);
@@ -321,7 +322,7 @@ try{
   }`);
   await send('Page.navigate',{url:url+'?race-permission-fixture'},rs);
   await waitReady(raceWorkerSession,'__permissionFixtureHit');
-  await evaluate(raceWorkerSession,'queue.then(()=>true)');
+  await evaluate(raceWorkerSession,'Promise.all([queue,...pageChains.values()]).then(()=>true)');
   check('Permission failure on a live document remains visible',workerErrors.some(x=>x.includes('Cannot access contents of the page.')),true);
   await evaluate(raceWorkerSession,'chrome.scripting.insertCSS=__raceNatives.insertCSS');
   await send('Page.navigate',{url:url+'?race-recovered'},rs);
@@ -333,10 +334,12 @@ try{
   await settings(defaults);
 
   if(!process.argv.includes('--race-only')){
+  // A host is learned on its first visit; a tab created at that moment can beat the registration.
+  async function attachLearned(address){await evaluate(raceWorkerSession,`readSettings().then(s=>learnHost(${JSON.stringify(new URL(address).hostname)},true,s)).then(()=>queue)`);return attach(address);}
   // New engines: real upstream rules, early scriptlets, reversibility and stubs.
   const advancedProfile={...defaults,enhancedTracking:true,webFilters:allWeb,popupMode:'balanced',scriptlets:true,procedural:true};
   await settings(advancedProfile);
-  const early=await attach(`http://timesofindia.indiatimes.com:${port}/early`);
+  const early=await attachLearned(`http://timesofindia.indiatimes.com:${port}/early`);
   await waitReady(early.sessionId,"document.readyState==='complete' && '__earlyFix' in window");
   check('Packaged scriptlet runs before the first inline site script',await evaluate(early.sessionId,'window.__earlyFix'),0);
   await settings({...advancedProfile,scriptlets:false});
@@ -348,16 +351,16 @@ try{
   await waitReady(early.sessionId,"location.search==='?white' && document.readyState==='complete'");
   check('Whitelist excludes document-start site scriptlets',await evaluate(early.sessionId,'window.__earlyFix'),99);
   await settings(advancedProfile);
-  const entityPage=await attach(`http://gplinks.co.uk:${port}/early`);
+  const entityPage=await attachLearned(`http://gplinks.co.uk:${port}/early`);
   await waitReady(entityPage.sessionId,"document.readyState==='complete' && '__entityFix' in window");
   check('Entity-scoped scriptlet handles a multi-label public suffix',await evaluate(entityPage.sessionId,'window.__entityFix'),false);
-  const entityNegative=await attach(`http://gplinks.example.test:${port}/early`);
+  const entityNegative=await attachLearned(`http://gplinks.example.test:${port}/early`);
   await waitReady(entityNegative.sessionId,"document.readyState==='complete' && '__entityFix' in window");
   check('Entity rule rejects a misleading domain prefix',await evaluate(entityNegative.sessionId,'window.__entityFix'),true);
-  const jsonPage=await attach(`http://chip.de:${port}/early`);
+  const jsonPage=await attachLearned(`http://chip.de:${port}/early`);
   await waitReady(jsonPage.sessionId,"document.readyState==='complete' && '__parsedFix' in window");
   check('Upstream JSON-pruning scriptlet removes ad data and keeps content',await evaluate(jsonPage.sessionId,'window.__parsedFix'),{force_disabled:true,keep:1});
-  const responsePage=await attach(`http://app.vaia.com:${port}/early`);
+  const responsePage=await attachLearned(`http://app.vaia.com:${port}/early`);
   // A newly created tab can briefly report a complete about:blank document.
   // The probe captured premature XHR before document-start scripts ran; wait
   // for the actual fixture and its first inline script, then assert rewriting.
@@ -366,7 +369,7 @@ try{
   check('Compatible upstream response scriptlet rewrites targeted ad data',await evaluate(responsePage.sessionId,xhrExpression('/payments')),{ads_disabled:true,keep:1});
   check('Response scriptlet preserves an unmatched request',await evaluate(responsePage.sessionId,xhrExpression('/ordinary')),{ads_disabled:false,keep:1});
   check('XHR-only response rule preserves ordinary fetch behavior',await evaluate(responsePage.sessionId,"fetch('/payments').then(r=>r.json())"),{ads_disabled:false,keep:1});
-  const proceduralPage=await attach(`http://gamedev.net:${port}/advanced`);
+  const proceduralPage=await attachLearned(`http://gamedev.net:${port}/advanced`);
   await waitReady(proceduralPage.sessionId,"document.readyState==='complete' && !!document.querySelector('#advanced-ad')");
   await waitReady(proceduralPage.sessionId,"document.querySelector('#advanced-ad') && getComputedStyle(document.querySelector('#advanced-ad')).display==='none'");
   check('Upstream text rule hides the matching sponsored element',await evaluate(proceduralPage.sessionId,"getComputedStyle(document.querySelector('#advanced-ad')).display"),'none');
@@ -384,7 +387,7 @@ try{
   await waitReady(proceduralPage.sessionId,"getComputedStyle(document.querySelector('#advanced-ad')).display!=='none'");
   check('Site whitelist restores procedural styles without reload',await evaluate(proceduralPage.sessionId,"getComputedStyle(document.querySelector('#advanced-ad')).display"),'block');
   await settings(advancedProfile);
-  const regexPage=await attach(`http://sport1.de:${port}/advanced`);
+  const regexPage=await attachLearned(`http://sport1.de:${port}/advanced`);
   await waitReady(regexPage.sessionId,"document.querySelector('#regex-ad') && getComputedStyle(document.querySelector('#regex-ad')).display==='none'");
   check('Upstream case-insensitive text regex selects the ad label',await evaluate(regexPage.sessionId,"[getComputedStyle(document.querySelector('#regex-ad')).display,getComputedStyle(document.querySelector('#regex-safe')).display]"),['none','inline']);
   // Custom advanced rules work even when automatic hiding is off.
@@ -424,7 +427,7 @@ try{
   await settings({...defaults,enhancedTracking:true,whitelist:['127.0.0.1']});
   check('Site pause overrides enhanced tracking protection',await evaluate(s,fetchExpr(tracker)),'ad-response');
   await settings({...defaults,enhancedTracking:true});
-  const firstParty=await attach(`http://a.klaviyo.com:${port}/first-party-page`);
+  const firstParty=await attachLearned(`http://a.klaviyo.com:${port}/first-party-page`);
   await waitReady(firstParty.sessionId,"document.readyState==='complete' && !!document.querySelector('ins')");
   check('Enhanced list preserves a first-party request on the same service',await evaluate(firstParty.sessionId,fetchExpr(tracker)),'ad-response');
   await send('Target.closeTarget',{targetId:firstParty.targetId});
@@ -442,9 +445,8 @@ try{
   check('Plain sponsored text link remains available',await evaluate(s,"getComputedStyle(document.querySelector('#sponsor-text')).display"),'inline');
   check('Neighboring ordinary content remains visible',await evaluate(s,"getComputedStyle(document.querySelector('#dynamic-article')).display"),'block');
   await settings({...advancedProfile,whitelist:['127.0.0.1']});
-  await waitReady(s,"getComputedStyle(document.querySelector('#dynamic-textad')).display!=='none'");
-  check('Site pause restores added cosmetic coverage',await evaluate(s,"getComputedStyle(document.querySelector('#dynamic-textad')).display"),'block');
-  check('Site pause restores sponsored background image',await evaluate(s,"getComputedStyle(document.querySelector('#sponsor-background')).display"),'inline');
+  await navigate(); // The popup reloads the tab for this; global selectors are injected at page start.
+  check('Site pause restores cosmetic coverage',await evaluate(s,"getComputedStyle(document.querySelector('ins')).display"),'inline');
   await settings(advancedProfile);
   // A site repair must retain advertising protection and leave other sites alone.
   await settings({...advancedProfile,compatSites:['127.0.0.1']});await navigate();

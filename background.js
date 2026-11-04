@@ -1,44 +1,40 @@
 // Chrome loads the shared scripts here; Firefox lists them in manifest background.scripts.
-if(typeof importScripts==='function')importScripts('vendor/publicsuffix.js','i18n.js','common.js','user-filters.js','web-filtering.js','static-rule-policy.js','popup-rescue.js');
+if(typeof importScripts==='function')importScripts('vendor/publicsuffix.js','i18n.js','common.js','user-filters.js','cosmetic-engine.js','static-rule-policy.js','popup-rescue.js');
 const A=AdShield;
-let cancellationData;let initializationError;let enhancedMeta,localCoverage;let seedMeta,webMeta,cosmeticData,extendedData,advancedMeta,scriptletHosts,baseSelectors;let logging=false;let logs=[];let flushTimer;let actionMap;
+let cancellationData;let initializationError;let enhancedMeta,localCoverage;let seedMeta,webMeta,extendedData,advancedMeta,baseSelectors;let logging=false;let logs=[];let flushTimer;let actionMap;
 const isExtended=x=>/:(?:has-text|contains|matches-css(?:-before|-after)?|matches-attr|matches-property|xpath|upward|nth-ancestor|if-not|empty-trimmed)\(/i.test(x);
 const WEB_IDS=['easylist','easyprivacy','chinese','annoyances','fixes'];
 // Firefox packages split large files: AMO does not parse text files over 5 MB.
 const ENHANCED_IDS=chrome.runtime.getManifest().declarative_net_request.rule_resources.map(x=>x.id).filter(id=>id==='enhanced' || id.startsWith('enhanced_'));
-async function loadCosmeticData(){
-  const json=path=>fetch(chrome.runtime.getURL(path)).then(r=>r.json());
-  if(!A.IS_FIREFOX)return json('data/web-cosmetics.json');
-  return Object.fromEntries(await Promise.all(WEB_IDS.map(async id=>[id,await json(`data/web-cosmetics/${id}.json`)])));
-}
 const DIRECT_IDS=['direct_easylist','direct_easyprivacy','direct_chinese','direct_fixes'];
 async function readState(){const state=await chrome.storage.local.get(['settings','listCache','updateMeta']);return {...state,settings:A.clean(state.settings)};}
+// Pages ask for their policy constantly; the settings stay cached until they change.
+let settingsCache;
+const readSettings=()=>settingsCache ||= chrome.storage.local.get('settings').then(({settings})=>A.clean(settings));
 async function ensureAlarm(settings){
   if(settings.autoUpdate){if(!await chrome.alarms.get('update-list'))await chrome.alarms.create('update-list',{periodInMinutes:1440});}
   else await chrome.alarms.clear('update-list');
   if(!await chrome.alarms.get('stats-sync'))await chrome.alarms.create('stats-sync',{periodInMinutes:4});
 }
-// Every frame of a page asks for the same host's list selectors; computing them walks
-// every list entry. Keep recent hosts until the settings change (applySettings clears it).
+// Every frame of a page asks for the same host's selectors. Keep recent hosts until the
+// settings change (applySettings clears it).
 const cosmeticCache=new Map();
 async function listCosmetics(host,settings){
   if(cosmeticCache.has(host)){const hit=cosmeticCache.get(host);cosmeticCache.delete(host);cosmeticCache.set(host,hit);return hit;}
-  cosmeticData ||= await loadCosmeticData();
   extendedData ||= await fetch(chrome.runtime.getURL('data/extended-cosmetics.json')).then(r=>r.json());
   baseSelectors ||= await fetch(chrome.runtime.getURL('data/builtin-cosmetics.json')).then(r=>r.json());
-  const selection=WebFiltering.policy(host,cosmeticData,settings.webFilters,extendedData);
-  const selectors=WebFiltering.cosmeticSelectors(host,cosmeticData,settings.webFilters,selection);
-  selectors.push(...baseSelectors.filter(selector=>WebFiltering.permits({selector,include:[]},selection)));
+  const selection=await CosmeticEngine.resolve(host,settings.webFilters,extendedData);
+  const permitted=(selector,scoped)=>!(scoped?selection.specific:selection.generic) && !selection.exceptions.has(selector);
+  const selectors=[...selection.selectors];
   if(settings.webFilters.easylist){
     localCoverage ||= await fetch(chrome.runtime.getURL('data/local-coverage.json')).then(r=>r.json());
-    for(const group of localCoverage.cosmetic)if(!group.hosts.length || A.isListed(host,group.hosts))selectors.push(...group.selectors.filter(selector=>WebFiltering.permits({selector,include:group.hosts},selection)));
+    for(const group of localCoverage.cosmetic)if(group.hosts.length && A.isListed(host,group.hosts))selectors.push(...group.selectors.filter(selector=>permitted(selector,true)));
   }
   // Shadow roots get only rules written for this site plus the curated built-ins. The
   // generic lists target page markup; inside self-contained components they mostly hit
   // unrelated widgets (uBO does not apply them there either).
-  const component=WebFiltering.cosmeticSelectors(host,cosmeticData,settings.webFilters,selection,true);
-  component.push(...baseSelectors.filter(selector=>WebFiltering.permits({selector,include:[]},selection)));
-  const result={selectors:Object.freeze(selectors),component:Object.freeze([...new Set(component)]),extended:Object.freeze(WebFiltering.extendedSelectors(host,extendedData,settings.webFilters,selection))};
+  const component=[...selection.scoped,...baseSelectors.filter(selector=>permitted(selector,false))];
+  const result={genericOff:selection.generic,selectors:Object.freeze(selectors),component:Object.freeze([...new Set(component)]),extended:Object.freeze(CosmeticEngine.extendedSelectors(host,extendedData,settings.webFilters,selection))};
   cosmeticCache.set(host,result);if(cosmeticCache.size>64)cosmeticCache.delete(cosmeticCache.keys().next().value);
   return result;
 }
@@ -50,8 +46,8 @@ async function ruleAction({ruleId,rulesetId}){
     const type=(await dynamicActions).get(ruleId);return type==='allow' || type==='allowAllRequests'?'allow':type || 'block';
   }
   if(rulesetId==='ads' || ENHANCED_IDS.includes(rulesetId) || rulesetId==='local_ads' || DIRECT_IDS.includes(rulesetId))return 'block';
-  actionMap ||= fetch(chrome.runtime.getURL('data/web-actions.json')).then(r=>r.json());
-  return (await actionMap)[rulesetId]?.[ruleId] || 'unknown';
+  actionMap ||= fetch(chrome.runtime.getURL('data/engine/rule-actions.json')).then(r=>r.json());
+  return (await actionMap)[rulesetId]?.[ruleId] || 'block';
 }
 // Blocked-request statistics. Chrome allows getMatchedRules 20 times per 10 minutes, so every
 // caller shares one incremental all-tabs query: matches newer than the last sync are added to
@@ -118,34 +114,70 @@ chrome.webNavigation.onCommitted.addListener(event=>{
   statsTask(async()=>{const {session}=await statsState();session.tabs[event.tabId]={host:A.hostname(event.url),since:Math.floor(event.timeStamp),count:0};await chrome.storage.session.set({statsSession:session});});
 });
 chrome.tabs.onRemoved.addListener(tabId=>statsTask(async()=>{const {session}=await statsState();if(session.tabs[tabId]){session.tabs[tabId].removed=true;await chrome.storage.session.set({statsSession:session});}}));
-// Generic hiding CSS that content.js applies from storage at document start, before the
-// service worker answers PAGE_POLICY. Selectors with any exception and every host that turns
-// generic hiding off (or is whitelisted / compatible) stay on the exact per-page path.
-async function prepareFastCosmetics(settings){
-  if(!settings.enabled || !settings.hideAds){await chrome.storage.local.remove('fastCosmetic');return;}
-  cosmeticData ||= await loadCosmeticData();
-  baseSelectors ||= await fetch(chrome.runtime.getURL('data/builtin-cosmetics.json')).then(r=>r.json());
-  localCoverage ||= await fetch(chrome.runtime.getURL('data/local-coverage.json')).then(r=>r.json());
-  const lists=Object.entries(cosmeticData).filter(([id])=>settings.webFilters[id]).map(([,data])=>data);
-  const excepted=new Set(),cancelled=new Set(),hosts=new Set([...settings.whitelist,...settings.compatSites]),entities=new Set();
-  for(const data of lists){for(const entry of data.entries)if(entry.exception)excepted.add(entry.selector);for(const off of data.genericOff || [])if(off.badfilter)cancelled.add(off.key);}
-  for(const data of lists)for(const off of data.genericOff || []){
-    if(off.badfilter || cancelled.has(off.key) || off.generic===false)continue;
-    const scope=off.host?[off.host]:off.include || [];
-    if(!scope.length){await chrome.storage.local.remove('fastCosmetic');return;}
-    for(const host of scope)if(host.endsWith('.*'))entities.add(host.slice(0,-2));else hosts.add(host);
-  }
-  const selectors=new Set();
-  for(const data of lists)for(const entry of data.entries)if(!entry.exception && !entry.include.length && !entry.exclude.length)selectors.add(entry.selector);
-  baseSelectors.forEach(selector=>selectors.add(selector));
-  if(settings.webFilters.easylist)for(const group of localCoverage.cosmetic)if(!group.hosts.length)group.selectors.forEach(selector=>selectors.add(selector));
-  const css=[...selectors].filter(selector=>!excepted.has(selector)).map(selector=>`${selector}{display:none!important}`).join('\n');
-  await chrome.storage.local.set({fastCosmetic:{css,hosts:[...hosts],entities:[...entities]}});
+// Hosts that need per-site treatment are learned as the user reaches them. Registering every
+// listed host up front would make the browser test ~25,000 patterns on each frame of each page.
+// Learned hosts stay registered, so only the first visit can race the page's own scripts; that
+// visit also gets the fixes injected at commit. Scriptlets guard against running twice.
+const HOT_LIMIT=400;
+let fixIndex,hotCache;
+const readHot=()=>hotCache ||= chrome.storage.local.get('hot').then(({hot})=>hot || {fixes:{},genericOff:{}});
+const trim=(record,size)=>{const keys=Object.keys(record);if(keys.length>size){const stamp=value=>Array.isArray(value)?value[1]:value;for(const key of keys.sort((a,b)=>stamp(record[a])-stamp(record[b])).slice(0,keys.length-size))delete record[key];}};
+async function registerScripts(settings,hot,ids){
+  const desired=A.scripts(settings,hot).filter(script=>!ids || ids.includes(script.id));
+  const old=await chrome.scripting.getRegisteredContentScripts(ids?{ids}:undefined);
+  const obsolete=old.filter(x=>!desired.some(next=>next.id===x.id));
+  if(obsolete.length)await chrome.scripting.unregisterContentScripts({ids:obsolete.map(x=>x.id)});
+  const existing=desired.filter(x=>old.some(previous=>previous.id===x.id));const missing=desired.filter(x=>!old.some(previous=>previous.id===x.id));
+  if(existing.length)await chrome.scripting.updateContentScripts(existing);
+  if(missing.length)await chrome.scripting.registerContentScripts(missing);
 }
+// Returns the fix buckets this host needed for the first time.
+async function learnHost(host,topFrame,settings){
+  if(!settings.enabled || !host || A.isListed(host,settings.whitelist) || A.isListed(host,settings.compatSites))return [];
+  const keys=CosmeticEngine.hostKeys(host);const {offKeys}=await CosmeticEngine.meta();
+  const fixes=settings.scriptlets && settings.webFilters.fixes;
+  if(fixes)fixIndex ||= await fetch(chrome.runtime.getURL('data/engine/fix-keys.json')).then(r=>r.json());
+  offSet ||= new Set(offKeys);
+  const hits=fixes?keys.filter(key=>fixIndex[key]!==undefined):[];
+  const offHit=topFrame && settings.hideAds && keys.some(key=>offSet.has(key)) && (await listCosmetics(host,settings)).genericOff;
+  if(!hits.length && !offHit)return [];
+  return enqueue(async()=>{
+    const hot=await readHot();const now=Date.now();const changed=new Set(),fresh=new Set();
+    for(const key of hits){
+      // An entity key such as example.* is registered for the exact domain being visited.
+      const domain=key.endsWith('.*')?key.slice(0,-1)+AdShieldDomainUtils.getPublicSuffix(host,{allowPrivateDomains:false}):key;
+      const pattern=`*://*.${domain}/*`;const shard=fixIndex[key];
+      if(hot.fixes[pattern]){hot.fixes[pattern][1]=now;continue;}
+      hot.fixes[pattern]=[shard,now];changed.add('fix-'+shard);fresh.add(shard);
+    }
+    if(offHit){const pattern=`*://${host}/*`;if(!hot.genericOff[pattern]){hot.genericOff[pattern]=now;changed.add('generic-css');}}
+    if(!changed.size)return [];
+    trim(hot.fixes,HOT_LIMIT);trim(hot.genericOff,HOT_LIMIT);
+    await chrome.storage.local.set({hot});
+    await registerScripts(await readSettings(),hot,[...changed]);
+    return [...fresh];
+  });
+}
+let offSet;
+const firstVisits=new Map();
+const WEB_ONLY={url:[{schemes:['http','https']}]};
+chrome.webNavigation.onBeforeNavigate.addListener(event=>{
+  const task=readSettings().then(settings=>learnHost(A.hostname(event.url),event.frameId===0,settings)).catch(error=>{console.debug('Learn host:',error.message);return [];});
+  firstVisits.set(event.tabId+':'+event.frameId,task);
+},WEB_ONLY);
+chrome.webNavigation.onCommitted.addListener(async event=>{
+  const key=event.tabId+':'+event.frameId;const pending=firstVisits.get(key);firstVisits.delete(key);if(!pending)return;
+  const shards=await pending;
+  for(const shard of shards){
+    const target=event.documentId?{tabId:event.tabId,documentIds:[event.documentId]}:{tabId:event.tabId,frameIds:[event.frameId]};
+    try{await chrome.scripting.executeScript({target,world:'MAIN',injectImmediately:true,files:A.fixFiles(shard)});}
+    catch(error){if(!await injectionCancelled(error,target))console.debug('Site fixes:',error.message);}
+  }
+},WEB_ONLY);
 let parsedFilters={text:null};
 function userFilters(settings){if(parsedFilters.text!==settings.userFilters)parsedFilters={text:settings.userFilters,result:UserFilters.parse(settings.userFilters)};return parsedFilters.result;}
 async function applySettings(settings,listCache){
-  cosmeticCache.clear();dynamicActions=undefined;
+  cosmeticCache.clear();dynamicActions=undefined;settingsCache=Promise.resolve(settings);
   const dynamic=A.dynamicRules(settings,listCache?.domains);
   if(settings.enabled){
     const parsed=userFilters(settings);
@@ -169,15 +201,7 @@ async function applySettings(settings,listCache){
   catch(error){if(/GUARANTEED_MINIMUM_STATIC_RULES|static rules/i.test(error.message))throw new Error(I18N.t('bg_rule_quota'));throw error;}
   logging=settings.logging;
   if(!logging){clearTimeout(flushTimer);logs=[];await chrome.storage.session.remove('diagnosticLogs');}
-  const old=await chrome.scripting.getRegisteredContentScripts();const desired=A.scripts(settings);
-  const fixes=desired.find(x=>x.id==='site-fixes');if(fixes){scriptletHosts ||= await fetch(chrome.runtime.getURL('data/scriptlet-hosts.json')).then(r=>r.json());if(!scriptletHosts.some(x=>x.endsWith('.*')))fixes.matches=scriptletHosts.flatMap(A.patterns);}
-  const obsolete=old.filter(x=>!desired.some(next=>next.id===x.id));
-  if(obsolete.length)await chrome.scripting.unregisterContentScripts({ids:obsolete.map(x=>x.id)});
-  const existing=desired.filter(x=>old.some(previous=>previous.id===x.id));const missing=desired.filter(x=>!old.some(previous=>previous.id===x.id));
-  if(existing.length)await chrome.scripting.updateContentScripts(existing);
-  if(missing.length)await chrome.scripting.registerContentScripts(missing);
-  await prepareFastCosmetics(settings);
-  await preparePopupObservers(settings);
+  await registerScripts(settings,await readHot());
   await ensureAlarm(settings);
   // Per-tab count of blocked/replaced requests on the toolbar icon is opt-in (settings);
   // the popup always shows it. Chrome resets the count on navigation.
@@ -213,24 +237,22 @@ async function documentIsCurrent(sender){
   const frame=await chrome.webNavigation.getFrame({tabId:sender.tab.id,frameId:sender.frameId});
   return !!frame && frame.documentId===sender.documentId;
 }
-async function updateDocumentCSS(method,css,sender,target){
+async function updateDocumentCSS(method,source,sender,target){
   if(!await documentIsCurrent(sender))return false;
-  await chrome.scripting[method]({target,css,origin:'USER'});
+  await chrome.scripting[method]({target,...source,origin:'USER'});
   if(await documentIsCurrent(sender))return true;
   // CSS injection can complete against the new frame during navigation even
-  // with documentIds. The serial policy queue ensures the replacement's own
+  // with documentIds. The per-tab policy chain ensures the replacement's own
   // CSS has not yet been applied. Remove this obsolete sheet before proceeding.
   if(method==='insertCSS'){
-    try{await chrome.scripting.removeCSS({target:{tabId:sender.tab.id,frameIds:[sender.frameId]},css,origin:'USER'});}
+    try{await chrome.scripting.removeCSS({target:{tabId:sender.tab.id,frameIds:[sender.frameId]},...source,origin:'USER'});}
     catch(error){if(!await injectionCancelled(error,{...target,frameIds:[sender.frameId]}))throw error;}
   }
   return false;
 }
-let popupObserversPrepared=false;
+// Tabs opened before the extension was installed or re-enabled have no popup observer yet.
 async function preparePopupObservers(settings){
-  if(!settings.enabled){popupObserversPrepared=false;return;}
-  if(popupObserversPrepared)return;
-  popupObserversPrepared=true;
+  if(!settings.enabled)return;
   const tabs=await chrome.tabs.query({url:['http://*/*','https://*/*']});
   for(const tab of tabs){
     if(A.isListed(A.hostname(tab.url),settings.whitelist))continue;
@@ -255,10 +277,21 @@ async function migrateNavigation(){
   // whitelist, manual rules and enabled state. Later explicit choices persist.
   await chrome.storage.local.set({settings:next,navigationCompatibilityVersion:2,...(stored.settings?{navigationSettingsBackup:stored.settings}:{})});
 }
-async function initialize(){await I18N.ready;await migrateNavigation();const state=await readState();const stored=await chrome.storage.session.get('diagnosticLogs');logs=state.settings.logging ? (stored.diagnosticLogs || []).slice(-200) : [];try{await applySettings(state.settings,state.listCache);initializationError=null;}catch(error){initializationError=error.message;console.error('Initialization:',error);}}
-enqueue(initialize);
-chrome.runtime.onInstalled.addListener(details=>{enqueue(initialize);setupMenus();if(details.reason==='install')chrome.tabs.create({url:chrome.runtime.getURL('welcome.html')});});
-chrome.runtime.onStartup.addListener(()=>enqueue(initialize));
+// The browser keeps rules and registered scripts across service worker restarts, so waking up
+// (for every page load after idle, and for the stats alarm) only has to redo them when something
+// changed. The session marker is cleared with the browser, which re-applies once per session.
+function appliedKey(state){return JSON.stringify([chrome.runtime.getManifest().version,state.settings,state.listCache?.sourceVersion || '',state.listCache?.domains?.length || 0]);}
+async function initialize(force){
+  await I18N.ready;await migrateNavigation();const state=await readState();
+  logging=state.settings.logging;
+  if(logging){const stored=await chrome.storage.session.get('diagnosticLogs');logs=(stored.diagnosticLogs || []).slice(-200);}
+  const {appliedSettings}=await chrome.storage.session.get('appliedSettings');const key=appliedKey(state);
+  if(!force && appliedSettings===key)return;
+  try{await applySettings(state.settings,state.listCache);initializationError=null;await chrome.storage.session.set({appliedSettings:key});}
+  catch(error){initializationError=error.message;console.error('Initialization:',error);}
+}
+enqueue(()=>initialize());
+chrome.runtime.onInstalled.addListener(details=>{enqueue(async()=>{await chrome.storage.local.remove('fastCosmetic');await initialize(true);await preparePopupObservers((await readState()).settings);});setupMenus();if(details.reason==='install')chrome.tabs.create({url:chrome.runtime.getURL('welcome.html')});});
 async function info(state){
   enhancedMeta ||= await fetch(chrome.runtime.getURL('data/enhanced-meta.json')).then(r=>r.json());
   seedMeta ||= await fetch(chrome.runtime.getURL('data/seed-meta.json')).then(r=>r.json());
@@ -269,8 +302,9 @@ async function info(state){
 }
 async function save(next,state){
   next=A.clean(next);
-  try{await applySettings(next,state.listCache);await chrome.storage.local.set({settings:next});initializationError=null;}
-  catch(error){try{await applySettings(state.settings,state.listCache);}catch(rollback){console.error('Rollback failed',rollback);}throw error;}
+  if(JSON.stringify(next.webFilters)!==JSON.stringify(state.settings.webFilters)){const hot=await readHot();hot.genericOff={};await chrome.storage.local.set({hot});}
+  try{await applySettings(next,state.listCache);await chrome.storage.local.set({settings:next});initializationError=null;await chrome.storage.session.set({appliedSettings:appliedKey({...state,settings:next})});if(next.enabled && !state.settings.enabled)await preparePopupObservers(next);}
+  catch(error){settingsCache=undefined;try{await applySettings(state.settings,state.listCache);}catch(rollback){console.error('Rollback failed',rollback);}throw error;}
   return next;
 }
 async function updateList(state){
@@ -290,47 +324,62 @@ async function updateList(state){
     return {settings:state.settings,info:await info({...state,listCache:next,updateMeta:{lastSuccess:next.downloadedAt,lastError:null}})};
   }catch(error){await chrome.storage.local.set({updateMeta:{...state.updateMeta,lastAttempt:new Date().toISOString(),lastError:error.message}});throw error;}
 }
+// Policy requests never touch the settings queue except to wait out a change in progress.
+// They run in order per tab, so a replaced document's CSS cannot overlap its successor's.
+const pageChains=new Map();
+function pagePolicy(message,sender){
+  const tabId=sender.tab.id;const task=(pageChains.get(tabId) || Promise.resolve()).then(()=>queue).then(()=>resolvePolicy(message,sender));
+  const tail=task.catch(error=>console.error('Ad Shield:',error));pageChains.set(tabId,tail);tail.then(()=>{if(pageChains.get(tabId)===tail)pageChains.delete(tabId);});
+  return task;
+}
+async function resolvePolicy(message,sender){
+  const settings=await readSettings();
+  const topHost=A.hostname(sender.frameId===0?sender.url:sender.tab.url);const host=A.hostname(sender.url) || A.hostname(sender.origin) || topHost;
+  const compatible=A.isListed(topHost,settings.compatSites) || A.isListed(host,settings.compatSites);
+  const active=settings.enabled && !A.isListed(topHost,settings.whitelist) && !A.isListed(host,settings.whitelist);
+  const custom=active ? [...settings.cosmeticRules.filter(x=>A.isListed(host,[x.host])).map(x=>x.selector),...UserFilters.selectorsFor(host,userFilters(settings))] : [];
+  const shadowRules=custom.map(A.selectorChain).filter(x=>x.length>1);const ordinaryCustom=custom.filter(x=>A.selectorChain(x).length===1);let selectors=[],componentSelectors=[];let extended=ordinaryCustom.filter(isExtended);
+  // Top documents get the global selectors from the registered stylesheet; subframes ask for them here.
+  let frameCss=[];
+  if(active && settings.hideAds && !compatible){
+    const lists=await listCosmetics(host,settings);
+    selectors=[...lists.selectors];componentSelectors=[...lists.component];
+    if(settings.procedural)extended=[...lists.extended,...extended];
+    if(sender.frameId>0 && !lists.genericOff)frameCss=A.genericFiles(settings);
+  }
+  const automaticCss=componentSelectors.map(selector=>`${selector} { display: none !important; }`).join('\n');
+  const documentCss=[...new Set([...selectors,...ordinaryCustom.filter(x=>!isExtended(x))])].map(selector=>`${A.scopedSelector(selector)} { display: none !important; }`).join('\n');
+  const css=!documentCss ? '' : A.IS_FIREFOX ? documentCss : `@scope (:root) {\n${documentCss}\n}`;
+  const shadowCss=active && settings.hideAds && settings.shadowAds && !compatible ? automaticCss : '';
+  const target=sender.documentId ? {tabId:sender.tab.id,documentIds:[sender.documentId]} : {tabId:sender.tab.id,frameIds:[sender.frameId]};
+  // Keep the document ID for every step; never retry on a replacement frame.
+  try{
+    if(message.previousCss && !await updateDocumentCSS('removeCSS',{css:message.previousCss},sender,target))return {stale:true};
+    const previousFiles=message.frameCss || [];const sameFiles=previousFiles.join()===frameCss.join();
+    if(previousFiles.length && !sameFiles && !await updateDocumentCSS('removeCSS',{files:previousFiles},sender,target))return {stale:true};
+    if(frameCss.length && !sameFiles && !await updateDocumentCSS('insertCSS',{files:frameCss},sender,target))return {stale:true};
+    if(css && !await updateDocumentCSS('insertCSS',{css},sender,target))return {stale:true};
+    let extendedLoaded=!!message.extendedLoaded;
+    if(extended.length && !extendedLoaded){await chrome.scripting.executeScript({target,world:'ISOLATED',files:['vendor/extended-css.js']});extendedLoaded=true;}
+    let guardInstalled=!!message.guardInstalled;
+    const mode=A.modeFor(topHost,settings);
+    if(sender.frameId>0 && active && mode==='strict' && !guardInstalled){await chrome.scripting.executeScript({target,world:'MAIN',files:['guard-strict.js']});guardInstalled=true;}
+    return {policy:{active,css,frameCss,shadowCss,shadowRules,guardInstalled,extendedLoaded,extended:[...new Set(extended)]}};
+  }catch(error){if(await injectionCancelled(error,target))return {stale:true};throw error;}
+}
 chrome.alarms.onAlarm.addListener(alarm=>{if(alarm.name==='stats-sync')statsTask(()=>syncStats(0));if(alarm.name==='update-list')enqueue(async()=>{const state=await readState();if(state.settings.autoUpdate)await updateList(state);});});
 chrome.runtime.onMessage.addListener((message,sender,respond)=>{
   if(sender.id!==chrome.runtime.id)return false;
   const extensionPage=sender.url?.startsWith(chrome.runtime.getURL(''));
   if(!extensionPage && sender.tab && A.hostname(sender.tab.url) && ['POPUP_INTENT','POPUP_RECORDER_READY'].includes(message?.type)){if(message.type==='POPUP_INTENT')popupRescue.record(message,sender);else popupRescue.markReady(sender);respond({ok:true});return false;}
-  const pageRequest=['PAGE_POLICY','ADD_SELECTOR','PICKER_STRINGS'].includes(message?.type) && !!sender.tab && !!A.hostname(sender.frameId===0?sender.url:sender.tab.url) && (message.type!=='ADD_SELECTOR' || sender.frameId===0);
+  const pageRequest=['PAGE_POLICY','ADD_SELECTOR','PICKER_STRINGS','LOAD_PICKER'].includes(message?.type) && !!sender.tab && !!A.hostname(sender.frameId===0?sender.url:sender.tab.url) && (!['ADD_SELECTOR','LOAD_PICKER'].includes(message.type) || sender.frameId===0);
   if(!extensionPage && !pageRequest)return false;
   const uiTypes=['TAB_STATS','GET_STATS','RESET_STATS','GET_SETTINGS','SET_SETTINGS','UPDATE_LIST','RESET_LIST','GET_LOGS','CLEAR_LOGS'];
   if(!pageRequest && !uiTypes.includes(message?.type))return false;
+  if(message.type==='PAGE_POLICY'){pagePolicy(message,sender).then(result=>respond({ok:true,...result}),error=>respond({ok:false,error:error.message}));return true;}
   enqueue(async()=>{
     const state=await readState();
-    if(message.type==='PAGE_POLICY'){
-      const topHost=A.hostname(sender.frameId===0?sender.url:sender.tab.url);const host=A.hostname(sender.url) || A.hostname(sender.origin) || topHost;
-      const compatible=A.isListed(topHost,state.settings.compatSites) || A.isListed(host,state.settings.compatSites);
-      const active=state.settings.enabled && !A.isListed(topHost,state.settings.whitelist) && !A.isListed(host,state.settings.whitelist);
-      const custom=active ? [...state.settings.cosmeticRules.filter(x=>A.isListed(host,[x.host])).map(x=>x.selector),...UserFilters.selectorsFor(host,userFilters(state.settings))] : [];
-      const shadowRules=custom.map(A.selectorChain).filter(x=>x.length>1);const ordinaryCustom=custom.filter(x=>A.selectorChain(x).length===1);let selectors=[],componentSelectors=[];let extended=ordinaryCustom.filter(isExtended);
-      if(active && state.settings.hideAds && !compatible){
-        const lists=await listCosmetics(host,state.settings);
-        selectors=[...lists.selectors];componentSelectors=[...lists.component];
-        if(state.settings.procedural)extended=[...lists.extended,...extended];
-      }
-      const automaticCss=componentSelectors.map(selector=>`${selector} { display: none !important; }`).join('\n');
-      const documentCss=[...new Set([...selectors,...ordinaryCustom.filter(x=>!isExtended(x))])].map(selector=>`${A.scopedSelector(selector)} { display: none !important; }`).join('\n');
-      const css=!documentCss ? '' : A.IS_FIREFOX ? documentCss : `@scope (:root) {\n${documentCss}\n}`;
-      const shadowCss=active && state.settings.hideAds && state.settings.shadowAds && !compatible ? automaticCss : '';
-      const target=sender.documentId ? {tabId:sender.tab.id,documentIds:[sender.documentId]} : {tabId:sender.tab.id,frameIds:[sender.frameId]};
-      // Keep the document ID for every step; never retry on a replacement frame.
-      try{
-      if(message.previousCss && !await updateDocumentCSS('removeCSS',message.previousCss,sender,target))return {stale:true};
-      if(css && !await updateDocumentCSS('insertCSS',css,sender,target))return {stale:true};
-      let extendedLoaded=!!message.extendedLoaded;
-      if(extended.length && !extendedLoaded){await chrome.scripting.executeScript({target,world:'ISOLATED',files:['vendor/extended-css.js']});extendedLoaded=true;}
-      let advancedInstalled=!!message.advancedInstalled;
-      if(sender.frameId>0 && active && !compatible && state.settings.scriptlets && state.settings.webFilters.fixes && !advancedInstalled){await chrome.scripting.executeScript({target,world:'MAIN',files:['vendor/publicsuffix.js','advanced-main.js']});advancedInstalled=true;}
-      let guardInstalled=!!message.guardInstalled;
-      const mode=A.modeFor(topHost,state.settings);
-      if(sender.frameId>0 && active && mode==='strict' && !guardInstalled){await chrome.scripting.executeScript({target,world:'MAIN',files:[mode==='strict'?'guard-strict.js':'guard-standard.js']});guardInstalled=true;}
-      return {policy:{active,css,shadowCss,shadowRules,guardInstalled,advancedInstalled,extendedLoaded,extended:[...new Set(extended)]}};
-      }catch(error){if(await injectionCancelled(error,target))return {stale:true};throw error;}
-    }
+    if(message.type==='LOAD_PICKER'){await chrome.scripting.executeScript({target:{tabId:sender.tab.id,frameIds:[0]},world:'ISOLATED',files:['picker.js']});return {};}
     if(message.type==='PICKER_STRINGS'){const keys=['picker_title','picker_hint','picker_selected','picker_selected_many','picker_repick','picker_widen','picker_widen_title','picker_cancel','picker_confirm','picker_save_failed','picker_not_unique','picker_too_deep','picker_too_broad','bg_site_paused'];return {strings:Object.fromEntries(keys.map(key=>[key,I18N.t(key)]))};}
     if(message.type==='ADD_SELECTOR'){
       if(!state.settings.enabled || A.isListed(A.hostname(sender.url),state.settings.whitelist))throw new Error(I18N.t('bg_site_paused'));
@@ -401,4 +450,4 @@ chrome.commands.onCommand.addListener((command,tab)=>{
   if(command==='start-picker')startPicker(tab,false).catch(error=>console.debug('Picker:',error.message));
   if(command==='toggle-site')toggleSite(tab).catch(error=>console.error('Toggle site:',error));
 });
-chrome.storage.onChanged.addListener((changes,area)=>{if(area==='local' && changes.uiLanguage)I18N.reload().then(setupMenus);});
+chrome.storage.onChanged.addListener((changes,area)=>{if(area!=='local')return;if(changes.uiLanguage)I18N.reload().then(setupMenus);if(changes.settings){settingsCache=undefined;cosmeticCache.clear();}if(changes.hot)hotCache=undefined;});

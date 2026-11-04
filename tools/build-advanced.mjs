@@ -81,11 +81,28 @@ for(const id of ids){
 
   }
 }
-const index={};for(let i=0;i<records.length;i++)for(const host of records[i].include){(index[host] ||= []).push(i);}
+// Site fixes split in two: the scriptlet library, and one data file per hash bucket of the
+// keys it applies to. The background registers a bucket only for hosts the user actually visits.
+const FIX_SHARDS=32;
+const shardOf=key=>{let hash=0x811c9dc5;for(let i=0;i<key.length;i++){hash^=key.charCodeAt(i);hash=Math.imul(hash,16777619);}return (hash>>>0)%FIX_SHARDS;};
 const exceptions=records.filter(x=>x.exception);
-const main=`/* AdGuard Scriptlets 2.5.1 and Ad Shield. GPL v3; sources in vendor/source/. */\n(()=>{\n'use strict';\nconst host=location.hostname.toLowerCase().replace(/\\.$/,'');\nconst index=${JSON.stringify(index)};\nconst suffix=globalThis.AdShieldDomainUtils.getPublicSuffix(host,{allowPrivateDomains:false}) || '';\nconst entity=suffix && host.length>suffix.length?host.slice(0,-suffix.length-1):'';\nconst keys=[...host.split('.').map((_,i,a)=>a.slice(i).join('.')),...(entity?entity.split('.').map((_,i,a)=>a.slice(i).join('.')+'.*'):[])];\nconst candidates=[...new Set(keys.flatMap(key=>index[key] || []))];\nif(!candidates.length || globalThis.__adShieldAdvancedApplied)return;\nObject.defineProperty(globalThis,'__adShieldAdvancedApplied',{value:true});\nconst records=${JSON.stringify(records)};\nconst exceptions=${JSON.stringify(exceptions)};\nconst listed=x=>x.endsWith('.*')?(entity===x.slice(0,-2) || entity.endsWith('.'+x.slice(0,-2))):(host===x || host.endsWith('.'+x));\nconst matches=entry=>(!entry.include.length || entry.include.some(listed)) && !entry.exclude.some(listed);\nconst excluded=exceptions.filter(matches);\nconst implementations={${[...functions].map(([name,fn])=>JSON.stringify(name)+':'+fn).join(',\n')}};\nconst seen=new Set();\nfor(const i of candidates){const entry=records[i];if(entry.exception || !matches(entry))continue;const key=JSON.stringify([entry.implementation,entry.args]);if(seen.has(key) || excluded.some(x=>x.all || (x.implementation===entry.implementation && JSON.stringify(x.args)===JSON.stringify(entry.args))))continue;seen.add(key);try{implementations[entry.implementation]({name:entry.name,args:entry.args,engine:'extension',version:'2.5.1',verbose:false,domainName:host,uniqueId:'ad-shield-4'},entry.args);}catch(error){console.debug('Ad Shield site fix:',entry.name,error.message);}}\n})();\n`;
-await writeFile(new URL('advanced-main.js',root),main);
-await writeFile(new URL('data/scriptlet-hosts.json',root),JSON.stringify(Object.keys(index).sort())+'\n');
+const usedImplementations=new Set(records.filter(x=>!x.exception).map(x=>x.implementation));
+const buckets=Array.from({length:FIX_SHARDS},()=>({records:[],seen:new Map(),keys:{}}));const fixKeys={};
+for(const record of records){
+  if(record.exception)continue;
+  const body=[record.name,record.implementation,record.args,record.exclude];const signature=JSON.stringify(body);
+  for(const key of record.include){
+    const shard=shardOf(key),bucket=buckets[shard];fixKeys[key]=shard;
+    let index=bucket.seen.get(signature);if(index===undefined){index=bucket.records.length;bucket.records.push(body);bucket.seen.set(signature,index);}
+    (bucket.keys[key] ||= []).push(index);
+  }
+}
+const library=`/* AdGuard Scriptlets 2.5.1 and Clearview. GPL v3; sources in vendor/source/. */\n(()=>{\n'use strict';\nconst exceptions=${JSON.stringify(exceptions)};\nconst implementations={${[...functions].filter(([name])=>usedImplementations.has(name)).map(([name,fn])=>JSON.stringify(name)+':'+fn).join(',\n')}};\nObject.defineProperty(globalThis,'__clearviewFixes',{configurable:true,value(keys,records){\ndelete globalThis.__clearviewFixes;\nconst host=location.hostname.toLowerCase().replace(/\\.$/,'');\nconst suffix=globalThis.AdShieldDomainUtils.getPublicSuffix(host,{allowPrivateDomains:false}) || '';\nconst entity=suffix && host.length>suffix.length?host.slice(0,-suffix.length-1):'';\nconst own=[...host.split('.').map((_,i,a)=>a.slice(i).join('.')),...(entity?entity.split('.').map((_,i,a)=>a.slice(i).join('.')+'.*'):[])];\nconst candidates=[...new Set(own.flatMap(key=>keys[key] || []))];\nif(!candidates.length)return;\nconst listed=x=>x.endsWith('.*')?(entity===x.slice(0,-2) || entity.endsWith('.'+x.slice(0,-2))):(host===x || host.endsWith('.'+x));\nconst excluded=exceptions.filter(entry=>(!entry.include.length || entry.include.some(listed)) && !entry.exclude.some(listed));\nfor(const i of candidates){const [name,implementation,args,exclude]=records[i];if(exclude.some(listed) || excluded.some(x=>x.all || (x.implementation===implementation && JSON.stringify(x.args)===JSON.stringify(args))))continue;try{implementations[implementation]({name,args,engine:'extension',version:'2.5.1',verbose:false,domainName:host,uniqueId:'ad-shield-4'},args);}catch(error){console.debug('Clearview site fix:',name,error.message);}}\n}});\n})();\n`;
+await mkdir(new URL('fixes/',root),{recursive:true});
+await writeFile(new URL('fixes/lib.js',root),library);
+for(let i=0;i<FIX_SHARDS;i++)await writeFile(new URL(`fixes/data-${i}.js`,root),`globalThis.__clearviewFixes?.(${JSON.stringify(buckets[i].keys)},${JSON.stringify(buckets[i].records)});\n`);
+await mkdir(new URL('data/engine/',root),{recursive:true});
+await writeFile(new URL('data/engine/fix-keys.json',root),JSON.stringify(fixKeys));
 await writeFile(new URL('data/extended-cosmetics.json',root),JSON.stringify(extended)+'\n');
 const meta={source:'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt',sha256:createHash('sha256').update((await readFile(new URL('data/filters/fixes.txt',root),'utf8'))+JSON.stringify(Object.entries(includes).sort())).digest('hex'),scriptletRules:records.filter(x=>!x.exception).length,scriptletExceptions:exceptions.length,scriptletImplementations:functions.size,skippedScriptlets,skippedReasons,extendedRules:Object.values(extended).reduce((n,x)=>n+x.entries.filter(e=>!e.exception).length,0),skippedExtended};
 await writeFile(new URL('data/advanced-meta.json',root),JSON.stringify(meta)+'\n');

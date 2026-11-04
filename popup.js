@@ -36,17 +36,18 @@ function render(){
   const enabledWeb=(info?.webLists || []).filter(x=>x.enabled);
   $('listInfo').textContent=info?t('popup_list_info',info.domainCount.toLocaleString(),enabledWeb.reduce((sum,x)=>sum+x.networkRules,0).toLocaleString(),info.lastSuccess?t('popup_updated_on',new Date(info.lastSuccess).toLocaleDateString()):t('popup_builtin_list')):t('popup_lists_loading');
 }
-async function save(next){if(busy)return;busy=true;render();try{({settings,info}=await request('SET_SETTINGS',next));message(t('popup_saved'));}catch(error){message(t('common_save_failed',error.message),true);}finally{busy=false;render();}}
+async function save(next,reload){if(busy)return;busy=true;render();try{({settings,info}=await request('SET_SETTINGS',next));message(t('popup_saved'));if(reload && activeTab && /^https?:/.test(activeTab.url || ''))await chrome.tabs.reload(activeTab.id);}catch(error){message(t('common_save_failed',error.message),true);}finally{busy=false;render();}}
+// Hiding that applies to every site is a stylesheet the browser injects at page start, so these changes need a reload to show.
 $('strong').addEventListener('click',()=>save({...settings,enabled:true,hideAds:true,shadowAds:true,scriptlets:true,procedural:true,webFilters:{...settings.webFilters,easylist:true,easyprivacy:true,chinese:true,fixes:true}}));
-$('compatible').addEventListener('click',()=>{if(!host || busy || !settings)return;const listed=AdShield.isListed(host,settings.compatSites);if(!listed && settings.compatSites.length>=200){message(t('popup_compat_full'),true);return;}save({...settings,compatSites:listed?settings.compatSites.filter(x=>!AdShield.isListed(host,[x])):[...settings.compatSites,host]});});
+$('compatible').addEventListener('click',()=>{if(!host || busy || !settings)return;const listed=AdShield.isListed(host,settings.compatSites);if(!listed && settings.compatSites.length>=200){message(t('popup_compat_full'),true);return;}save({...settings,compatSites:listed?settings.compatSites.filter(x=>!AdShield.isListed(host,[x])):[...settings.compatSites,host]},true);});
 $('strictThirdParty').addEventListener('change',()=>save({...settings,strictThirdParty:$('strictThirdParty').checked}));
-$('enabled').addEventListener('change',()=>save({...settings,enabled:$('enabled').checked}));
+$('enabled').addEventListener('change',()=>save({...settings,enabled:$('enabled').checked},true));
 $('mode').addEventListener('change',()=>save({...settings,popupMode:$('mode').value}));
 $('site').addEventListener('click',()=>{
   if(!host || busy || !settings)return;
   const listed=AdShield.isListed(host,settings.whitelist);
   if(!listed && settings.whitelist.length>=200){message(t('popup_whitelist_full'),true);return;}
-  save({...settings,whitelist:listed?settings.whitelist.filter(x=>!AdShield.isListed(host,[x])):[...settings.whitelist,host]});
+  save({...settings,whitelist:listed?settings.whitelist.filter(x=>!AdShield.isListed(host,[x])):[...settings.whitelist,host]},true);
 });
 $('siteMode').addEventListener('change',()=>{
   const mode=$('siteMode').value;const existing=settings.siteModes.filter(x=>x.host!==host);

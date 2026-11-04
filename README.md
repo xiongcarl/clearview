@@ -16,7 +16,7 @@
 - Chrome / Edge：開啟 `chrome://extensions`，打開「開發人員模式」，選「載入未封裝項目」並選擇這個資料夾。
 
 ## 建置
-見 [BUILD.md](BUILD.md)。Firefox 套件：`python3 tools/build-firefox.py clearview-firefox.zip`
+見 [BUILD.md](BUILD.md)。打包：`python3 tools/build-package.py chromium clearview.zip`（Firefox 用 `firefox`）
 
 ## 支持開發
 淨頁免費提供。如果它讓你上網清爽一點，歡迎贊助：https://ko-fi.com/clearview

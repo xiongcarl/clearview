@@ -61,7 +61,7 @@ globalThis.AdShieldShadows=(()=>{
     return {selector,byKey,fallback};
   }
   class Filter {
-    constructor(){this.roots=new Map();this.queue=[];this.css='';this.rules=[];this.running=false;this.scheduled=null;this.timer=null;this.manualTimer=null;this.shared=null;this.selectors='';this.index=makeIndex('');this.indexVersion=0;this.pendingInline=new Set();this.inlineFrame=null;this.visibility=()=>{if(!document.hidden && this.running)this.enqueue(document.documentElement);};}
+    constructor(){this.quietTicks=0;this.rescanEvery=1;this.roots=new Map();this.queue=[];this.css='';this.rules=[];this.running=false;this.scheduled=null;this.timer=null;this.manualTimer=null;this.shared=null;this.selectors='';this.index=makeIndex('');this.indexVersion=0;this.pendingInline=new Set();this.inlineFrame=null;this.visibility=()=>{if(!document.hidden && this.running)this.enqueue(document.documentElement);};}
     update(css,rules){
       this.rules=(rules || []).filter(x=>Array.isArray(x) && x.length>1);
       if(!css && !this.rules.length){this.stop();return;}
@@ -76,8 +76,10 @@ globalThis.AdShieldShadows=(()=>{
           this.prune();
           for(const [root,record] of this.roots)this.adopt(root,record);
           // attachShadow on an existing host emits no document mutation. Reconcile
-          // in idle batches without replacing the site's attachShadow function.
-          if(!document.hidden && !this.queue.length)this.enqueue(document.documentElement);
+          // in idle batches without replacing the site's attachShadow function, and
+          // back off to every 30 s while the page sits still: this walks every element.
+          if(document.hidden || this.queue.length || ++this.quietTicks<this.rescanEvery)return;
+          this.quietTicks=0;this.rescanEvery=Math.min(this.rescanEvery*2,20);this.enqueue(document.documentElement);
         },1500);
       }else{this.observeDocument();for(const [root,record] of this.roots)this.observeRoot(root,record);}
       this.applyManual();for(const [root,record] of this.roots){this.adopt(root,record);if(changed)this.invalidate(root);}
@@ -85,6 +87,7 @@ globalThis.AdShieldShadows=(()=>{
     observeDocument(){this.observer.disconnect();this.observer.observe(document,{childList:true,subtree:true,attributes:this.rules.length>0});}
     observeRoot(root,record){record.observer.disconnect();record.observer.observe(root,{childList:true,subtree:true,attributes:true});}
     changed(records,root){
+      this.rescanEvery=1;
       if(root && records.every(x=>x.type==='attributes' && x.attributeName==='style' && this.roots.get(root)?.forced.has(x.target) && this.isForced(x.target)))return;
       if(root){const record=this.roots.get(root);if(record)record.selection=null;this.scheduleInline(root);}
       for(const change of records)for(const node of change.addedNodes)if(node.nodeType===Node.ELEMENT_NODE)this.enqueue(node);
@@ -119,6 +122,7 @@ globalThis.AdShieldShadows=(()=>{
       if(this.queue.length)this.schedule();else{this.prune();this.applyManual();}
     }
     track(root){
+      this.rescanEvery=1;
       const record={observer:new MutationObserver(records=>this.changed(records,root)),extra:null,extraCss:'',extraIndex:makeIndex(''),selection:null,initial:true,forced:new Map()};
       this.roots.set(root,record);this.observeRoot(root,record);this.adopt(root,record);this.enqueue(root);
       return record;
