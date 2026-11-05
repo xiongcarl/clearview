@@ -131,6 +131,18 @@ async function registerScripts(settings,hot,ids){
   if(existing.length)await chrome.scripting.updateContentScripts(existing);
   if(missing.length)await chrome.scripting.registerContentScripts(missing);
 }
+// Sites where missing the fixes even once has a visible cost: YouTube answers a single failed ad
+// with its ad blocker warning. They are known from the start instead of learned on first visit.
+const KNOWN_HOSTS=['www.youtube.com','m.youtube.com','music.youtube.com','tv.youtube.com','www.youtube-nocookie.com','www.youtubekids.com','www.twitch.tv'];
+async function seedHot(settings,hot){
+  if(!settings.enabled)return;
+  const fixes=settings.scriptlets && settings.webFilters.fixes;
+  if(fixes)fixIndex ||= await fetch(chrome.runtime.getURL('data/engine/fix-keys.json')).then(r=>r.json());
+  for(const host of KNOWN_HOSTS){
+    if(fixes)for(const key of CosmeticEngine.hostKeys(host))if(fixIndex[key]!==undefined)hot.fixes[`*://*.${key}/*`] ||= [fixIndex[key],Date.now()];
+    if(settings.hideAds && (await listCosmetics(host,settings)).genericOff)hot.genericOff[`*://${host}/*`] ||= Date.now();
+  }
+}
 // Returns the fix buckets this host needed for the first time.
 async function learnHost(host,topFrame,settings){
   if(!settings.enabled || !host || A.isListed(host,settings.whitelist) || A.isListed(host,settings.compatSites))return [];
@@ -201,7 +213,9 @@ async function applySettings(settings,listCache){
   catch(error){if(/GUARANTEED_MINIMUM_STATIC_RULES|static rules/i.test(error.message))throw new Error(I18N.t('bg_rule_quota'));throw error;}
   logging=settings.logging;
   if(!logging){clearTimeout(flushTimer);logs=[];await chrome.storage.session.remove('diagnosticLogs');}
-  await registerScripts(settings,await readHot());
+  const hot=await readHot();const before=JSON.stringify(hot);await seedHot(settings,hot);
+  if(JSON.stringify(hot)!==before)await chrome.storage.local.set({hot});
+  await registerScripts(settings,hot);
   await ensureAlarm(settings);
   // Per-tab count of blocked/replaced requests on the toolbar icon is opt-in (settings);
   // the popup always shows it. Chrome resets the count on navigation.

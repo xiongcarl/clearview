@@ -13989,7 +13989,6 @@ const implementations={"preventSetTimeout":function preventSetTimeout(source, ar
   }
 }};
 Object.defineProperty(globalThis,'__clearviewFixes',{configurable:true,value(keys,records){
-delete globalThis.__clearviewFixes;
 const host=location.hostname.toLowerCase().replace(/\.$/,'');
 const suffix=globalThis.AdShieldDomainUtils.getPublicSuffix(host,{allowPrivateDomains:false}) || '';
 const entity=suffix && host.length>suffix.length?host.slice(0,-suffix.length-1):'';
