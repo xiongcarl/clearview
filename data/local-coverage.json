@@ -20,6 +20,20 @@
         "script",
         "xmlhttprequest"
       ]
+    },
+    {
+      "requestDomains": [
+        "onead.com.tw",
+        "onead.onevision.com.tw",
+        "clickforce.com.tw",
+        "popin.cc",
+        "ad.toutiao.com",
+        "tongji.baidu.com"
+      ],
+      "domainType": "thirdParty",
+      "excludedResourceTypes": [
+        "main_frame"
+      ]
     }
   ],
   "cosmetic": [
