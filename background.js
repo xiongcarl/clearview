@@ -236,7 +236,8 @@ function targetDisappeared(error,target){
   const text=error?.message;
   return !!(target.documentIds?.some(id=>text===`No document with id ${id} in tab with id ${target.tabId}`) ||
     text===`No tab with id: ${target.tabId}` || text===`No tab with id: ${target.tabId}.` ||
-    target.frameIds?.some(id=>text===`No frame with id ${id} in tab with id ${target.tabId}`));
+    target.frameIds?.some(id=>text===`No frame with id ${id} in tab with id ${target.tabId}`) ||
+    /^Frame with ID \d+ was removed\.$/.test(text));
 }
 async function injectionCancelled(error,target){
   if(targetDisappeared(error,target))return true;
