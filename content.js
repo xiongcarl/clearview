@@ -22,7 +22,8 @@
     return refreshQueue;
   }
   refresh();
-  chrome.storage.onChanged.addListener((changes,area)=>{if(area==='local' && changes.settings)refresh();});
+  // A page restored from the back/forward cache may have missed a settings change.
+  addEventListener('pageshow',event=>{if(event.persisted)refresh();});
   function targetAt(event){
     let element=event.composedPath().find(x=>x instanceof Element);
     for(let depth=0;element && depth<8;depth++){const root=AdShieldShadows.rootFor(element);if(!root)break;const inner=root.elementFromPoint(event.clientX,event.clientY);if(!inner || inner===element)break;element=inner;}
@@ -34,7 +35,10 @@
   // What the on-demand element picker (picker.js) needs from this page's state.
   const page=globalThis.__adShieldPage={refresh,targetAt,active:()=>policyActive,contextTarget:()=>Date.now()-contextTime<15000?contextTarget:null,onInactive:null,start:null};
   chrome.runtime.onMessage.addListener((message,sender,respond)=>{
-    if(sender.id!==chrome.runtime.id || !sender.url?.startsWith(chrome.runtime.getURL('')) || message?.type!=='START_PICKER')return false;
+    if(sender.id!==chrome.runtime.id || !sender.url?.startsWith(chrome.runtime.getURL('')))return false;
+    // The background says when the settings changed (see notifyPages there).
+    if(message?.type==='POLICY_CHANGED'){refresh();return false;}
+    if(message?.type!=='START_PICKER')return false;
     (async()=>{
       if(!page.start){const loaded=await chrome.runtime.sendMessage({type:'LOAD_PICKER'});if(!loaded?.ok)throw new Error(loaded?.error || 'Picker unavailable');}
       await page.start(!!message.fromContext);

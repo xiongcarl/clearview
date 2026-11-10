@@ -1,594 +1,86 @@
-.content-ad-stack{display:none!important}
+.content-ad-stack,.main-container ~ div.z-gate-mask,#ADtip,#ChapterView > .slide-baidu,#J_sideFooter.side_footer,#MsnDialog.ad,#MyMoveAd,#QEff1,#QEff2,#QQ_Full,#ZAML,#Zi_ad_a_H,#aafoot.top_box,#aaheadtop,#aatop.top_box,#ad > #h2_player_prevideo,#ad-SNSSplashAd,#ad-float.kyty,#ad-floatwin,#adBody07,#adFloat,#adLeftFloat,#adRightFloat,#adUrl,#ad_box1,#ad_box2,#ad_full,#ad_headerbanner,#adad,#adrights14,#ads.row,#ads_c_tpc,#ads_top_video,#adtop1,#adv-2,#adv-3,#adv-fixed-square,#adv_wrap_hh,#adx_cggp,#apprecom1.apprecom,#apprecom2.apprecom,#arBRyGHxuDYU,#asdw,#asdw2,#asdw2 + img,#banner_links.banner-container,#bfad,#bfad1,#bfad2,#bfad3,#bfad4,#bfad5,#bfad6,#bottomAD,#bottomNavad,#bottommob.bottommob,#chs_bannerArea,#comiis_xizi_gg02,#crazy_ad_float,#crazy_ad_layer,#cs_left_couplet,#cs_right_couplet,#diads,#div_top_ads,#duilian_left,#duilian_right,#dy_card_dy,#eis_pad1,#eis_pad2,#fc_foot > #f_skyf,#fk_faiVisitStateAd,#float-ad,#floatad-winpop,#fnbt,#foot > #btmBox,#footer_fix_ggw,#fucku.col-md-8,#fwin_popad_7ree,#fwin_popad_7ree + #fwin_dialog,#gg300,#gg_url,#googleAD1,#googleAD2,#googleAD3,#googleAdIndexTop,#gridAdvContent,#gridAdvoOerlay,#header-top + .advertisement,#header_global_ad,#imgad,#index-ad-banner,#index_aside_ad,#index_content_ad,#js-ad-map,#js-ysjpp,#js_ads_banner_top,#js_ads_banner_top_slide,#kfpopupDiv,#ldgindexbuttom,#leftCouple,#leftCouple1,#leftCouplet,#leftFloat + #rightFloat,#leftFloat1 + #rightFloat1,#left_couple,#left_down_float_ad,#left_float + #right_float,#left_up_float_ad,#ljPz,#lovexin1,#lovexin11,#lovexin12,#lovexin121,#lovexin13,#lovexin14,#lovexin2,#lt-ad-radio,#main > .nv-ad,#miaov_float_layer,#micast_ads,#modalgg,#movieInfoRight,#movietp > .movietp,#mui-player + #player_pic,#mv_ad_dom,#mv_float_layer,#my-adsFPR,#navcontainer + .moneyarea,#netease_mail_footer,#news_top_advert,#olfullad,#overture_ads_bottom_td,#overture_ads_top_td,#photo--content-title-bottomx--foot,#player-bottom-ads,#popadv_popmask,#popadv_popmenu,#popup.t,#pp-modal-id,#ptcmsad1,#qinav_a1,#qj960a,#qj960b,#results.content-main > .eLeft,#rightCouple,#rightCouple + #leftFloat,#rightCouple1,#rightCouple1 + #leftFloat1,#rightCouplet,#rightCouplet + #leftFloat,#right_couple,#right_couple + #left_float,#right_down_float_ad,#right_up_float_ad,#sc-superman-ad,#side_promo.bc_dp,#snActive-wrap,#sponsorAdDiv2,#syad.visible-xs,#syad1,#syad2,#syad3,#syad4,#syad5,#syad6,#tanx-con-1,#tanx-fold-main,#taotaole,#textggs,#topNavad,#top_ads0,#toperAd2,#tripadvisor-ad,#widget-quan,#wp > .V-videoFloat,#xinnxi,#xqad,#xqad1,#xqad2,#xqad3,.MacPlayer > #play-pause,.TqAdShow,.Zi_ad_a_SB,._300x250.item,._cggp,._ggs,._v_ad_container,.a-media.ex-728-90,.a_2mu,.a_cn,.a_fl,.a_oscar1,.a_pb,.a_sxc,.aab-post,.ad-below-adjacent-post,.ad-below-header-menu,.ad-below-post-title,.ad-below-related-post,.ad-block-cn{display:none!important}
+.ad-couplet-common,.ad-left-down,.ad-pc,.ad-right-down,.ad-right-top,.ad-s2-card,.ad-s3-block,.ad-s4-block,.ad-s5-block,.ad-shine-panel,.ad-site,.ad.mi_btcon,.ad250left,.ad250right,.ad300left,.ad336left,.ad990x130,.ad990x90,.ad_content_mask,.ad_couplebanner,.ad_footerbanner,.ad_headerbanner,.ad_hf,.ad_pc,.ad_right_1,.ad_right_2,.ad_thread,.adbox-bg.adscounter,.add-gg,.adlistcss,.adpc,.adpcc,.adppc,.adpvc,.adpwc,.ads-after-content,.ads-after-header,.ads-all,.ads-before-content,.ads.flex,.ads100,.ads200,.ads_all > .ads_w,.ads_desktop,.ads_mobile,.ads_plugin,.ads_topBanner,.adsense160,.adsense200,.adsoho,.adv-6park,.adv-couplets,.advert-short,.advertising_lightbox,.afc_popup,.anniversary-wrap-2018,.apd-footer,.apd-home,.apd-right,.area > .tuiguang,.art-layer-ad,.article-pop-up-ad,.artplayer-plugin-ads,.asb-index,.asb-post,.assort-ad,.aub-post,.baiduad,.banner-ad-section,.banner-adv-new,.bdyp-sygg-ul,.below_ads,.bhgg,.bjxhf,.bm.a_c,.bn728-100,.bn728-93,.body-adblock,.bottomSponsor,.bottom_mengcheng_ad_wrap,.bus_adsbox,.cari-ads,.ceo_ads,.chat-ad,.chat-right-ad,.chat-sysbroadcast-ad,.chat-top-ad,.comiis_ad,.comiis_adbox,.comiis_guanggao,.comiis_guanggao_tit,.common_ad,.component-advertises,.conch-ads-box,.container > #dhshtml,.container > .index-ad,.container > .slide-baidu,.containeradvertising,.content > #dhxhtml,.content > .dds_w,.content > .myads,.content-video > .ads,.content-video > .ads-player,.content_ad_300,.corner-gg,.coupletad,.d_banner_inner,.dabc > .ng-star-inserted,.davwheat-ad,.ddd.ng-star-inserted,.dipiao,.dplayer > .tips,.ec-ad,.ec-tutu,.error > #qqs,.event_fullscreen_gg_modal,.fed-part-case > .ads-img,.float-adv-left-bottom,.float-adv-left-top,.float-adv-right-bottom,.float-adv-right-top,.floatAd,.float_bot_right,.floating-ad,.fnwehjnc12,.frAd,.frontpageAdvM,.ftad-ct,.full.banners12,.getads,.gg-one,.gg1000,.gg430,.gg_1,.gg_2,.gg_3,.gg_300,.gg_4,.gg_5,.gg_6,.gg_728,.gg_950,.gg_960,.gg_canvas,.gg_full,.gg_pc,.ggad,.gggpost-above,.ggpost-below,.ggtop,.google-ad2_fixed,.google_adsense2,.gpt_ads_box,.gpt_ads_title,.guanggaoBox,.guruin-ads,.hao123-unionad-pic,.head-adblock,.heg > .div-list,.hg-ssp-slot,.hidden-text + .ad-container,.homepage > .wp-none1,.hongbao_hd,.horizontal-banner,.horizontal-banner + .post-content,.hzxld,.iHead960x90,.ibtad,.imagegg-container,.index-top-aassd,.index-top-ad,.index-top-gg,.index-wz-ad,.index_alert_gg,.indexad2,.indexad3,.indexad4,.indexnews-ad,.infomation + #notice_container > .event-notice,.inner-advertise,.jav-nav + .bcpic,.jav-nav + .bcpic2,.jq_infoflow_ad_wrap,.jq_mediav_ad_report,.jqrp_infoflow_ad,.ksads,.leftadv,.leo-container .ssr1,.loc-home-top-adv-new,.lol-ad,.lol_ad,.lyzm-prevent,.main-container > #dhxhtml,.main-content > .ad-shell,.mainbg > #s11navtop,.maomi-content > #main-container > .row.mob40 + .row,.maomi-content > .section-banner,.mediav-newsfeed-listitem-type-1,.mediavAd_report,.mediavfeed-newsitem{display:none!important}
+.menutab_ad,.ml_ad1,.ml_ad3,.ml_ad5,.mlad,.mobadsq,.module-adslist,.module-adslists,.module-player > .dds_w,.myui-extra + .noticetext,.nav-ads,.nav-area + .wrapper .tuiguang,.newsAD,.notice-ad-wrapper,.notice-ad-wrapper + .app-abk,.notice-ad-wrapper + .app-abk + .app-text,.orbui-post,.orbui-site,.overBanner.dowloadBtn,.page > .wp-none1,.page-wwads,.pagead_3,.pasuAD,.pause-ad,.pc-ads,.pccb > .ng-star-inserted,.pggb > .ng-star-inserted,.pggc > .ng-star-inserted,.pggd > .ng-star-inserted,.pggf > .ng-star-inserted,.player-bottom-gg,.player-info > .recommend-two.recommend-list,.player-rm-float,.playtop.col-pd,.playtopad,.plc > .a_p,.pop.pop-bottom,.popup + .shortcuts-m-overlay,.privilege-promote,.pro-molnk,.pro1-molnk,.prom-olnk,.qzdhf,.qzhfaaa,.readmidad,.right > .content > .ads,.ripro_gg_wrap,.room-ad-bottom,.room-ad-top,.room-ad-video-down,.rotate-adv,.rtcenter_game,.samBannerUnit,.scupioadslot,.single-ad-banner,.socialmedia > #middletextbanner,.spot_nav_under_ad,.static-a2d,.svg-icon + #player_pause,.sxAdBox,.tab-content + .col-pd,.textadlist,.tg-m.tg-site,.tg-pc.tg-site,.theme_custom_slidebox-ad-below,.tmall_ad_container,.tmall_bg15,.top-gg,.top-read-ad,.topSponsor,.top_ad_ban,.top_func_ad,.toy52_outer,.toy52apparel_ALL,.trad3,.twavt-ads,.uk-width-1-1.adbox,.vg-overlay-pause,.video-ad-item,.video-item-ads,.video-player > .gg-bg-cover,.wemziguanggao,.wf_ad_block,.widget-qianhuiji,.widget-topadding,.widget-xlxba,.widget_adbox,.widget_ui_asb,.widget_ui_aub,.widget_ui_textasb,.widget_ui_textaub,.wp > .ad-box,.wp.a2_h,.wp.a_f,.wp.a_h,.wpcom_ad_wrap,.wrap > #btmBox,.wumii-bottom-popup,.wumii-widget-ad,.wwads,.wwads-cn,.wzad,.xstui-content__acc,.xzad-list,.xzbox-gh,.yalayi_box,.yt-ad-com,.yueduad1,.zone_wap_banner2,a#wrapper_left_bg,a#wrapper_right_bg,a.hengfu > img.hengfu,div#ad_id,div#xinxi,img#GGADIMG,img#adv1,script + #rbbox,script + .header_rmb,style + .a-loading,style + .vdgdo,#centerAd,.acg-adv-show,.popup-banner-ad,.ttgg,#cpro_container,.dabf > .ng-star-inserted,#downdiv > .downcode,#gudingweiDiv,#my_dp_a,#my_gd_a,.app > .app_tj,.nr_all > .m_f_a.sw_sp,.readerListADbox,body > .app + #htmlContenthtml,body > .dbfh,body > .zdhf,script + .dbfh,#asx_text,#wp > .V-video-float,.b_oscar1,.b_pr,.b_sxc,.b_sxp,.b_sxp + .zxy,.float-left12 > .div-list,.wrapper > #asxv,#j-new-ad,.a_sxfl,.a_sxmu,.a_sxp,.a_sxpb,.heg > .partner-list,.it618_firstad_flex,#vpnModal.nordvpn-popup,.nordvpn-popup + .sidebar-vpn{display:none!important}
+/* one selector per rule below */
 a[class="home-ad-banner"]{display:none!important}
 body > div#inplayer[align="center"]{display:none!important}
 a[href^="https://adm.beimg.com/"]{display:none!important}
 .main-container div[id^="z-extra-"]{display:none!important}
 .main-container div[id^="core-zone-"]{display:none!important}
 .main-container ~ div[class^="z"][class$="-root"]{display:none!important}
-.main-container ~ div.z-gate-mask{display:none!important}
 html[lang="zh-cn"] > body  > header.Mobile-Header + main#main > div[id][class]:not(#videoListPage,[class*="-"],[class*=" "]){display:none!important}
 .videoPlayContainer > div#video-play + div[data-nosnippet]{display:none!important}
 .row > div.colVideoList:has(> div.video-elem > a[target="_blank"]){display:none!important}
 body[onresize="stopDebugger()"][onbeforecopy="return!1"] > div#root div[id^="notice_modal"]{display:none!important}
 body[onresize="stopDebugger()"][onbeforecopy="return!1"] > div#root div.m0auto > div > div.grid + div > div:empty{display:none!important}
 div[style^="position:fixed; bottom:"][style$="vw;background: #000;opacity:0.01;"]{display:none!important}
-#ADtip{display:none!important}
-#ChapterView > .slide-baidu{display:none!important}
-#J_sideFooter.side_footer{display:none!important}
-#MsnDialog.ad{display:none!important}
-#MyMoveAd{display:none!important}
-#QEff1{display:none!important}
-#QEff2{display:none!important}
-#QQ_Full{display:none!important}
-#ZAML{display:none!important}
-#Zi_ad_a_H{display:none!important}
 #\31 280_adv{display:none!important}
-#aafoot.top_box{display:none!important}
 #aafoot[class^="top_box"]{display:none!important}
-#aaheadtop{display:none!important}
-#aatop.top_box{display:none!important}
 #aatop[class^="top_box"]{display:none!important}
-#ad > #h2_player_prevideo{display:none!important}
-#ad-SNSSplashAd{display:none!important}
-#ad-float.kyty{display:none!important}
-#ad-floatwin{display:none!important}
 #ad1[onclick="window.open(this.url)"]{display:none!important}
-#adBody07{display:none!important}
-#adFloat{display:none!important}
-#adLeftFloat{display:none!important}
-#adRightFloat{display:none!important}
-#adUrl{display:none!important}
-#ad_box1{display:none!important}
-#ad_box2{display:none!important}
-#ad_full{display:none!important}
-#ad_headerbanner{display:none!important}
-#adad{display:none!important}
-#adrights14{display:none!important}
-#ads.row{display:none!important}
-#ads_c_tpc{display:none!important}
-#ads_top_video{display:none!important}
-#adtop1{display:none!important}
-#adv-2{display:none!important}
-#adv-3{display:none!important}
-#adv-fixed-square{display:none!important}
-#adv_wrap_hh{display:none!important}
-#adx_cggp{display:none!important}
-#apprecom1.apprecom{display:none!important}
-#apprecom2.apprecom{display:none!important}
-#arBRyGHxuDYU{display:none!important}
-#asdw{display:none!important}
-#asdw2{display:none!important}
-#asdw2 + img{display:none!important}
-#banner_links.banner-container{display:none!important}
-#bfad{display:none!important}
-#bfad1{display:none!important}
-#bfad2{display:none!important}
-#bfad3{display:none!important}
-#bfad4{display:none!important}
-#bfad5{display:none!important}
-#bfad6{display:none!important}
-#bottomAD{display:none!important}
-#bottomNavad{display:none!important}
-#bottommob.bottommob{display:none!important}
-#chs_bannerArea{display:none!important}
-#comiis_xizi_gg02{display:none!important}
 #container > #main.site-main > div > div > a[href^="/"][href$="/"] > img{display:none!important}
-#crazy_ad_float{display:none!important}
-#crazy_ad_layer{display:none!important}
-#cs_left_couplet{display:none!important}
-#cs_right_couplet{display:none!important}
-#diads{display:none!important}
-#div_top_ads{display:none!important}
-#duilian_left{display:none!important}
-#duilian_right{display:none!important}
-#dy_card_dy{display:none!important}
-#eis_pad1{display:none!important}
-#eis_pad2{display:none!important}
-#fc_foot > #f_skyf{display:none!important}
 #fixed-bottom-modal[style^="right:"][style$="px; display: block;"]{display:none!important}
-#fk_faiVisitStateAd{display:none!important}
-#float-ad{display:none!important}
-#floatad-winpop{display:none!important}
-#fnbt{display:none!important}
-#foot > #btmBox{display:none!important}
-#footer_fix_ggw{display:none!important}
-#fucku.col-md-8{display:none!important}
-#fwin_popad_7ree{display:none!important}
-#fwin_popad_7ree + #fwin_dialog{display:none!important}
-#gg300{display:none!important}
-#gg_url{display:none!important}
-#googleAD1{display:none!important}
-#googleAD2{display:none!important}
-#googleAD3{display:none!important}
-#googleAdIndexTop{display:none!important}
-#gridAdvContent{display:none!important}
-#gridAdvoOerlay{display:none!important}
-#header-top + .advertisement{display:none!important}
-#header_global_ad{display:none!important}
 #hj-right-aside[style="float: right;"]{display:none!important}
-#imgad{display:none!important}
 #imgs5[height="60px"]{display:none!important}
-#index-ad-banner{display:none!important}
-#index_aside_ad{display:none!important}
 #index_banner[src*=".imgdd.com"]{display:none!important}
 #index_banner[src*=".meituan.net"]{display:none!important}
-#index_content_ad{display:none!important}
 #interstitial_fade[style^="display: block"]{display:none!important}
-#js-ad-map{display:none!important}
-#js-ysjpp{display:none!important}
-#js_ads_banner_top{display:none!important}
-#js_ads_banner_top_slide{display:none!important}
-#kfpopupDiv{display:none!important}
-#ldgindexbuttom{display:none!important}
-#leftCouple{display:none!important}
-#leftCouple1{display:none!important}
-#leftCouplet{display:none!important}
-#leftFloat + #rightFloat{display:none!important}
-#leftFloat1 + #rightFloat1{display:none!important}
-#left_couple{display:none!important}
-#left_down_float_ad{display:none!important}
-#left_float + #right_float{display:none!important}
-#left_up_float_ad{display:none!important}
-#ljPz{display:none!important}
-#lovexin1{display:none!important}
-#lovexin11{display:none!important}
-#lovexin12{display:none!important}
-#lovexin121{display:none!important}
-#lovexin13{display:none!important}
-#lovexin14{display:none!important}
-#lovexin2{display:none!important}
-#lt-ad-radio{display:none!important}
 #magneturlpost + .movie + .movie[style="padding:12px; margin-top:15px"]{display:none!important}
-#main > .nv-ad{display:none!important}
-#miaov_float_layer{display:none!important}
-#micast_ads{display:none!important}
-#modalgg{display:none!important}
-#movieInfoRight{display:none!important}
-#movietp > .movietp{display:none!important}
-#mui-player + #player_pic{display:none!important}
-#mv_ad_dom{display:none!important}
-#mv_float_layer{display:none!important}
-#my-adsFPR{display:none!important}
-#navcontainer + .moneyarea{display:none!important}
-#netease_mail_footer{display:none!important}
-#news_top_advert{display:none!important}
-#olfullad{display:none!important}
-#overture_ads_bottom_td{display:none!important}
-#overture_ads_top_td{display:none!important}
-#photo--content-title-bottomx--foot{display:none!important}
-#player-bottom-ads{display:none!important}
 #player_pause > .tip + a[target="_blank"]{display:none!important}
-#popadv_popmask{display:none!important}
-#popadv_popmenu{display:none!important}
-#popup.t{display:none!important}
-#pp-modal-id{display:none!important}
-#ptcmsad1{display:none!important}
-#qinav_a1{display:none!important}
-#qj960a{display:none!important}
-#qj960b{display:none!important}
-#results.content-main > .eLeft{display:none!important}
-#rightCouple{display:none!important}
-#rightCouple + #leftFloat{display:none!important}
-#rightCouple1{display:none!important}
-#rightCouple1 + #leftFloat1{display:none!important}
-#rightCouplet{display:none!important}
-#rightCouplet + #leftFloat{display:none!important}
-#right_couple{display:none!important}
-#right_couple + #left_float{display:none!important}
-#right_down_float_ad{display:none!important}
-#right_up_float_ad{display:none!important}
 #rip[href*=".taobao.com"]{display:none!important}
-#sc-superman-ad{display:none!important}
-#side_promo.bc_dp{display:none!important}
-#snActive-wrap{display:none!important}
-#sponsorAdDiv2{display:none!important}
-#syad.visible-xs{display:none!important}
-#syad1{display:none!important}
-#syad2{display:none!important}
-#syad3{display:none!important}
-#syad4{display:none!important}
-#syad5{display:none!important}
-#syad6{display:none!important}
 #table1[width="468"][height="50"]{display:none!important}
 #table1[width="794"][height="60"]{display:none!important}
 #table1[width="812"][height="50"]{display:none!important}
 #table1[width="812"][height="60"]{display:none!important}
-#tanx-con-1{display:none!important}
-#tanx-fold-main{display:none!important}
-#taotaole{display:none!important}
-#textggs{display:none!important}
-#topNavad{display:none!important}
-#top_ads0{display:none!important}
-#toperAd2{display:none!important}
-#tripadvisor-ad{display:none!important}
-#widget-quan{display:none!important}
-#wp > .V-videoFloat{display:none!important}
-#xinnxi{display:none!important}
-#xqad{display:none!important}
-#xqad1{display:none!important}
-#xqad2{display:none!important}
-#xqad3{display:none!important}
-.MacPlayer > #play-pause{display:none!important}
-.TqAdShow{display:none!important}
-.Zi_ad_a_SB{display:none!important}
-._300x250.item{display:none!important}
-._cggp{display:none!important}
-._ggs{display:none!important}
-._v_ad_container{display:none!important}
-.a-media.ex-728-90{display:none!important}
-.a_2mu{display:none!important}
-.a_cn{display:none!important}
-.a_fl{display:none!important}
-.a_oscar1{display:none!important}
-.a_pb{display:none!important}
-.a_sxc{display:none!important}
-.aab-post{display:none!important}
-.ad-below-adjacent-post{display:none!important}
-.ad-below-header-menu{display:none!important}
-.ad-below-post-title{display:none!important}
-.ad-below-related-post{display:none!important}
-.ad-block-cn{display:none!important}
-.ad-couplet-common{display:none!important}
-.ad-left-down{display:none!important}
-.ad-pc{display:none!important}
-.ad-right-down{display:none!important}
-.ad-right-top{display:none!important}
-.ad-s2-card{display:none!important}
-.ad-s3-block{display:none!important}
-.ad-s4-block{display:none!important}
-.ad-s5-block{display:none!important}
-.ad-shine-panel{display:none!important}
-.ad-site{display:none!important}
-.ad.mi_btcon{display:none!important}
-.ad250left{display:none!important}
-.ad250right{display:none!important}
-.ad300left{display:none!important}
-.ad336left{display:none!important}
-.ad990x130{display:none!important}
-.ad990x90{display:none!important}
-.ad_content_mask{display:none!important}
-.ad_couplebanner{display:none!important}
-.ad_footerbanner{display:none!important}
-.ad_headerbanner{display:none!important}
-.ad_hf{display:none!important}
-.ad_pc{display:none!important}
-.ad_right_1{display:none!important}
-.ad_right_2{display:none!important}
-.ad_thread{display:none!important}
-.adbox-bg.adscounter{display:none!important}
-.add-gg{display:none!important}
-.adlistcss{display:none!important}
-.adpc{display:none!important}
-.adpcc{display:none!important}
-.adppc{display:none!important}
-.adpvc{display:none!important}
-.adpwc{display:none!important}
 .ads > a > img[src*=".sinaimg."]{display:none!important}
-.ads-after-content{display:none!important}
-.ads-after-header{display:none!important}
-.ads-all{display:none!important}
-.ads-before-content{display:none!important}
-.ads.flex{display:none!important}
-.ads100{display:none!important}
-.ads200{display:none!important}
-.ads_all > .ads_w{display:none!important}
-.ads_desktop{display:none!important}
-.ads_mobile{display:none!important}
-.ads_plugin{display:none!important}
-.ads_topBanner{display:none!important}
-.adsense160{display:none!important}
-.adsense200{display:none!important}
-.adsoho{display:none!important}
-.adv-6park{display:none!important}
-.adv-couplets{display:none!important}
-.advert-short{display:none!important}
-.advertising_lightbox{display:none!important}
-.afc_popup{display:none!important}
-.anniversary-wrap-2018{display:none!important}
-.apd-footer{display:none!important}
-.apd-home{display:none!important}
-.apd-right{display:none!important}
 .archive > a[ontouchstart="this.click();"]{display:none!important}
-.area > .tuiguang{display:none!important}
-.art-layer-ad{display:none!important}
-.article-pop-up-ad{display:none!important}
-.artplayer-plugin-ads{display:none!important}
-.asb-index{display:none!important}
-.asb-post{display:none!important}
-.assort-ad{display:none!important}
-.aub-post{display:none!important}
 .ayx[style="display:block;"]{display:none!important}
 .ayx[style^="position: fixed;bottom"]{display:none!important}
 .b300 > .h100 > a[href^="http"]{display:none!important}
-.baiduad{display:none!important}
-.banner-ad-section{display:none!important}
-.banner-adv-new{display:none!important}
-.bdyp-sygg-ul{display:none!important}
-.below_ads{display:none!important}
-.bhgg{display:none!important}
-.bjxhf{display:none!important}
-.bm.a_c{display:none!important}
-.bn728-100{display:none!important}
-.bn728-93{display:none!important}
-.body-adblock{display:none!important}
-.bottomSponsor{display:none!important}
-.bottom_mengcheng_ad_wrap{display:none!important}
-.bus_adsbox{display:none!important}
-.cari-ads{display:none!important}
-.ceo_ads{display:none!important}
-.chat-ad{display:none!important}
-.chat-right-ad{display:none!important}
-.chat-sysbroadcast-ad{display:none!important}
-.chat-top-ad{display:none!important}
 .col6 > a[onclick*="横幅"]{display:none!important}
-.comiis_ad{display:none!important}
-.comiis_adbox{display:none!important}
-.comiis_guanggao{display:none!important}
-.comiis_guanggao_tit{display:none!important}
-.common_ad{display:none!important}
-.component-advertises{display:none!important}
-.conch-ads-box{display:none!important}
 .container .t-img-box:first-child{display:none!important}
-.container > #dhshtml{display:none!important}
-.container > .index-ad{display:none!important}
-.container > .slide-baidu{display:none!important}
-.containeradvertising{display:none!important}
-.content > #dhxhtml{display:none!important}
-.content > .dds_w{display:none!important}
 .content > .module > .small-icon-container > a.small-icon-div[target="_blank"]{display:none!important}
-.content > .myads{display:none!important}
 .content > .small-icon-container > a.small-icon-div[target="_blank"]{display:none!important}
-.content-video > .ads{display:none!important}
-.content-video > .ads-player{display:none!important}
-.content_ad_300{display:none!important}
-.corner-gg{display:none!important}
-.coupletad{display:none!important}
 .cui-pt-item[data-qhb]{display:none!important}
-.d_banner_inner{display:none!important}
-.dabc > .ng-star-inserted{display:none!important}
-.davwheat-ad{display:none!important}
-.ddd.ng-star-inserted{display:none!important}
-.dipiao{display:none!important}
-.dplayer > .tips{display:none!important}
-.ec-ad{display:none!important}
-.ec-tutu{display:none!important}
-.error > #qqs{display:none!important}
-.event_fullscreen_gg_modal{display:none!important}
 .f-sign-cont[data-dysign-adid]{display:none!important}
-.fed-part-case > .ads-img{display:none!important}
 .feed-item[data-ad]{display:none!important}
-.float-adv-left-bottom{display:none!important}
-.float-adv-left-top{display:none!important}
-.float-adv-right-bottom{display:none!important}
-.float-adv-right-top{display:none!important}
-.floatAd{display:none!important}
-.float_bot_right{display:none!important}
-.floating-ad{display:none!important}
-.fnwehjnc12{display:none!important}
-.frAd{display:none!important}
-.frontpageAdvM{display:none!important}
-.ftad-ct{display:none!important}
-.full.banners12{display:none!important}
-.getads{display:none!important}
-.gg-one{display:none!important}
-.gg1000{display:none!important}
-.gg430{display:none!important}
-.gg_1{display:none!important}
-.gg_2{display:none!important}
-.gg_3{display:none!important}
-.gg_300{display:none!important}
-.gg_4{display:none!important}
-.gg_5{display:none!important}
-.gg_6{display:none!important}
-.gg_728{display:none!important}
-.gg_950{display:none!important}
-.gg_960{display:none!important}
-.gg_canvas{display:none!important}
-.gg_full{display:none!important}
-.gg_pc{display:none!important}
-.ggad{display:none!important}
-.gggpost-above{display:none!important}
-.ggpost-below{display:none!important}
-.ggtop{display:none!important}
-.google-ad2_fixed{display:none!important}
-.google_adsense2{display:none!important}
 .gotoclick[adv_id]{display:none!important}
-.gpt_ads_box{display:none!important}
-.gpt_ads_title{display:none!important}
-.guanggaoBox{display:none!important}
-.guruin-ads{display:none!important}
-.hao123-unionad-pic{display:none!important}
-.head-adblock{display:none!important}
-.heg > .div-list{display:none!important}
-.hg-ssp-slot{display:none!important}
-.hidden-text + .ad-container{display:none!important}
 .his-sign-cont[data-dysign-adid]{display:none!important}
 .home-qf > div[class*="img-ad"]{display:none!important}
 .home-qf > div[class*="img-qf"]{display:none!important}
-.homepage > .wp-none1{display:none!important}
-.hongbao_hd{display:none!important}
-.horizontal-banner{display:none!important}
-.horizontal-banner + .post-content{display:none!important}
-.hzxld{display:none!important}
-.iHead960x90{display:none!important}
-.ibtad{display:none!important}
 .image-container > a[href*=".yangkeduo.com"]{display:none!important}
-.imagegg-container{display:none!important}
 .imgBox > div[class^="ad"]{display:none!important}
-.index-top-aassd{display:none!important}
-.index-top-ad{display:none!important}
-.index-top-gg{display:none!important}
-.index-wz-ad{display:none!important}
-.index_alert_gg{display:none!important}
-.indexad2{display:none!important}
-.indexad3{display:none!important}
-.indexad4{display:none!important}
-.indexnews-ad{display:none!important}
-.infomation + #notice_container > .event-notice{display:none!important}
-.inner-advertise{display:none!important}
-.jav-nav + .bcpic{display:none!important}
-.jav-nav + .bcpic2{display:none!important}
-.jq_infoflow_ad_wrap{display:none!important}
-.jq_mediav_ad_report{display:none!important}
-.jqrp_infoflow_ad{display:none!important}
 .js-cui-pt-item[data-qhb]{display:none!important}
-.ksads{display:none!important}
-.leftadv{display:none!important}
-.leo-container .ssr1{display:none!important}
-.loc-home-top-adv-new{display:none!important}
-.lol-ad{display:none!important}
-.lol_ad{display:none!important}
-.lyzm-prevent{display:none!important}
 .m_hot_rec_box_base[id^="right"]{display:none!important}
-.main-container > #dhxhtml{display:none!important}
-.main-content > .ad-shell{display:none!important}
-.mainbg > #s11navtop{display:none!important}
-.maomi-content > #main-container > .row.mob40 + .row{display:none!important}
-.maomi-content > .section-banner{display:none!important}
 .maomi-content > .section-menu > .row > a[target="_blank"]{display:none!important}
 .maomi-content > a[target="_blank"]{display:none!important}
-.mediav-newsfeed-listitem-type-1{display:none!important}
-.mediavAd_report{display:none!important}
-.mediavfeed-newsitem{display:none!important}
-.menutab_ad{display:none!important}
-.ml_ad1{display:none!important}
-.ml_ad3{display:none!important}
-.ml_ad5{display:none!important}
-.mlad{display:none!important}
-.mobadsq{display:none!important}
-.module-adslist{display:none!important}
-.module-adslists{display:none!important}
-.module-player > .dds_w{display:none!important}
-.myui-extra + .noticetext{display:none!important}
-.nav-ads{display:none!important}
-.nav-area + .wrapper .tuiguang{display:none!important}
-.newsAD{display:none!important}
 .newstyle > .container > a[target="_blank"]{display:none!important}
 .newstyle > a > img[src*="img.com/i/"]{display:none!important}
 .no-mobile[style="position: fixed;right:0px;bottom: 0px;"]{display:none!important}
-.notice-ad-wrapper{display:none!important}
-.notice-ad-wrapper + .app-abk{display:none!important}
-.notice-ad-wrapper + .app-abk + .app-text{display:none!important}
 .opt > a[target="_blank"] > img[src*=".360buyimg.com"]{display:none!important}
-.orbui-post{display:none!important}
-.orbui-site{display:none!important}
-.overBanner.dowloadBtn{display:none!important}
-.page > .wp-none1{display:none!important}
-.page-wwads{display:none!important}
-.pagead_3{display:none!important}
-.pasuAD{display:none!important}
-.pause-ad{display:none!important}
-.pc-ads{display:none!important}
-.pccb > .ng-star-inserted{display:none!important}
 .pg-body > div[class^="gg_"]{display:none!important}
-.pggb > .ng-star-inserted{display:none!important}
-.pggc > .ng-star-inserted{display:none!important}
-.pggd > .ng-star-inserted{display:none!important}
-.pggf > .ng-star-inserted{display:none!important}
-.player-bottom-gg{display:none!important}
 .player-box > .rm-two > a[target="_blank"]{display:none!important}
 .player-box-main > .rm-one > a[start-time]{display:none!important}
-.player-info > .recommend-two.recommend-list{display:none!important}
 .player-rm > a[href*="/ad.html?url="]{display:none!important}
-.player-rm-float{display:none!important}
 .player-rma > a[target="_blank"]{display:none!important}
 .player-tl > a[target="_blank"]{display:none!important}
-.playtop.col-pd{display:none!important}
-.playtopad{display:none!important}
-.plc > .a_p{display:none!important}
-.pop.pop-bottom{display:none!important}
 .pop[style="right: 10px;"]{display:none!important}
-.popup + .shortcuts-m-overlay{display:none!important}
-.privilege-promote{display:none!important}
-.pro-molnk{display:none!important}
-.pro1-molnk{display:none!important}
-.prom-olnk{display:none!important}
 .promlnk[style="position:relative;width:100%;height:100%;"]{display:none!important}
 .push-bottom-container[clickmode="cpt"]{display:none!important}
 .push-slider[clickmode="cpt"]{display:none!important}
 .push-top[clickmode="cpt"]{display:none!important}
 .qpdb + a[href]{display:none!important}
-.qzdhf{display:none!important}
-.qzhfaaa{display:none!important}
-.readmidad{display:none!important}
-.right > .content > .ads{display:none!important}
-.ripro_gg_wrap{display:none!important}
 .rm-twoa > a[href*=".umtrack.com"]{display:none!important}
-.room-ad-bottom{display:none!important}
-.room-ad-top{display:none!important}
-.room-ad-video-down{display:none!important}
-.rotate-adv{display:none!important}
-.rtcenter_game{display:none!important}
-.samBannerUnit{display:none!important}
-.scupioadslot{display:none!important}
-.single-ad-banner{display:none!important}
 .slider-ad[adid]{display:none!important}
-.socialmedia > #middletextbanner{display:none!important}
-.spot_nav_under_ad{display:none!important}
-.static-a2d{display:none!important}
-.svg-icon + #player_pause{display:none!important}
-.sxAdBox{display:none!important}
-.tab-content + .col-pd{display:none!important}
-.textadlist{display:none!important}
-.tg-m.tg-site{display:none!important}
-.tg-pc.tg-site{display:none!important}
-.theme_custom_slidebox-ad-below{display:none!important}
 .tjtagmanager[data-ad_id]{display:none!important}
-.tmall_ad_container{display:none!important}
-.tmall_bg15{display:none!important}
-.top-gg{display:none!important}
-.top-read-ad{display:none!important}
-.topSponsor{display:none!important}
-.top_ad_ban{display:none!important}
-.top_func_ad{display:none!important}
-.toy52_outer{display:none!important}
-.toy52apparel_ALL{display:none!important}
-.trad3{display:none!important}
-.twavt-ads{display:none!important}
 .txp_ad[data-role="txpad-interact-pause"]{display:none!important}
-.uk-width-1-1.adbox{display:none!important}
-.vg-overlay-pause{display:none!important}
-.video-ad-item{display:none!important}
 .video-holder > a[target="_blank"] > img[src*=".360buyimg.com"]{display:none!important}
 .video-info-aux + div[style^="border-radius: 5px;"]{display:none!important}
-.video-item-ads{display:none!important}
-.video-player > .gg-bg-cover{display:none!important}
 .wbalist_thumb[style*="/upload/site/"]{display:none!important}
-.wemziguanggao{display:none!important}
-.wf_ad_block{display:none!important}
-.widget-qianhuiji{display:none!important}
-.widget-topadding{display:none!important}
-.widget-xlxba{display:none!important}
-.widget_adbox{display:none!important}
-.widget_ui_asb{display:none!important}
-.widget_ui_aub{display:none!important}
-.widget_ui_textasb{display:none!important}
-.widget_ui_textaub{display:none!important}
-.wp > .ad-box{display:none!important}
-.wp.a2_h{display:none!important}
-.wp.a_f{display:none!important}
-.wp.a_h{display:none!important}
-.wpcom_ad_wrap{display:none!important}
-.wrap > #btmBox{display:none!important}
-.wumii-bottom-popup{display:none!important}
-.wumii-widget-ad{display:none!important}
-.wwads{display:none!important}
-.wwads-cn{display:none!important}
-.wzad{display:none!important}
-.xstui-content__acc{display:none!important}
-.xzad-list{display:none!important}
-.xzbox-gh{display:none!important}
 .y.mtw[style="padding: 0px 10px;"]{display:none!important}
-.yalayi_box{display:none!important}
-.yt-ad-com{display:none!important}
-.yueduad1{display:none!important}
-.zone_wap_banner2{display:none!important}
 A[href*=".com/?Agent="]{display:none!important}
 IMG[onclick*="bucd.lol"]{display:none!important}
-a#wrapper_left_bg{display:none!important}
 a#wrapper_left_bg\ llll{display:none!important}
-a#wrapper_right_bg{display:none!important}
-a.hengfu > img.hengfu{display:none!important}
 a[clickmode="ad"]{display:none!important}
 a[clickmode="cpt"]{display:none!important}
 a[data-ad_type="1"]{display:none!important}
@@ -641,8 +133,6 @@ a[target="_blank"] > img[src*=".ikstatic.cn"][style="width:100%;height:100%"]{di
 body > div.container[style="margin-bottom: 10px;"] > script:first-child ~ div[style="height:60px;width:100%;"]{display:none!important}
 body > div[style=" max-width:990px; margin:0 auto;"] > a[target="_blank"]{display:none!important}
 body[onload*="u()"] > #x{display:none!important}
-div#ad_id{display:none!important}
-div#xinxi{display:none!important}
 div[class^="is_"] > a > img[referrerpolicy="no-referrer"]{display:none!important}
 div[id^="a-loading-"] > span{display:none!important}
 div[id^="ad_thread"]{display:none!important}
@@ -655,19 +145,12 @@ div[role="listitem"] .bannerliststyle{display:none!important}
 div[style="margin:10px auto;width: 930px;height: 250px;"]{display:none!important}
 div[style="position: fixed;top: 60px;right:0;z-index:999;width:250px"]{display:none!important}
 div[style^="position"][onclick^="window.open"]{display:none!important}
-img#GGADIMG{display:none!important}
-img#adv1{display:none!important}
 img[onclick*=".qq.com/doc/"]{display:none!important}
 img[onclick*="/statics/js/"]{display:none!important}
 img[onclick="window.open(this.url)"][src*="qq.com"]{display:none!important}
 img[onclick^="window.open"][src*=".360buyimg.com"]{display:none!important}
 img[onclick^="window.open"][src*="pc.qq.com"]{display:none!important}
-script + #rbbox{display:none!important}
-script + .header_rmb{display:none!important}
 span[title="neteasefooter"]{display:none!important}
-style + .a-loading{display:none!important}
-style + .vdgdo{display:none!important}
-#centerAd{display:none!important}
 .nav-link[name="temp_ad_adcontrol"]{display:none!important}
 a[href*="/122.51.121.126:"]{display:none!important}
 a[href*="/137.220.194.105:"]{display:none!important}
@@ -700,35 +183,23 @@ body > #__nuxt:first-child > div > .footer > .floatWindow + div[data-tag]{displa
 body > #__nuxt:first-child ~ div[class] > div > div > button[aria-label] + div[class]{display:none!important}
 #guanggao1[style^="position"]{display:none!important}
 #guanggao2[style^="position"]{display:none!important}
-.acg-adv-show{display:none!important}
-.popup-banner-ad{display:none!important}
-.ttgg{display:none!important}
-#cpro_container{display:none!important}
 a[href*="/mobads.php?"]{display:none!important}
 body > div[style="display:none;"] + div[style="display:none;"] + div[id][class][style^="background-color:"]{display:none!important}
 a[href*="/yfj8159.com"]{display:none!important}
 a[href^="http://yunbofangbt."]{display:none!important}
 div[align="center"] > a[href^="/url/"] > img[src*=".alicdn.com"]{display:none!important}
 div[align="center"] > a[href^="/url/"] > img[src*=".qpic.cn"]{display:none!important}
-.dabf > .ng-star-inserted{display:none!important}
 vg-pause-ads{display:none!important}
 vg-pause-f{display:none!important}
 center > p > a[target="_blank"] > img[width="728px"][height="90px"]{display:none!important}
 body > noscript + #root > div > div > .grid + div[role] + div{display:none!important}
 body > noscript + #root > div > div > .grid + div[role] + div + div[class]{display:none!important}
 body > noscript + #root > div > div > .grid > .m0auto > div > div:last-child{display:none!important}
-#downdiv > .downcode{display:none!important}
-#gudingweiDiv{display:none!important}
-#my_dp_a{display:none!important}
-#my_gd_a{display:none!important}
-.app > .app_tj{display:none!important}
 .appguide-wrap[onclick*="bcebos.com"]{display:none!important}
 .box_con[style="border-radius:10px;background-color:#ff0000;padding:15px;"]{display:none!important}
 .callApp_fl_btn[onclick^="open_app"]{display:none!important}
 .downcode[style^="position:fixed;z-index:1000;top:200px;"]{display:none!important}
 .look_more_a[onclick^="open_app"]{display:none!important}
-.nr_all > .m_f_a.sw_sp{display:none!important}
-.readerListADbox{display:none!important}
 [class][onclick="window.location.href='/api/goapp/'"]{display:none!important}
 [class][onclick="window.location.href='https://www.suyuexs.com'"]{display:none!important}
 [class][onclick="window.location.href='https://www.tsqcy.cn'"]{display:none!important}
@@ -741,36 +212,14 @@ a[href*=".ssmh"][href*="?u="]{display:none!important}
 a[href*=".xxmh"][href*="?u="]{display:none!important}
 a[href*="://mgzs.cdn.bcebos.com/"]{display:none!important}
 a[href^="http"][onclick^="setCookie"][style^="width:100%;height:100"]{display:none!important}
-body > .app + #htmlContenthtml{display:none!important}
-body > .dbfh{display:none!important}
-body > .zdhf{display:none!important}
 body > div[style$=";background: #000;opacity:0.01;"]{display:none!important}
 div[onclick^="window.location.href"][onclick*=".bcebos."]{display:none!important}
 div[style^="line-height"][style*="http"][style$="fixed;"]{display:none!important}
 iframe[src*=".xxmh"][src*="?u="]{display:none!important}
-script + .dbfh{display:none!important}
 a[href^="/api/hop/"] > img[src*=".xyz/m/"]{display:none!important}
 a[href^="/api/jump/"] > img[src*=".xyz/m/"]{display:none!important}
-#asx_text{display:none!important}
-#wp > .V-video-float{display:none!important}
-.b_oscar1{display:none!important}
-.b_pr{display:none!important}
-.b_sxc{display:none!important}
-.b_sxp{display:none!important}
-.b_sxp + .zxy{display:none!important}
-.float-left12 > .div-list{display:none!important}
-.wrapper > #asxv{display:none!important}
 a[onclick*="/dasp.php?a="]{display:none!important}
-#j-new-ad{display:none!important}
-.a_sxfl{display:none!important}
-.a_sxmu{display:none!important}
-.a_sxp{display:none!important}
-.a_sxpb{display:none!important}
-.heg > .partner-list{display:none!important}
 a[href^="/dasp.php?a="]{display:none!important}
 #toptb + div[align="center"]{display:none!important}
-.it618_firstad_flex{display:none!important}
-#vpnModal.nordvpn-popup{display:none!important}
-.nordvpn-popup + .sidebar-vpn{display:none!important}
 a[href*=".labsda.com"] > img[src^="/game/20"]{display:none!important}
 a[href^="/link-index-aid-"] > img[src*=".wnimg2.cfd"]{display:none!important}

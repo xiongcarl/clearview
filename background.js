@@ -57,9 +57,10 @@ const STATS_CALLS=18,STATS_WINDOW=600000,STATS_RESERVED=4;
 let statsChain=Promise.resolve();
 function statsTask(task){const result=statsChain.then(task);statsChain=result.catch(error=>console.error('Stats:',error));return result;}
 const dayKey=time=>new Date(time).toLocaleDateString('sv');
+async function statsSession(){return (await chrome.storage.session.get('statsSession')).statsSession || {last:0,calls:[],tabs:{}};}
 async function statsState(){
-  const [{statsSession},{stats}]=await Promise.all([chrome.storage.session.get('statsSession'),chrome.storage.local.get('stats')]);
-  return {session:statsSession || {last:0,calls:[],tabs:{}},stats:stats || {total:0,since:new Date().toISOString(),days:{},sites:{}}};
+  const [session,{stats}]=await Promise.all([statsSession(),chrome.storage.local.get('stats')]);
+  return {session,stats:stats || {total:0,since:new Date().toISOString(),days:{},sites:{}}};
 }
 async function syncStats(minGap){
   const {session,stats}=await statsState();const now=Date.now();
@@ -69,17 +70,19 @@ async function syncStats(minGap){
   if(!chrome.declarativeNetRequest.getMatchedRules)return {session,stats};
   session.calls.push(now);
   const {rulesMatchedInfo}=await chrome.declarativeNetRequest.getMatchedRules({minTimeStamp:session.last+1});
+  let counted=false;
   for(const match of rulesMatchedInfo){
     session.last=Math.max(session.last,match.timeStamp);
     const action=await ruleAction(match.rule);if(action!=='block' && action!=='redirect')continue;
-    stats.total++;const day=dayKey(match.timeStamp);stats.days[day]=(stats.days[day] || 0)+1;
+    counted=true;stats.total++;const day=dayKey(match.timeStamp);stats.days[day]=(stats.days[day] || 0)+1;
     const tab=session.tabs[match.tabId];
     if(tab && match.timeStamp>=tab.since){tab.count++;if(tab.host)stats.sites[tab.host]=(stats.sites[tab.host] || 0)+1;}
   }
   for(const [id,tab] of Object.entries(session.tabs))if(tab.removed)delete session.tabs[id];
   const days=Object.keys(stats.days).sort();for(const day of days.slice(0,-90))delete stats.days[day];
   const sites=Object.entries(stats.sites);if(sites.length>300)stats.sites=Object.fromEntries(sites.sort((a,b)=>b[1]-a[1]).slice(0,200));
-  await Promise.all([chrome.storage.session.set({statsSession:session}),chrome.storage.local.set({stats})]);
+  // The periodic sync usually finds nothing new; leave the stored totals alone then.
+  await Promise.all([chrome.storage.session.set({statsSession:session}),...(counted?[chrome.storage.local.set({stats})]:[])]);
   return {session,stats};
 }
 async function tabStats(tabId){
@@ -111,9 +114,9 @@ if(!chrome.declarativeNetRequest.getMatchedRules && chrome.webRequest){
 }
 chrome.webNavigation.onCommitted.addListener(event=>{
   if(event.frameId!==0 || event.tabId<0 || event.documentLifecycle==='prerender')return;
-  statsTask(async()=>{const {session}=await statsState();session.tabs[event.tabId]={host:A.hostname(event.url),since:Math.floor(event.timeStamp),count:0};await chrome.storage.session.set({statsSession:session});});
+  statsTask(async()=>{const session=await statsSession();session.tabs[event.tabId]={host:A.hostname(event.url),since:Math.floor(event.timeStamp),count:0};await chrome.storage.session.set({statsSession:session});});
 });
-chrome.tabs.onRemoved.addListener(tabId=>statsTask(async()=>{const {session}=await statsState();if(session.tabs[tabId]){session.tabs[tabId].removed=true;await chrome.storage.session.set({statsSession:session});}}));
+chrome.tabs.onRemoved.addListener(tabId=>statsTask(async()=>{const session=await statsSession();if(session.tabs[tabId]){session.tabs[tabId].removed=true;await chrome.storage.session.set({statsSession:session});}}));
 // Hosts that need per-site treatment are learned as the user reaches them. Registering every
 // listed host up front would make the browser test ~25,000 patterns on each frame of each page.
 // Learned hosts stay registered, so only the first visit can race the page's own scripts; that
@@ -215,7 +218,10 @@ async function applySettings(settings,listCache){
   if(!logging){clearTimeout(flushTimer);logs=[];await chrome.storage.session.remove('diagnosticLogs');}
   const hot=await readHot();const before=JSON.stringify(hot);await seedHot(settings,hot);
   if(JSON.stringify(hot)!==before)await chrome.storage.local.set({hot});
+  const hadRecorder=!!(await chrome.scripting.getRegisteredContentScripts({ids:['ad-style']}))[0]?.js?.some(file=>file.endsWith('popup-intent.js'));
   await registerScripts(settings,hot);
+  // Pages already open predate a newly chosen strict mode; give them the recorder now.
+  if(!hadRecorder && A.usesStrict(settings))preparePopupObservers(settings).catch(error=>console.error('Popup observer:',error));
   await ensureAlarm(settings);
   // Per-tab count of blocked/replaced requests on the toolbar icon is opt-in (settings);
   // the popup always shows it. Chrome resets the count on navigation.
@@ -252,8 +258,9 @@ async function documentIsCurrent(sender){
   const frame=await chrome.webNavigation.getFrame({tabId:sender.tab.id,frameId:sender.frameId});
   return !!frame && frame.documentId===sender.documentId;
 }
-async function updateDocumentCSS(method,source,sender,target){
-  if(!await documentIsCurrent(sender))return false;
+async function updateDocumentCSS(method,source,sender,target,verified){
+  // `verified`: an earlier step of the same request just confirmed this document.
+  if(!verified && !await documentIsCurrent(sender))return false;
   await chrome.scripting[method]({target,...source,origin:'USER'});
   if(await documentIsCurrent(sender))return true;
   // CSS injection can complete against the new frame during navigation even
@@ -267,7 +274,7 @@ async function updateDocumentCSS(method,source,sender,target){
 }
 // Tabs opened before the extension was installed or re-enabled have no popup observer yet.
 async function preparePopupObservers(settings){
-  if(!settings.enabled)return;
+  if(!settings.enabled || !A.usesStrict(settings))return;
   const tabs=await chrome.tabs.query({url:['http://*/*','https://*/*']});
   for(const tab of tabs){
     if(A.isListed(A.hostname(tab.url),settings.whitelist))continue;
@@ -315,10 +322,15 @@ async function info(state){
   const enabled=await chrome.declarativeNetRequest.getEnabledRulesets();
   return {initializationError,enhanced:{...enhancedMeta,enabled:enabled.includes('enhanced')},advanced:advancedMeta,webLists:webMeta.map(x=>({...x,enabled:enabled.includes(x.id)})),domainCount:state.listCache?.domains.length || seedMeta.domainCount,sourceVersion:state.listCache?.sourceVersion || seedMeta.sourceVersion,source:A.LIST_URL,...state.updateMeta};
 }
+// Open pages re-read their policy when the settings change. They are told directly: a storage
+// listener in every frame would also be handed every statistics and learned-host write.
+async function notifyPages(){
+  for(const tab of await chrome.tabs.query({}))if(/^https?:/.test(tab.url || ''))chrome.tabs.sendMessage(tab.id,{type:'POLICY_CHANGED'}).catch(()=>{});
+}
 async function save(next,state){
   next=A.clean(next);
   if(JSON.stringify(next.webFilters)!==JSON.stringify(state.settings.webFilters)){const hot=await readHot();hot.genericOff={};await chrome.storage.local.set({hot});}
-  try{await applySettings(next,state.listCache);await chrome.storage.local.set({settings:next});initializationError=null;await chrome.storage.session.set({appliedSettings:appliedKey({...state,settings:next})});if(next.enabled && !state.settings.enabled)await preparePopupObservers(next);}
+  try{await applySettings(next,state.listCache);await chrome.storage.local.set({settings:next});notifyPages().catch(()=>{});initializationError=null;await chrome.storage.session.set({appliedSettings:appliedKey({...state,settings:next})});if(next.enabled && !state.settings.enabled)await preparePopupObservers(next);}
   catch(error){settingsCache=undefined;try{await applySettings(state.settings,state.listCache);}catch(rollback){console.error('Rollback failed',rollback);}throw error;}
   return next;
 }
@@ -355,25 +367,30 @@ async function resolvePolicy(message,sender){
   const custom=active ? [...settings.cosmeticRules.filter(x=>A.isListed(host,[x.host])).map(x=>x.selector),...UserFilters.selectorsFor(host,userFilters(settings))] : [];
   const shadowRules=custom.map(A.selectorChain).filter(x=>x.length>1);const ordinaryCustom=custom.filter(x=>A.selectorChain(x).length===1);let selectors=[],componentSelectors=[];let extended=ordinaryCustom.filter(isExtended);
   // Top documents get the global selectors from the registered stylesheet; subframes ask for them here.
-  let frameCss=[];
+  let frameCss=[],lists;
   if(active && settings.hideAds && !compatible){
-    const lists=await listCosmetics(host,settings);
+    lists=await listCosmetics(host,settings);
     selectors=[...lists.selectors];componentSelectors=[...lists.component];
     if(settings.procedural)extended=[...lists.extended,...extended];
     if(sender.frameId>0 && !lists.genericOff)frameCss=A.genericFiles(settings);
   }
-  const automaticCss=componentSelectors.map(selector=>`${selector} { display: none !important; }`).join('\n');
-  const documentCss=[...new Set([...selectors,...ordinaryCustom.filter(x=>!isExtended(x))])].map(selector=>`${A.scopedSelector(selector)} { display: none !important; }`).join('\n');
+  // Every frame of a site gets the same text; build it once per cached host.
+  const automaticCss=lists?(lists.shadowCss ??= componentSelectors.map(selector=>`${selector} { display: none !important; }`).join('\n')):'';
+  const plainCustom=ordinaryCustom.filter(x=>!isExtended(x));
+  const hideAll=list=>[...new Set(list)].map(selector=>`${A.scopedSelector(selector)} { display: none !important; }`).join('\n');
+  const documentCss=lists && !plainCustom.length?(lists.documentCss ??= hideAll(selectors)):hideAll([...selectors,...plainCustom]);
   const css=!documentCss ? '' : A.IS_FIREFOX ? documentCss : `@scope (:root) {\n${documentCss}\n}`;
   const shadowCss=active && settings.hideAds && settings.shadowAds && !compatible ? automaticCss : '';
   const target=sender.documentId ? {tabId:sender.tab.id,documentIds:[sender.documentId]} : {tabId:sender.tab.id,frameIds:[sender.frameId]};
   // Keep the document ID for every step; never retry on a replacement frame.
   try{
-    if(message.previousCss && !await updateDocumentCSS('removeCSS',{css:message.previousCss},sender,target))return {stale:true};
+    let verified=false;
+    const change=async(method,source)=>{if(!await updateDocumentCSS(method,source,sender,target,verified))return false;verified=true;return true;};
+    if(message.previousCss && !await change('removeCSS',{css:message.previousCss}))return {stale:true};
     const previousFiles=message.frameCss || [];const sameFiles=previousFiles.join()===frameCss.join();
-    if(previousFiles.length && !sameFiles && !await updateDocumentCSS('removeCSS',{files:previousFiles},sender,target))return {stale:true};
-    if(frameCss.length && !sameFiles && !await updateDocumentCSS('insertCSS',{files:frameCss},sender,target))return {stale:true};
-    if(css && !await updateDocumentCSS('insertCSS',{css},sender,target))return {stale:true};
+    if(previousFiles.length && !sameFiles && !await change('removeCSS',{files:previousFiles}))return {stale:true};
+    if(frameCss.length && !sameFiles && !await change('insertCSS',{files:frameCss}))return {stale:true};
+    if(css && !await change('insertCSS',{css}))return {stale:true};
     let extendedLoaded=!!message.extendedLoaded;
     if(extended.length && !extendedLoaded){await chrome.scripting.executeScript({target,world:'ISOLATED',files:['vendor/extended-css.js']});extendedLoaded=true;}
     let guardInstalled=!!message.guardInstalled;
@@ -394,7 +411,7 @@ chrome.runtime.onMessage.addListener((message,sender,respond)=>{
   if(message.type==='PAGE_POLICY'){pagePolicy(message,sender).then(result=>respond({ok:true,...result}),error=>respond({ok:false,error:error.message}));return true;}
   enqueue(async()=>{
     const state=await readState();
-    if(message.type==='LOAD_PICKER'){await chrome.scripting.executeScript({target:{tabId:sender.tab.id,frameIds:[0]},world:'ISOLATED',files:['picker.js']});return {};}
+    if(message.type==='LOAD_PICKER'){await chrome.scripting.executeScript({target:{tabId:sender.tab.id,frameIds:[0]},world:'ISOLATED',files:['common.js','picker.js']});return {};}
     if(message.type==='PICKER_STRINGS'){const keys=['picker_title','picker_hint','picker_selected','picker_selected_many','picker_repick','picker_widen','picker_widen_title','picker_cancel','picker_confirm','picker_save_failed','picker_not_unique','picker_too_deep','picker_too_broad','bg_site_paused'];return {strings:Object.fromEntries(keys.map(key=>[key,I18N.t(key)]))};}
     if(message.type==='ADD_SELECTOR'){
       if(!state.settings.enabled || A.isListed(A.hostname(sender.url),state.settings.whitelist))throw new Error(I18N.t('bg_site_paused'));
@@ -443,7 +460,7 @@ async function startPicker(tab,fromContext){
   const send=()=>chrome.tabs.sendMessage(tab.id,{type:'START_PICKER',fromContext},{frameId:0});
   let response;
   // Pages opened before the extension was installed or updated have no content script yet.
-  try{response=await send();}catch{await chrome.scripting.executeScript({target:{tabId:tab.id,frameIds:[0]},world:'ISOLATED',files:['common.js','popup-intent.js','shadow-filtering.js','content.js']});response=await send();}
+  try{response=await send();}catch{await chrome.scripting.executeScript({target:{tabId:tab.id,frameIds:[0]},world:'ISOLATED',files:A.pageFiles((await readState()).settings)});response=await send();}
   if(!response?.ok)throw new Error(response?.error || I18N.t('bg_picker_failed'));
 }
 async function toggleSite(tab){

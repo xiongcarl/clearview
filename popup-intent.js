@@ -55,11 +55,19 @@
             const finalRedirect=safeRedirect(link,finalURL);if(finalRedirect && finalRedirect!==redirect)send({...message,url:finalRedirect});}catch{}
         },0);
       };
+      let frames=0;
       const observer=new MutationObserver(records=>{
         // document.open() can clear listeners; restore them for this document.
         // Ordinary feeds, counters and ad removal do not change the frame tree.
         relisten();
-        if(records.some(change=>Array.from(change.addedNodes).some(node=>node.nodeType===1 && (['iframe','frame'].includes(node.localName) || node.querySelector('iframe,frame')))))schedule();
+        if(scheduled)return;
+        // window.length counts child frames without searching the added subtrees (the parser
+        // reports every element of a page here). A frame swapped for another in one batch
+        // keeps the count, so directly added frames are checked by name; anything deeper
+        // waits for the periodic scan.
+        const count=doc.defaultView?doc.defaultView.length:0;
+        if(count!==frames){frames=count;schedule();return;}
+        for(let i=0;i<records.length;i++){const added=records[i].addedNodes;for(let j=0;j<added.length;j++){const name=added[j].localName;if(name==='iframe' || name==='frame'){schedule();return;}}}
       });
       const relisten=()=>{for(const type of ['pointerdown','click','auxclick','keydown','contextmenu'])doc.addEventListener(type,handler,{capture:true,passive:true});};
       record={relisten,observer};documents.set(doc,record);observer.observe(doc,{subtree:true,childList:true});
@@ -70,7 +78,8 @@
   function scan(){
     scheduled=false;const queue=[window],seen=new Set();
     while(queue.length){const view=queue.shift();if(seen.has(view))continue;seen.add(view);try{listen(view.document);for(let i=0;i<view.frames.length;i++)queue.push(view.frames[i]);}catch{} /* Cross-origin frames use their own registered observer. */}
-    send({type:'POPUP_RECORDER_READY'});
+    // The worker only tracks the top document (popup-rescue.js markReady).
+    if(window===top)send({type:'POPUP_RECORDER_READY'});
   }
   function schedule(){if(!scheduled){scheduled=true;setTimeout(scan,0);}}
   globalThis[key]={scan};scan();setInterval(scan,1500);

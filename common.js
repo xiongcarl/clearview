@@ -88,7 +88,8 @@ globalThis.AdShield = (() => {
   function scripts(settings,hot={fixes:{},genericOff:{}}) {
     if (!settings.enabled) return [];
     const shared={matches:['http://*/*','https://*/*'],excludeMatches:excludes(settings.whitelist),runAt:'document_start',allFrames:false,persistAcrossSessions:true};
-    const result=[{...shared,id:'ad-style',world:'ISOLATED',js:['common.js','popup-intent.js','shadow-filtering.js','content.js'], allFrames:true, ...(IS_FIREFOX?{}:{matchOriginAsFallback:true}), css:[]}];
+    const everyFrame={allFrames:true, ...(IS_FIREFOX?{}:{matchOriginAsFallback:true})};
+    const result=[{...shared,id:'ad-style',world:'ISOLATED',js:pageFiles(settings), ...everyFrame, css:[]}];
     // Selectors every site gets. The browser injects these at document start without any script running.
     if(settings.hideAds)result.push({...shared,id:'generic-css',css:genericFiles(settings),excludeMatches:excludes([...settings.whitelist,...settings.compatSites]).concat(Object.keys(hot.genericOff || {}))});
     const guard = mode => mode === 'strict' ? 'guard-strict.js' : 'guard-standard.js';
@@ -105,6 +106,9 @@ globalThis.AdShield = (() => {
     });
     return result;
   }
+  // The link-gesture recorder only serves strict popup blocking; nobody else pays for it.
+  function usesStrict(settings){return settings.popupMode==='strict' || settings.siteModes.some(x=>x.mode==='strict');}
+  function pageFiles(settings){return [...(usesStrict(settings)?['popup-intent.js']:[]),'shadow-filtering.js','content.js'];}
   function genericFiles(settings){return ['base',...['easylist','easyprivacy','chinese','annoyances','fixes'].filter(id=>settings.webFilters[id])].map(id=>`data/engine/generic-${id}.css`);}
   function fixFiles(shard){return ['vendor/publicsuffix.js','fixes/lib.js',`fixes/data-${shard}.js`];}
   function domainRules(list, firstId=20000, priority=20) {
@@ -140,5 +144,5 @@ globalThis.AdShield = (() => {
     if(!Number.isInteger(declared) || declared<5000 || declared>150000 || entries.length!==declared || entries.some(x=>!validDomain(x) || !x.includes('.'))) throw new Error(globalThis.I18N?I18N.t('bg_list_invalid'):'Invalid list');
     return {domains:[...new Set([...entries,...CORE_DOMAINS])].sort(), sourceVersion:text.match(/^# Version:\s*(.+)$/m)?.[1] || '',sourceCount:declared};
   }
-  return {entityFor,genericFiles,fixFiles,LIST_URL,SUPPORT_URL,IS_FIREFOX,MODES,CORE_DOMAINS,RESTRICTED_THIRD_PARTY,validDomain,hostname,normalizeDomain,safeFilterSelector,safeSelector,selectorChain,scopedSelector,clean,isListed,modeFor,patterns,scripts,domainRules,dynamicRules,parseList};
+  return {entityFor,usesStrict,pageFiles,genericFiles,fixFiles,LIST_URL,SUPPORT_URL,IS_FIREFOX,MODES,CORE_DOMAINS,RESTRICTED_THIRD_PARTY,validDomain,hostname,normalizeDomain,safeFilterSelector,safeSelector,selectorChain,scopedSelector,clean,isListed,modeFor,patterns,scripts,domainRules,dynamicRules,parseList};
 })();

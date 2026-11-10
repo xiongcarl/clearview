@@ -1,10 +1,10 @@
-ins.adsbygoogle{display:none!important}
+ins.adsbygoogle,.trc_rbox_container{display:none!important}
+/* one selector per rule below */
 [data-ad-slot][data-ad-client]{display:none!important}
 iframe[src*="//googleads.g.doubleclick.net/"]{display:none!important}
 iframe[src*="//tpc.googlesyndication.com/"]{display:none!important}
 iframe[src*="//pagead2.googlesyndication.com/"]{display:none!important}
 div[id^="taboola-"]{display:none!important}
-.trc_rbox_container{display:none!important}
 iframe[id^="google_ads_iframe_"]{display:none!important}
 div[id^="google_ads_iframe_"]{display:none!important}
 amp-ad[type="doubleclick"]{display:none!important}

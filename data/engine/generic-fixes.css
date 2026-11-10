@@ -1,67 +1,28 @@
+.aff-content-col,.aff-inner-col,.aff-item-list,.inplayer-ad,.trafficjunky-float-right,.happy-inside-player,.blocker-notice,.blocker-overlay,.exo-horizontal,.ave-pl,.bottom-hor-block,.brs-block,.advboxemb,.wgAdBlockMessage,.glx-watermark-container,#sidearm-adblock-modal,.overlay-advertising-new,.header-menu-bottom-ads,.rkads,#bt-ads,.mdp-deblocker-wrapper,.amp-ad-inner,#placeAds,.samBannerUnit,#kt_player ~ #sp-player,.bloc-pub,.bloc-pub2,#invideo_data,#invideo_2,.hor_banner,#invid_call,#invideo_new,.aan_fake,.aan_fake__video-units,.rps_player_ads,.preroll-blocker,#kt_player #ads_iframe,#kt_player .fp-brand,.ID_live_cam_inner,.asside-link,#dontfoid,.ark-ad-message,#vidcloud-player > #overlay-container,.ninja-recommend-block,#vstr ~ #overlay,.pppx,.bb ~ main#container .containerAds,.fints-block__row,.full-ave-pl,.full-bns-block,.vertbars,.video-brs,#plban,.player-bns-block,.gallery-bns-bl,#stop_ad,#stop_ad2,.stream-item-widget,.adsbyrunactive,#tabVideo > .rmedia,#micast_ads,.adde_modal_detector,.adde_modal-overlay,#video-id_fluid_html_on_pause,#adyes,.ads-btns,.infiniteads_placeholder,.sharethis-inline-share-buttons.st-hidden,#TapatalkFooterDesktopAds,#adbd.overdiv,#close-teaser,.gliaplayer-container,#clickCatcher31,#clickCatcher32,#zdn-adblock-overlay,.wp-block-savage-platform-primis-video,.fandom-ad-sticky-container,body > #mdl-register.modal.anm-e.regnow,.ad-banner-slot,.ez-sidebar-wall,.DCDOr{display:none!important}
+/* one selector per rule below */
 [href*="/afu.php"]{display:none!important}
 a[href^="https://syndication.exdynsrv.com/splash.php"]{display:none!important}
-.aff-content-col{display:none!important}
-.aff-inner-col{display:none!important}
-.aff-item-list{display:none!important}
-.inplayer-ad{display:none!important}
 [href^="https://www.onclickperformance.com/"]{display:none!important}
 [data-lnguri*="vipbox"]{display:none!important}
 [href*="passtechusa.com"]{display:none!important}
-.trafficjunky-float-right{display:none!important}
 [href^="https://t.mobtyb.com/"]{display:none!important}
 a[href^="http://www.poweredbyliquidfire.mobi/"]{display:none!important}
-.happy-inside-player{display:none!important}
 [href^="https://go.smljmp.com/"]{display:none!important}
-.blocker-notice{display:none!important}
-.blocker-overlay{display:none!important}
-.exo-horizontal{display:none!important}
 [href^="https://popcash.net/"]{display:none!important}
 [href^="https://adult.xyz/"]{display:none!important}
-.ave-pl{display:none!important}
-.bottom-hor-block{display:none!important}
-.brs-block{display:none!important}
-.advboxemb{display:none!important}
 [href^="//look.utndln.com/offer"]{display:none!important}
 [href^="https://track.wg-aff.com/click"]{display:none!important}
 [href="//xxxrevpushclcdu.com/app.webp"]{display:none!important}
-.wgAdBlockMessage{display:none!important}
 [href^="//producebreed.com/"]{display:none!important}
 [href*="uselnk.com/"]{display:none!important}
-.glx-watermark-container{display:none!important}
 [href^="http://referrer.website/"]{display:none!important}
-#sidearm-adblock-modal{display:none!important}
 [href^="https://klsdee.com/"]{display:none!important}
-.overlay-advertising-new{display:none!important}
-.header-menu-bottom-ads{display:none!important}
-.rkads{display:none!important}
-#bt-ads{display:none!important}
-.mdp-deblocker-wrapper{display:none!important}
-.amp-ad-inner{display:none!important}
-#placeAds{display:none!important}
 a[href*="/go.php?a_aid="]{display:none!important}
 [class^="div-gpt-ad"]:not([style^="width: 1px; height: 1px; position: absolute; left: -10000px; top: -"]){display:none!important}
-.samBannerUnit{display:none!important}
 .nav-item[href^="https://candyai.gg/"]{display:none!important}
-#kt_player ~ #sp-player{display:none!important}
-.bloc-pub{display:none!important}
-.bloc-pub2{display:none!important}
-#invideo_data{display:none!important}
-#invideo_2{display:none!important}
-.hor_banner{display:none!important}
-#invid_call{display:none!important}
-#invideo_new{display:none!important}
-.aan_fake{display:none!important}
-.aan_fake__video-units{display:none!important}
-.rps_player_ads{display:none!important}
 [src^="//dombnrs.com/"]{display:none!important}
-.preroll-blocker{display:none!important}
-#kt_player #ads_iframe{display:none!important}
-#kt_player .fp-brand{display:none!important}
-.ID_live_cam_inner{display:none!important}
 .container a[href^="https://go.mavrtracktor.com/"]{display:none!important}
 .container a[href^="https://seduced.com"][href*="ref="]{display:none!important}
-.asside-link{display:none!important}
-#dontfoid{display:none!important}
 div[style="top: 0px; left: 0px; width: 1287px; height: 500px; position: fixed; z-index: 2147483647;"]{display:none!important}
 div[style="position: fixed; inset: 0px; z-index: 2147483647; pointer-events: auto;"]{display:none!important}
 body > div[style$="z-index: 2147483647; top: 0px; left: 0px; position: fixed; display: block;"]{display:none!important}
@@ -82,15 +43,9 @@ a[id][href="https://toolkitspro.com"][rel^="noopener noreferrer"]{display:none!i
 .close-btn2[onclick="closeAd2()"]{display:none!important}
 .close-btn3[onclick="closeAd3()"]{display:none!important}
 .close-btn4[onclick="closeAd4()"]{display:none!important}
-.ark-ad-message{display:none!important}
-#vidcloud-player > #overlay-container{display:none!important}
 #videojs ~ div[style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; z-index: 2147483646;"]{display:none!important}
 body > div[style="position: fixed; inset: 0px; z-index: 2147483647; background: transparent; cursor: pointer;"]{display:none!important}
-.ninja-recommend-block{display:none!important}
-#vstr ~ #overlay{display:none!important}
 body > a.visible[id][href][target="_blank"]{display:none!important}
-.pppx{display:none!important}
-.bb ~ main#container .containerAds{display:none!important}
 html[lang="tr"] #aa-wp + .fixed-footer .footer-ad-container{display:none!important}
 html[lang="tr"] #aa-wp .container-ads-adjustment{display:none!important}
 html[lang="tr"] #aa-wp .rnd-ads-adjustment{display:none!important}
@@ -105,28 +60,17 @@ html[lang="vi"] .sspp-area{display:none!important}
 [href^="https://go.rdrjmp.com/"]{display:none!important}
 [href^="https://www.safestcontentgate.com/"]{display:none!important}
 #vplayer ~ img[id][onclick]{display:none!important}
-.fints-block__row{display:none!important}
 div[id][style^="position: fixed; inset: 0px; z-index: 2147483647; background: black"][style*="opacity: 0.01"]{display:none!important}
 #playerOverlay[style="position:absolute; z-index:3"]{display:none!important}
-.full-ave-pl{display:none!important}
-.full-bns-block{display:none!important}
-.vertbars{display:none!important}
-.video-brs{display:none!important}
-#plban{display:none!important}
 div[class$="player-promo-col"]{display:none!important}
-.player-bns-block{display:none!important}
 [href^="https://exi8ef83z9.com/"]{display:none!important}
 [href^="//taghaugh.com/"]{display:none!important}
 .home a[href^="https://s.zline0.com/"]{display:none!important}
 a[href*=".click/?z="][href*="&n"]{display:none!important}
 div#spot-holder.spot-holder[style="display: block;"]{display:none!important}
-.gallery-bns-bl{display:none!important}
-#stop_ad{display:none!important}
-#stop_ad2{display:none!important}
 [href^="https://join.enjoyx.com/track/"]{display:none!important}
 [href="https://clickaine.com"]{display:none!important}
 a[dontfo=""][style$="position: absolute; z-index: 2147483647;"]{display:none!important}
-.stream-item-widget{display:none!important}
 #ad_300:not([style^="position: absolute; left: -5000px"]){display:none!important}
 #ad_728:not([style^="position: absolute; left: -5000px"]){display:none!important}
 #ad_area:not([style^="position: absolute; left: -5000px"]){display:none!important}
@@ -149,8 +93,6 @@ a[dontfo=""][style$="position: absolute; z-index: 2147483647;"]{display:none!imp
 [data-ad-manager-id]:not([style$="left: -10000px !important; top: -1000px !important;"]):not(.adsbygoogle){display:none!important}
 .ad-300x250:not(.ads){display:none!important}
 div[style^="z-index: 999999; background-image: url(\"data:image/gif;base64,"][style$="position: absolute;"]{display:none!important}
-.adsbyrunactive{display:none!important}
-#tabVideo > .rmedia{display:none!important}
 #adContext:not(:empty){display:none!important}
 #ad_img:not(:empty){display:none!important}
 #downloadAd:not(:empty){display:none!important}
@@ -161,11 +103,7 @@ a[onclick="openAuc();"]{display:none!important}
 div[style="position: fixed; display: block; width: 100%; height: 100%; inset: 0px; background-color: rgba(0, 0, 0, 0); z-index: 300000;"]{display:none!important}
 .ads-iframe:not([style="position: absolute; left: -10px; top: -10px;"]){display:none!important}
 [style^="position: fixed; inset: 0px; z-index: 2147483647; background-color: transparent; pointer-events: auto; cursor: auto; margin: 0px; padding: 0px; display: block;"]{display:none!important}
-#micast_ads{display:none!important}
 .skel-layers-fixed a[href*=".com/smartpop/"]{display:none!important}
-.adde_modal_detector{display:none!important}
-.adde_modal-overlay{display:none!important}
-#video-id_fluid_html_on_pause{display:none!important}
 div[style^="position:fixed;inset:0px;z-index:2147483647;background:black;opacity:0.01"]{display:none!important}
 div[style^="position: fixed; inset: 0px; z-index: 2147483647; background: black; opacity: 0.01"]{display:none!important}
 iframe.lazyloaded[data-src^="https://rcm-fe.amazon-adsystem.com/"]{display:none!important}
@@ -178,33 +116,20 @@ a[href^="https://track.cam4tracking.com/"]{display:none!important}
 #video_player ~ div[id] div[style^="position:fixed;inset:0px;z-index:"]{display:none!important}
 .fp-ui > a[href][target="_blank"][style^="position: absolute; inset: 0px;"]{display:none!important}
 figure.movie-detail-banner div[style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; z-index: 999; cursor: pointer;"]{display:none!important}
-#adyes{display:none!important}
 #donate > a[href][style][onclick="thank_you()"][target="_blank"][rel="nofollow"]{display:none!important}
-.ads-btns{display:none!important}
-.infiniteads_placeholder{display:none!important}
 html[lang][style^="--main-bg-color"] > body:not([class]):not([id]) > div#container[style="visibility: visible;"] > div#banner[style="opacity:0"] ~ main:not([class]):not([id]) > div#message{display:none!important}
-.sharethis-inline-share-buttons.st-hidden{display:none!important}
 [data-uri^="https://s3.amazonaws.com"]{display:none!important}
 [data-lnguri^="https://s3.amazonaws.com"]{display:none!important}
-#TapatalkFooterDesktopAds{display:none!important}
-#adbd.overdiv{display:none!important}
 .kln > a[href^="https://www.polybuzz.ai/"]{display:none!important}
 a.poly-title[href^="https://www.polybuzz.ai/"]{display:none!important}
 a[href^="https://www.polybuzz.ai/"] img.responsive-image{display:none!important}
-#close-teaser{display:none!important}
 #teaser3[style^="width: 100%;height:0;text-align: center;display: scroll;position:fixed;"]{display:none!important}
-.gliaplayer-container{display:none!important}
 #adbtm[onclick="badr();"]{display:none!important}
 button.btn[data-openuri*="/4/"]{display:none!important}
-#clickCatcher31{display:none!important}
-#clickCatcher32{display:none!important}
-#zdn-adblock-overlay{display:none!important}
 img[width="728"][height="90"]{display:none!important}
-.wp-block-savage-platform-primis-video{display:none!important}
 .menu-item a[href^="https://go.rmhfrtnd.com"]{display:none!important}
 a.tdn[href^="https://landing.brazzersnetwork.com/"]{display:none!important}
 .header-container a[href^="https://candyai.gg/"]{display:none!important}
-.fandom-ad-sticky-container{display:none!important}
 #modern-player-root ~ div[id^="custom-invisible-overlay-"][class^="custom-popup-overlay-"]{display:none!important}
 #app a[href^="https://s.smartfloralab.com/"]{display:none!important}
 #app a[href^="https://t.nettrck.store/"]{display:none!important}
@@ -213,13 +138,9 @@ a.tdn[href^="https://landing.brazzersnetwork.com/"]{display:none!important}
 #app-root ~ a[href][target="_blank"][style="position: fixed;top: 0;left: 0;width: 100%;height: 100%;display: block;z-index: 9999999;cursor: auto"]{display:none!important}
 #main-content a[href^="https://hub.buzzaffiliates.com/"]{display:none!important}
 .flex a[href^="http://adpostup.com/"]{display:none!important}
-body > #mdl-register.modal.anm-e.regnow{display:none!important}
 .page-layout a[href^="https://hashcounts.com/"]{display:none!important}
 .container a[title="AI Jerk OFF"][href][target="_blank"]{display:none!important}
-.ad-banner-slot{display:none!important}
 .post-template-default a[href^="https://go."][href*="/smartpop/"]{display:none!important}
 .post-template-default a[href^="https://www.ourdreamersai13.com/"]{display:none!important}
 .wrapper a[rel~="sponsored"][href^="https://"][href*=".com/"][href*="?key="]{display:none!important}
 .code-block a[target="_blank"][href^="https://"][href*=".com/"][href*="?key="]{display:none!important}
-.ez-sidebar-wall{display:none!important}
-.DCDOr{display:none!important}

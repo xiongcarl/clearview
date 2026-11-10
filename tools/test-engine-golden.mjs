@@ -1,12 +1,13 @@
 // The sharded engine must select exactly what a full walk of data/web-cosmetics.json selects.
 import {readFile} from 'node:fs/promises';import vm from 'node:vm';
+import {readGenericCss} from './generic-css.mjs';
 const root=new URL('../',import.meta.url);const read=p=>readFile(new URL(p,root),'utf8');
 const context=vm.createContext({URL,console,chrome:{runtime:{getURL:p=>p}},fetch:async p=>({json:async()=>JSON.parse(await read(p))})});
 context.globalThis=context;
 for(const file of ['vendor/publicsuffix.js','common.js','web-filtering.js','cosmetic-engine.js'])vm.runInContext(await read(file),context);
 const {AdShield:A,WebFiltering:W,CosmeticEngine:E}=context;
 const db=JSON.parse(await read('data/web-cosmetics.json'));const ext=JSON.parse(await read('data/extended-cosmetics.json'));const base=JSON.parse(await read('data/builtin-cosmetics.json'));const coverage=JSON.parse(await read('data/local-coverage.json'));
-const generic={};for(const id of [...Object.keys(db),'base'])generic[id]=(await read(`data/engine/generic-${id}.css`)).split('\n').filter(Boolean).map(x=>x.slice(0,-'{display:none!important}'.length));
+const generic={};for(const id of [...Object.keys(db),'base'])generic[id]=readGenericCss(await read(`data/engine/generic-${id}.css`));
 const hosts=new Set(['example.com','news.example.tw','www.google.com','a.b.c.co.uk','localhost.test']);
 const expand=key=>key.endsWith('.*')?[key.slice(0,-2)+'.com',key.slice(0,-2)+'.co.uk','www.'+key.slice(0,-2)+'.net']:[key,'sub.'+key];
 const pick=(list,step)=>list.filter((_,i)=>i%step===0);

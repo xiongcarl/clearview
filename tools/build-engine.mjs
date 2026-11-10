@@ -2,6 +2,7 @@
 // one static CSS file per list for selectors that apply everywhere, and hostname-keyed
 // shards for everything scoped to a site, so a page never needs the whole database.
 import {readFile,writeFile,mkdir,rm} from 'node:fs/promises';
+import {writeGenericCss} from './generic-css.mjs';
 const root=new URL('../',import.meta.url);
 const json=async path=>JSON.parse(await readFile(new URL(path,root),'utf8'));
 const database=await json('data/web-cosmetics.json');const extended=await json('data/extended-cosmetics.json');
@@ -36,7 +37,7 @@ generic.base=new Set(builtin.filter(selector=>!excepted.has(selector)));
 for(const group of coverage.cosmetic)if(!group.hosts.length)for(const selector of group.selectors){if(excepted.has(selector))conditional.easylist.push({selector,exclude:[]});else generic.easylist.add(selector);}
 const out=new URL('data/engine/',root);await rm(new URL('s/',out),{recursive:true,force:true});await mkdir(new URL('s/',out),{recursive:true});
 const counts={};
-for(const [id,css] of Object.entries(generic)){counts[id]=css.size;await writeFile(new URL(`generic-${id}.css`,out),[...css].map(selector=>`${selector}{display:none!important}`).join('\n')+'\n');}
+for(const [id,css] of Object.entries(generic)){counts[id]=css.size;await writeFile(new URL(`generic-${id}.css`,out),writeGenericCss(css));}
 await writeFile(new URL('meta.json',out),JSON.stringify({shards:SHARDS,lists:ids,conditional,globalExceptions,globalOff,cancelled,offKeys:[...offKeys].sort()}));
 for(let i=0;i<SHARDS;i++)await writeFile(new URL(`s/${i}.json`,out),JSON.stringify(shards[i]));
 // Rule IDs that do anything but block; almost every rule blocks, so the rest is the default.

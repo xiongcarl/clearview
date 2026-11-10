@@ -1,9 +1,13 @@
 /* Ad Shield component filtering. GPL-3.0-or-later. No page prototype hooks. */
 globalThis.AdShieldShadows=(()=>{
   const hosts=new Set(['article','aside','blockquote','body','div','footer','h1','h2','h3','h4','h5','h6','header','main','nav','p','section','span']);
+  const PICKER='ad-shield-picker-root';
+  // Only these elements and custom elements can carry a shadow root.
+  function candidate(element){const name=element.localName;return (hosts.has(name) || name.includes('-')) && element instanceof HTMLElement;}
+  function shadowOf(element){try{return chrome.dom?.openOrClosedShadowRoot(element) || element.shadowRoot;}catch{return element.shadowRoot;}}
   function rootFor(element){
-    if(!(element instanceof HTMLElement) || (!hosts.has(element.localName) && !element.localName.includes('-')) || element.closest('#ad-shield-picker-root'))return null;
-    try{return chrome.dom?.openOrClosedShadowRoot(element) || element.shadowRoot;}catch{return element.shadowRoot;}
+    if(!(element instanceof HTMLElement) || !candidate(element) || element.closest('#'+PICKER))return null;
+    return shadowOf(element);
   }
   function escapedEnd(text,i){
     let end=i+1;
@@ -61,7 +65,7 @@ globalThis.AdShieldShadows=(()=>{
     return {selector,byKey,fallback};
   }
   class Filter {
-    constructor(){this.quietTicks=0;this.rescanEvery=1;this.roots=new Map();this.queue=[];this.css='';this.rules=[];this.running=false;this.scheduled=null;this.timer=null;this.manualTimer=null;this.shared=null;this.selectors='';this.index=makeIndex('');this.indexVersion=0;this.pendingInline=new Set();this.inlineFrame=null;this.visibility=()=>{if(!document.hidden && this.running)this.enqueue(document.documentElement);};}
+    constructor(){this.quietTicks=0;this.rescanEvery=1;this.rescanFloor=1;this.roots=new Map();this.queue=[];this.jobs=new Map();this.light=0;this.css='';this.rules=[];this.running=false;this.scheduled=null;this.timer=null;this.manualTimer=null;this.shared=null;this.selectors='';this.index=makeIndex('');this.indexVersion=0;this.pendingInline=new Set();this.inlineFrame=null;this.visibility=()=>{if(!document.hidden && this.running)this.enqueue(document.documentElement);};}
     update(css,rules){
       this.rules=(rules || []).filter(x=>Array.isArray(x) && x.length>1);
       if(!css && !this.rules.length){this.stop();return;}
@@ -71,7 +75,7 @@ globalThis.AdShieldShadows=(()=>{
         this.running=true;
         this.observer=new MutationObserver(records=>this.changed(records));
         this.observeDocument();document.addEventListener('visibilitychange',this.visibility);
-        this.enqueue(document.documentElement || document);
+        this.enqueue(document.documentElement || document,true);
         this.timer=setInterval(()=>{
           this.prune();
           for(const [root,record] of this.roots)this.adopt(root,record);
@@ -79,7 +83,7 @@ globalThis.AdShieldShadows=(()=>{
           // in idle batches without replacing the site's attachShadow function, and
           // back off to every 30 s while the page sits still: this walks every element.
           if(document.hidden || this.queue.length || ++this.quietTicks<this.rescanEvery)return;
-          this.quietTicks=0;this.rescanEvery=Math.min(this.rescanEvery*2,20);this.enqueue(document.documentElement);
+          this.quietTicks=0;this.rescanEvery=Math.min(this.rescanEvery*2,20);this.enqueue(document.documentElement,true);
         },1500);
       }else{this.observeDocument();for(const [root,record] of this.roots)this.observeRoot(root,record);}
       this.applyManual();for(const [root,record] of this.roots){this.adopt(root,record);if(changed)this.invalidate(root);}
@@ -87,24 +91,33 @@ globalThis.AdShieldShadows=(()=>{
     observeDocument(){this.observer.disconnect();this.observer.observe(document,{childList:true,subtree:true,attributes:this.rules.length>0});}
     observeRoot(root,record){record.observer.disconnect();record.observer.observe(root,{childList:true,subtree:true,attributes:true});}
     changed(records,root){
-      this.rescanEvery=1;
+      this.rescanEvery=this.rescanFloor;
       if(root && records.every(x=>x.type==='attributes' && x.attributeName==='style' && this.roots.get(root)?.forced.has(x.target) && this.isForced(x.target)))return;
       if(root){const record=this.roots.get(root);if(record)record.selection=null;this.scheduleInline(root);}
       for(const change of records)for(const node of change.addedNodes)if(node.nodeType===Node.ELEMENT_NODE)this.enqueue(node);
       if(this.rules.length && !this.manualTimer)this.manualTimer=setTimeout(()=>{this.manualTimer=null;if(this.running)this.applyManual();},100);
     }
-    enqueue(node){
-      if(!node || !this.running || node.id==='ad-shield-picker-root')return;
+    enqueue(node,full){
+      if(!node || !this.running || node.id===PICKER)return;
       const scope=node instanceof ShadowRoot?node:node.getRootNode();let shadow=scope instanceof ShadowRoot;
-      const existing=this.queue.find(job=>job.node===node);if(existing){existing.shadow ||= shadow;return;}
+      const existing=this.jobs.get(node);
+      if(existing){existing.full ||= !!full;if(shadow && !existing.shadow){existing.shadow=true;this.light--;}return;}
       // A light-DOM rescan cannot reach shadow children. Retain those jobs when
       // collapsing a mutation burst, including moved subtrees inside roots.
-      if(!shadow && this.queue.filter(job=>!job.shadow).length>100){
-        this.queue=this.queue.filter(job=>job.shadow);node=document.documentElement;shadow=false;
+      if(!shadow && this.light>1000){
+        this.queue=this.queue.filter(job=>job.shadow);this.jobs=new Map(this.queue.map(job=>[job.node,job]));this.light=0;
+        node=document.documentElement;full=true;
+        if(!node || this.jobs.has(node))return;
       }
-      if(!node || this.queue.some(job=>job.node===node))return;
-      this.queue.push({node,shadow,first:true,walker:document.createTreeWalker(node,NodeFilter.SHOW_ELEMENT)});
+      const job={node,shadow,full:!!full,seen:0,first:true,walker:null};
+      this.queue.push(job);this.jobs.set(node,job);if(!shadow)this.light++;
       this.schedule();
+    }
+    finish(job){
+      this.queue.shift();this.jobs.delete(job.node);if(!job.shadow)this.light--;
+      // Rescanning the whole page costs about a microsecond per element. Space the
+      // rescans out on large pages so they stay near a quarter percent of one core.
+      if(job.full)this.rescanFloor=Math.max(1,Math.min(20,Math.ceil(job.seen/2500)));
     }
     schedule(){
       if(this.scheduled!==null || !this.running)return;
@@ -112,17 +125,20 @@ globalThis.AdShieldShadows=(()=>{
       this.scheduled=typeof requestIdleCallback==='function'?requestIdleCallback(run,{timeout:200}):setTimeout(run,16);
     }
     walk(){
-      const start=performance.now();let count=0;
-      while(this.queue.length && count<300 && performance.now()-start<6){
-        const job=this.queue[0];const node=job.first?(job.first=false,job.node):job.walker.nextNode();
-        if(!node){this.queue.shift();continue;}count++;
-        if(node.nodeType!==Node.ELEMENT_NODE || !node.isConnected || node.closest('#ad-shield-picker-root'))continue;
-        const root=rootFor(node);if(root){if(!this.roots.has(root))this.track(root);else this.enqueue(root);}
+      const start=performance.now();let count=0;const picker=document.getElementById(PICKER);
+      while(this.queue.length && count<1500){
+        if((count&63)===63 && performance.now()-start>=5)break;
+        const job=this.queue[0];let node;
+        if(job.first){job.first=false;node=job.node;}
+        else{job.walker ||= document.createTreeWalker(job.node,NodeFilter.SHOW_ELEMENT);node=job.walker.nextNode();}
+        if(!node){this.finish(job);continue;}count++;job.seen++;
+        if(node.nodeType!==1 || !candidate(node) || !node.isConnected || (picker && picker.contains(node)))continue;
+        const root=shadowOf(node);if(root){if(!this.roots.has(root))this.track(root);else this.enqueue(root);}
       }
       if(this.queue.length)this.schedule();else{this.prune();this.applyManual();}
     }
     track(root){
-      this.rescanEvery=1;
+      this.rescanEvery=this.rescanFloor;
       const record={observer:new MutationObserver(records=>this.changed(records,root)),extra:null,extraCss:'',extraIndex:makeIndex(''),selection:null,initial:true,forced:new Map()};
       this.roots.set(root,record);this.observeRoot(root,record);this.adopt(root,record);this.enqueue(root);
       return record;
@@ -234,7 +250,7 @@ globalThis.AdShieldShadows=(()=>{
       // is restored even if Chromium retains a cached adopted-sheet style.
       this.shared?.replaceSync('');
       for(const record of this.roots.values())record.extra?.replaceSync('');
-      this.queue=[];for(const [root,record] of this.roots)this.remove(root,record);
+      this.queue=[];this.jobs.clear();this.light=0;for(const [root,record] of this.roots)this.remove(root,record);
       this.css='';this.rules=[];this.selectors='';this.index=makeIndex('');this.indexVersion++;
     }
   }
