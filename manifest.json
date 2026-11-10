@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_ext_name__",
-  "version": "5.6.1",
+  "version": "5.6.2",
   "homepage_url": "https://github.com/xiongcarl/clearview",
   "default_locale": "zh_TW",
   "description": "__MSG_ext_desc__",

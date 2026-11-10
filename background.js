@@ -251,9 +251,37 @@ const loadPopupFilter=()=>popupFilter ||= fetch(chrome.runtime.getURL('data/engi
 async function checkOpenedTab(tabId,url){
   const record=openedTabs.get(tabId);if(!record)return;
   if(Date.now()>record.until){openedTabs.delete(tabId);return;}
+  // Still finding out whether the user clicked a link; remember the newest address for then.
+  if(record.pending){record.latest=url;return;}
   const [settings,filter]=await Promise.all([readSettings(),loadPopupFilter()]);
   if(!settings.enabled || !filter.match(url,record.opener,settings.webFilters) || !openedTabs.delete(tabId))return;
   try{await chrome.tabs.remove(tabId);}catch{} // Already closed.
+}
+// A link the user clicked is never a popup, whatever the lists say about its destination: the
+// address was there to read before the click. The link under the pointer (or the focused one,
+// for the keyboard) is read from the opening frame right away; a tab opened to that same
+// address is left alone, and so is wherever it redirects. If the frame cannot be asked, the
+// tab stays open: closing something the user chose is worse than missing a popup.
+function linksAtPointer(){
+  const found=[];
+  const add=element=>{
+    for(let node=element;node;node=node.parentElement || node.getRootNode()?.host){
+      if(node.localName!=='a')continue;
+      const raw=node.getAttribute('href') ?? node.getAttributeNS('http://www.w3.org/1999/xlink','href');
+      if(raw!==null){try{found.push(new URL(raw,node.baseURI).href);}catch{}}
+      return;
+    }
+  };
+  let active=document.activeElement;while(active?.shadowRoot?.activeElement)active=active.shadowRoot.activeElement;
+  add(active);for(const element of document.querySelectorAll('a:hover'))add(element);
+  return found;
+}
+const sameAddress=(a,b)=>{try{const x=new URL(a),y=new URL(b);x.hash='';y.hash='';return x.href===y.href;}catch{return false;}};
+async function openedByClickedLink(event){
+  try{
+    const results=await chrome.scripting.executeScript({target:{tabId:event.sourceTabId,frameIds:[event.sourceFrameId || 0]},world:'ISOLATED',func:linksAtPointer});
+    return (results?.[0]?.result || []).some(href=>sameAddress(href,event.url));
+  }catch{return true;}
 }
 chrome.webNavigation.onCreatedNavigationTarget.addListener(async event=>{
   try{
@@ -261,9 +289,15 @@ chrome.webNavigation.onCreatedNavigationTarget.addListener(async event=>{
     const settings=await readSettings();if(!settings.enabled)return;
     const opener=A.hostname((await chrome.tabs.get(event.sourceTabId)).url);
     if(!opener || A.isListed(opener,settings.whitelist) || A.isListed(opener,settings.compatSites) || A.modeFor(opener,settings)==='off')return;
+    // Watch from now so a quick redirect is not missed while the opening frame is asked.
+    openedTabs.set(event.tabId,{opener,until:Date.now()+5000,pending:true});
+    if(await openedByClickedLink(event)){openedTabs.delete(event.tabId);return;}
+    const latest=openedTabs.get(event.tabId)?.latest;
+    if(!openedTabs.has(event.tabId))return;
     openedTabs.set(event.tabId,{opener,until:Date.now()+5000});
     if(openedTabs.size>64)openedTabs.delete(openedTabs.keys().next().value);
     await checkOpenedTab(event.tabId,event.url);
+    if(latest && latest!==event.url)await checkOpenedTab(event.tabId,latest);
   }catch(error){console.debug('Popup filter:',error.message);}
 });
 for(const name of ['onBeforeNavigate','onCommitted'])chrome.webNavigation[name].addListener(event=>{

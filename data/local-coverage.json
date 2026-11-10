@@ -28,7 +28,11 @@
         "clickforce.com.tw",
         "popin.cc",
         "ad.toutiao.com",
-        "tongji.baidu.com"
+        "tongji.baidu.com",
+        "business-api.tiktok.com",
+        "ads.tiktok.com",
+        "appmetrica.yandex.ru",
+        "metrika.yandex.ru"
       ],
       "domainType": "thirdParty",
       "excludedResourceTypes": [

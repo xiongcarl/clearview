@@ -53,13 +53,23 @@ try{
   assert.ok(!left.split(/\s+/).includes(removal.name),`${removal.host}: class ${removal.name} removed (left "${left}")`);assert.ok(left.split(/\s+/).includes('keep'),'other classes stay');
   console.log(`PASS :remove-class() rule applies on ${removal.host}`);
   // 3. $popup
-  const c=await page({'news.example.com':'<!doctype html><body><a id="x" href="#">x</a>'});await c.go('https://news.example.com/');
+  const c=await page({'news.example.com':`<!doctype html><body style="margin:0"><a id="listed" target="_blank" href="https://${popup.h}/chosen" style="display:block;width:300px;height:50px">a link to a listed site</a><a id="hijacked" target="_blank" href="https://www.example.org/story" onclick="window.open('https://${popup.h}/under')" style="display:block;width:300px;height:50px">a link with a popunder</a>`});await c.go('https://news.example.com/');
   const open=async url=>{const before=new Set((await pageTargets()).map(t=>t.targetId));await evaluate(c.sessionId,`window.open(${JSON.stringify(url)},'_blank');true`);await sleep(2500);return (await pageTargets()).filter(t=>!before.has(t.targetId));};
   const blocked=await open(`https://${popup.h}/landing?x=1`);
   assert.equal(blocked.length,0,`popup to ${popup.h} is closed`);
   const kept=await open('https://www.example.org/article');
   assert.equal(kept.length,1,'an ordinary new tab stays open');
   console.log(`PASS $popup rule closes a tab opened to ${popup.h}; an ordinary one stays`);
+  // A link the user clicks opens even when its destination is listed (EasyList lists
+  // canyoublockit.com as a popup; a search result pointing there must still open).
+  const click=async(x,y)=>{const before=new Set((await pageTargets()).map(t=>t.targetId));for(const type of ['mouseMoved','mousePressed','mouseReleased'])await send('Input.dispatchMouseEvent',{type,x,y,button:type==='mouseMoved'?'none':'left',clickCount:type==='mouseMoved'?0:1},c.sessionId);await sleep(2500);return (await pageTargets()).filter(t=>!before.has(t.targetId));};
+  const chosen=await click(100,25);
+  assert.equal(chosen.length,1,'a clicked link to a listed site stays open');assert.ok(chosen[0].url.includes(popup.h) || chosen[0].url.startsWith('chrome-error:'),'it is the tab the link asked for');
+  console.log('PASS a clicked link to a listed site opens');
+  const hijacked=await click(100,75);
+  // Chrome spends the click on the script's window.open, so only the popunder would exist.
+  assert.equal(hijacked.filter(t=>t.url.includes(popup.h)).length,0,'a popunder fired from a click on another link is closed');
+  console.log('PASS a popunder fired from a click on a different link is closed');
   // Popup mode "off" leaves popups alone.
   const {sessionId:ui}=await send('Target.attachToTarget',{targetId:(await send('Target.createTarget',{url:`chrome-extension://${extensionId}/popup.html`})).targetId,flatten:true});await sleep(1000);
   // The worker may be asleep; the first message wakes it and can miss it.
