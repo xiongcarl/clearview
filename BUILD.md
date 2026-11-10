@@ -1,8 +1,15 @@
 # Building Clearview
 
 Clearview is plain JavaScript; there is no bundler or minifier. The runtime files in the
-package are the files in this folder. Some data files are generated from public filter lists
-and are committed here together with the tools that produce them.
+package are the files in `extension/` (load that folder unpacked for development), plus the
+license and documents at the top of the repository. Some data files are generated from public
+filter lists and are committed together with the tools that produce them.
+
+| Folder | Contents |
+|---|---|
+| `extension/` | The extension itself: manifest, scripts, pages, rules and generated data |
+| `tools/` | Build scripts and tests (run them from the repository root) |
+| `docs/` | Per-version notes (`docs/changes/`), history, testing and benchmark notes |
 
 ## Release packages
 

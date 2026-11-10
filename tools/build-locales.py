@@ -12,7 +12,7 @@ term fixes. The script fails if any key used by the pages or scripts is missing 
 import html, json, pathlib, re, sys
 import opencc
 
-ROOT = pathlib.Path(__file__).resolve().parent.parent
+ROOT = pathlib.Path(__file__).resolve().parent.parent / 'extension'
 PAGES = ['popup.html', 'options.html', 'welcome.html']
 SCRIPTS = ['popup.js', 'options.js', 'background.js', 'content.js', 'user-filters.js', 'common.js', 'welcome.js']
 

@@ -6,7 +6,7 @@ import {fileURLToPath} from 'node:url';
 const testDirectory=fileURLToPath(new URL('../testing-output/public/',import.meta.url));await mkdir(testDirectory,{recursive:true});
 const label=process.argv[2] || 'before';
 if(!/^[a-z0-9-]{1,50}$/.test(label))throw new Error('Use a short lowercase test label.');
-const root=path.resolve(process.argv[3] || fileURLToPath(new URL('../',import.meta.url)));
+const root=path.resolve(process.argv[3] || fileURLToPath(new URL('../extension/',import.meta.url)));
 const profile=path.join(testDirectory,'coverage-profile-'+label);await rm(profile,{recursive:true,force:true});await mkdir(profile,{recursive:true});
 const chrome=spawn('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',['--headless=new','--no-first-run','--no-default-browser-check','--disable-background-networking','--remote-debugging-port=0','--enable-unsafe-extension-debugging',`--user-data-dir=${profile}`,'about:blank'],{stdio:['ignore','ignore','pipe']});
 let stderr='';chrome.stderr.on('data',d=>stderr+=d);let ws;let seq=0;const pending=new Map();const requests=new Map();const events=[];

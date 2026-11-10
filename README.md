@@ -30,7 +30,7 @@
 
 ## 開發
 - 更新紀錄：[CHANGELOG.md](CHANGELOG.md)
-- 建置與打包：[BUILD.md](BUILD.md)
+- 建置與打包：[BUILD.md](BUILD.md)（擴充功能本體在 [`extension/`](extension/)）
 - 授權：GPL-3.0-or-later，見 [LICENSE](LICENSE) 與 [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)
 
 ---
@@ -64,4 +64,4 @@ Collects no data, no "acceptable ads"; all filtering runs on your computer. See 
 Clearview is free. If it makes your web calmer, you can support it on [Ko-fi](https://ko-fi.com/clearview).
 
 ### Development
-[CHANGELOG.md](CHANGELOG.md) · [BUILD.md](BUILD.md) · License: GPL-3.0-or-later ([LICENSE](LICENSE), [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md))
+[CHANGELOG.md](CHANGELOG.md) · [BUILD.md](BUILD.md) (the extension itself is in [`extension/`](extension/)) · License: GPL-3.0-or-later ([LICENSE](LICENSE), [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md))

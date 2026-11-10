@@ -6,7 +6,7 @@ import {readFile, writeFile, mkdir, rm} from 'node:fs/promises';
 import {createServer} from 'node:http';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-const extensionRoot=fileURLToPath(new URL('../',import.meta.url));
+const extensionRoot=fileURLToPath(new URL('../extension/',import.meta.url));
 const testDirectory=path.join(extensionRoot,'testing-output');
 await mkdir(testDirectory,{recursive:true});
 const profile = path.join(testDirectory,'component-test-profile');

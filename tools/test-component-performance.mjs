@@ -7,7 +7,7 @@ import {readFile,writeFile,mkdir,rm} from 'node:fs/promises';
 import {createServer} from 'node:http';
 import path from 'node:path';
 import crypto from 'node:crypto';
-const root=path.resolve(process.argv[2]||fileURLToPath(new URL('../',import.meta.url))),label=process.argv[3]||'probe';
+const root=path.resolve(process.argv[2]||fileURLToPath(new URL('../extension/',import.meta.url))),label=process.argv[3]||'probe';
 if(!/^[a-z0-9-]{1,50}$/.test(label))throw Error('Invalid label');
 const dir=fileURLToPath(new URL('../testing-output/component-performance/',import.meta.url));await mkdir(dir,{recursive:true});const profile=path.join(dir,'profile-'+label);await rm(profile,{recursive:true,force:true});await mkdir(profile,{recursive:true});
 const server=createServer((req,res)=>{if(!respondComponentFixture(req,res)){res.setHeader('Content-Type','text/plain');res.end('Probe');}});await new Promise(r=>server.listen(0,'127.0.0.1',r));

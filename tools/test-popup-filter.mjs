@@ -1,6 +1,6 @@
 // The $popup rules built from the lists: matching, scoping and exceptions.
 import assert from 'node:assert/strict';import {readFile} from 'node:fs/promises';import vm from 'node:vm';
-const root=new URL('../',import.meta.url);const read=p=>readFile(new URL(p,root),'utf8');
+const root=new URL('../extension/',import.meta.url);const read=p=>readFile(new URL(p,root),'utf8');
 const context=vm.createContext({URL,console});context.globalThis=context;
 for(const file of ['vendor/publicsuffix.js','common.js','popup-filter.js'])vm.runInContext(await read(file),context);
 const {AdShield:A,AdShieldPopupFilter:P,AdShieldDomainUtils:D}=context;

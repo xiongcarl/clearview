@@ -2,7 +2,7 @@
 // selector:style(...), :remove-attr()/:remove-class(), and $popup.
 // Usage: node tools/test-list-rules.mjs [extension folder]
 import assert from 'node:assert/strict';import {spawn} from 'node:child_process';import {mkdtemp,readFile} from 'node:fs/promises';import os from 'node:os';import path from 'node:path';import {fileURLToPath} from 'node:url';
-const root=process.argv[2] || fileURLToPath(new URL('../',import.meta.url));
+const root=process.argv[2] || fileURLToPath(new URL('../extension/',import.meta.url));
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const json=async p=>JSON.parse(await readFile(path.join(root,p),'utf8'));
 const plainHost=x=>/^[a-z0-9.-]+$/.test(x) && !x.endsWith('.*');

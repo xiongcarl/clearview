@@ -10,7 +10,7 @@ import {configureNodeRegexValidator} from './node-regex-validator.mjs';
 import {normalizeNetworkAliases} from './network-aliases.mjs';
 await configureNodeRegexValidator();
 const {FilterConverter,Filter,Rule}=await import(process.env.AD_SHIELD_CONVERTER || '@adguard/dnr-converter');
-const root=new URL('../',import.meta.url);
+const root=new URL('../extension/',import.meta.url);
 const dependency=process.env.AD_SHIELD_DEPENDENCIES;
 const redirectSource=dependency?new URL('@adguard/scriptlets/dist/redirect-files/',dependency):new URL('./node_modules/@adguard/scriptlets/dist/redirect-files/',import.meta.url);
 const redirectFiles=new Set(await readdir(redirectSource));

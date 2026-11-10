@@ -19,7 +19,10 @@ Firefox also gets:
 """
 import json, pathlib, re, shutil, sys, tempfile, zipfile
 
-ROOT = pathlib.Path(__file__).resolve().parent.parent
+REPO = pathlib.Path(__file__).resolve().parent.parent
+ROOT = REPO / 'extension'
+# Documents that ship in every package but live at the top of the repository.
+REPO_DOCS = ['LICENSE', 'README.md', 'PRIVACY.md', 'THIRD-PARTY-NOTICES.md', 'BUILD.md']
 GECKO_ID = '{4b5c2b8e-6f0a-4d7e-9a43-2f1d6c8e7a51}'
 BACKGROUND = ['vendor/publicsuffix.js', 'i18n.js', 'common.js', 'user-filters.js', 'cosmetic-engine.js',
               'static-rule-policy.js', 'popup-rescue.js', 'popup-filter.js', 'background.js']
@@ -111,6 +114,8 @@ def main():
     dropped = before = after = 0
     with tempfile.TemporaryDirectory() as temp:
         stage = pathlib.Path(temp)
+        for name in REPO_DOCS:
+            shutil.copy2(REPO / name, stage / name)
         for relative in runtime_files():
             target = stage / relative
             target.parent.mkdir(parents=True, exist_ok=True)

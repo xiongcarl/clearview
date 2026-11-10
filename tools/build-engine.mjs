@@ -3,7 +3,7 @@
 // shards for everything scoped to a site, so a page never needs the whole database.
 import {readFile,writeFile,mkdir,rm} from 'node:fs/promises';
 import {writeGenericCss} from './generic-css.mjs';
-const root=new URL('../',import.meta.url);
+const root=new URL('../extension/',import.meta.url);
 const json=async path=>JSON.parse(await readFile(new URL(path,root),'utf8'));
 const database=await json('data/web-cosmetics.json');const extended=await json('data/extended-cosmetics.json');
 const builtin=await json('data/builtin-cosmetics.json');const coverage=await json('data/local-coverage.json');

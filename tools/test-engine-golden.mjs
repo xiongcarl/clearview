@@ -1,7 +1,7 @@
 // The sharded engine must select exactly what a full walk of data/web-cosmetics.json selects.
 import {readFile} from 'node:fs/promises';import vm from 'node:vm';
 import {readGenericCss} from './generic-css.mjs';
-const root=new URL('../',import.meta.url);const read=p=>readFile(new URL(p,root),'utf8');
+const root=new URL('../extension/',import.meta.url);const read=p=>readFile(new URL(p,root),'utf8');
 const context=vm.createContext({URL,console,chrome:{runtime:{getURL:p=>p}},fetch:async p=>({json:async()=>JSON.parse(await read(p))})});
 context.globalThis=context;
 for(const file of ['vendor/publicsuffix.js','common.js','web-filtering.js','cosmetic-engine.js'])vm.runInContext(await read(file),context);

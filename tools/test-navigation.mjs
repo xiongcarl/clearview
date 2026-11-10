@@ -8,7 +8,7 @@ import {readFile,writeFile,mkdir,rm} from 'node:fs/promises';
 import {createServer} from 'node:https';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
-const root=path.resolve(process.argv.slice(2).find(x=>!x.startsWith('--')) || fileURLToPath(new URL('../',import.meta.url)));
+const root=path.resolve(process.argv.slice(2).find(x=>!x.startsWith('--')) || fileURLToPath(new URL('../extension/',import.meta.url)));
 const observe=process.argv.includes('--observe');
 const out=path.join(root,'testing-output/navigation'),profile=path.join(out,'profile');
 await mkdir(out,{recursive:true});await rm(profile,{recursive:true,force:true});await mkdir(profile,{recursive:true});

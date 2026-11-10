@@ -3,7 +3,7 @@ import {readFile,writeFile,readdir} from 'node:fs/promises';
 import vm from 'node:vm';
 import {preprocess} from './filter-preprocess.mjs';
 import {compileCosmetics} from './cosmetic-compiler.mjs';
-const root=new URL('../',import.meta.url),ctx=vm.createContext({URL});
+const root=new URL('../extension/',import.meta.url),ctx=vm.createContext({URL});
 vm.runInContext(await readFile(new URL('common.js',root),'utf8'),ctx);
 const includes={};for(const file of await readdir(new URL('data/filters/',root)))if(/^fixes-.+\.txt$/.test(file))includes[file.slice(6)]=await readFile(new URL('data/filters/'+file,root),'utf8');
 const ordinary={},extended={},report=[];

@@ -9,7 +9,7 @@ const load=name=>import(dependency ? new URL(name+'/dist/index.js',dependency).h
 const {scriptlets}=await load('@adguard/scriptlets');
 const {CosmeticRuleParser,QuoteUtils}=await load('@adguard/agtree');
 const {convertScriptletToAdg}=await import(dependency?new URL('@adguard/scriptlets/dist/converters/index.js',dependency).href:'@adguard/scriptlets/converters');
-const root=new URL('../',import.meta.url);
+const root=new URL('../extension/',import.meta.url);
 const context=vm.createContext({URL});vm.runInContext(await readFile(new URL('common.js',root),'utf8'),context);
 const publicSuffixSource=dependency?new URL('tldts/dist/index.umd.min.js',dependency):new URL('./node_modules/tldts/dist/index.umd.min.js',import.meta.url);
 await mkdir(new URL('vendor/',root),{recursive:true});

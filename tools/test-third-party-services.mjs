@@ -6,7 +6,7 @@ import {readFile,writeFile,mkdir,rm} from 'node:fs/promises';
 import {createServer} from 'node:https';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
-const root=path.resolve(process.argv[2] || fileURLToPath(new URL('../',import.meta.url)));
+const root=path.resolve(process.argv[2] || fileURLToPath(new URL('../extension/',import.meta.url)));
 const baseline=process.argv.includes('--baseline');
 const out=path.join(root,'testing-output'),profile=path.join(out,'third-party-services-profile');
 await mkdir(out,{recursive:true});await rm(profile,{recursive:true,force:true});await mkdir(profile,{recursive:true});

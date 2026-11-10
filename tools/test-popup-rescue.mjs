@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import {readFile} from 'node:fs/promises';
 const ctx=vm.createContext({URL,performance});
-for(const file of ['common.js','popup-rescue.js'])vm.runInContext(await readFile(new URL('../'+file,import.meta.url),'utf8'),ctx);
+for(const file of ['common.js','popup-rescue.js'])vm.runInContext(await readFile(new URL('../extension/'+file,import.meta.url),'utf8'),ctx);
 let checks=0;
 const check=(name,actual,expected)=>{assert.deepEqual(JSON.parse(JSON.stringify(actual)),expected,name);console.log('PASS '+name);checks++;};
 const destination='https://site.example.test/article';

@@ -3,7 +3,7 @@ import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 import {compileCosmetics,hidingException,nestedHas,balancedNative} from './cosmetic-compiler.mjs';
 const ctx=vm.createContext({URL});
-for(const file of ['vendor/publicsuffix.js','common.js','web-filtering.js'])vm.runInContext(await readFile(new URL('../'+file,import.meta.url),'utf8'),ctx);
+for(const file of ['vendor/publicsuffix.js','common.js','web-filtering.js'])vm.runInContext(await readFile(new URL('../extension/'+file,import.meta.url),'utf8'),ctx);
 const A=ctx.AdShield,W=ctx.WebFiltering;let count=0;
 const check=(name,actual,expected)=>{assert.deepEqual(JSON.parse(JSON.stringify(actual)),expected,name);count++;console.log('PASS '+name);};
 for(const selector of ['[class^="adDisplay-module"]','#teaser1[style^="width:autopx;"]','a[href="/user@example.org"]','[data-value="{};@"]','[data-value="escaped\\\"; value"]'])check('Preserve quoted selector '+selector,A.safeFilterSelector(selector),true);
@@ -46,7 +46,7 @@ for(const line of ['@@||example.test/path$ghide','@@||example.test^$ghide,third-
 const key1=hidingException('@@*$ghide,domain=b.test|a.test',A).key,key2=hidingException('@@*$from=a.test|b.test,generichide,badfilter',A).key;
 check('Cancellation normalizes aliases and domain order',key1,key2);
 check('Manual quoted attribute selectors can be saved',A.clean({cosmeticRules:[{host:'example.test',selector:'[style^="width:autopx;"]'}]}).cosmeticRules.length,1);
-const actual=JSON.parse(await readFile(new URL('../data/web-cosmetics.json',import.meta.url),'utf8'));
+const actual=JSON.parse(await readFile(new URL('../extension/data/web-cosmetics.json',import.meta.url),'utf8'));
 check('Real uAssets short alias compiled',actual.fixes.genericOff.some(x=>x.host==='ondemandkorea.com' && x.generic),true);
 check('Real canceled exception is represented as cancellation',actual.fixes.genericOff.some(x=>x.host==='kobieta.wp.pl' && x.badfilter),true);
 console.log(count+' cosmetic compiler/policy checks passed.');

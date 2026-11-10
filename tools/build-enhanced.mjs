@@ -1,7 +1,7 @@
 // Packaged optional third-party privacy coverage. GPL-3.0-or-later.
 import {readFile,writeFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
-const root=new URL('../',import.meta.url);
+const root=new URL('../extension/',import.meta.url);
 const text=await readFile(new URL('data/ultimate-domains.txt',root),'utf8');
 const domains=text.split(/\r?\n/).map(x=>x.trim()).filter(x=>x && !x.startsWith('#'));
 const declared=Number(text.match(/^# Number of entries:\s*(\d+)\s*$/m)?.[1]);

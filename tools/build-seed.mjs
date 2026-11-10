@@ -1,6 +1,6 @@
 import {readFile,writeFile} from 'node:fs/promises';
 import vm from 'node:vm';
-const root=new URL('../',import.meta.url);
+const root=new URL('../extension/',import.meta.url);
 const context=vm.createContext({URL});
 vm.runInContext(await readFile(new URL('common.js',root),'utf8'),context);
 const A=context.AdShield;

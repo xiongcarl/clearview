@@ -3,7 +3,7 @@
 // Usage: node tools/test-generic-css.mjs [extension folder]
 import assert from 'node:assert/strict';import {spawn} from 'node:child_process';import {mkdtemp,readFile,readdir} from 'node:fs/promises';import os from 'node:os';import path from 'node:path';import {fileURLToPath} from 'node:url';
 import {readGenericCss,ruleCount} from './generic-css.mjs';
-const root=process.argv[2] || fileURLToPath(new URL('../',import.meta.url));
+const root=process.argv[2] || fileURLToPath(new URL('../extension/',import.meta.url));
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const profile=await mkdtemp(path.join(os.tmpdir(),'clearview-css-'));
 const chrome=spawn('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',['--headless=new','--remote-debugging-port=0','--no-first-run',`--user-data-dir=${profile}`,'about:blank'],{stdio:'ignore'});

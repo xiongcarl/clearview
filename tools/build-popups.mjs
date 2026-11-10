@@ -3,7 +3,7 @@
 // drops these rules; the background applies them itself when a page opens a new tab.
 import {readFile,writeFile,readdir,mkdir} from 'node:fs/promises';
 import {preprocess} from './filter-preprocess.mjs';
-const root=new URL('../',import.meta.url);
+const root=new URL('../extension/',import.meta.url);
 const includes={};for(const file of await readdir(new URL('data/filters/',root)))if(/^fixes-.+\.txt$/.test(file))includes[file.slice(6)]=await readFile(new URL('data/filters/'+file,root),'utf8');
 const plain=x=>x.length<=253 && x.split('.').every(y=>/^[a-z0-9_](?:[a-z0-9_-]{0,61}[a-z0-9_])?$/.test(y));
 const domain=x=>plain(x) || (x.endsWith('.*') && plain(x.slice(0,-2)));
