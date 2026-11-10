@@ -69,7 +69,15 @@ async function syncStats(minGap){
   if(now-(session.calls.at(-1) || 0)<minGap || session.calls.length>=(minGap?STATS_CALLS-STATS_RESERVED:STATS_CALLS))return {session,stats};
   if(!chrome.declarativeNetRequest.getMatchedRules)return {session,stats};
   session.calls.push(now);
-  const {rulesMatchedInfo}=await chrome.declarativeNetRequest.getMatchedRules({minTimeStamp:session.last+1});
+  let rulesMatchedInfo;
+  try{({rulesMatchedInfo}=await chrome.declarativeNetRequest.getMatchedRules({minTimeStamp:session.last+1}));}
+  catch(error){
+    // Chrome counts these calls across extension reloads; our own log starts empty after one.
+    // Treat the window as used up and show the numbers already stored until it passes.
+    if(!/MAX_GETMATCHEDRULES_CALLS_PER_INTERVAL|quota/i.test(error?.message || ''))throw error;
+    session.calls=Array(STATS_CALLS).fill(now);await chrome.storage.session.set({statsSession:session});
+    return {session,stats};
+  }
   let counted=false;
   for(const match of rulesMatchedInfo){
     session.last=Math.max(session.last,match.timeStamp);
