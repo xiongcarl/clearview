@@ -1,5 +1,5 @@
 // Chrome loads the shared scripts here; Firefox lists them in manifest background.scripts.
-if(typeof importScripts==='function')importScripts('vendor/publicsuffix.js','i18n.js','common.js','user-filters.js','cosmetic-engine.js','static-rule-policy.js','popup-rescue.js');
+if(typeof importScripts==='function')importScripts('vendor/publicsuffix.js','i18n.js','common.js','user-filters.js','cosmetic-engine.js','static-rule-policy.js','popup-rescue.js','popup-filter.js');
 const A=AdShield;
 let cancellationData;let initializationError;let enhancedMeta,localCoverage;let seedMeta,webMeta,extendedData,advancedMeta,baseSelectors;let logging=false;let logs=[];let flushTimer;let actionMap;
 const isExtended=x=>/:(?:has-text|contains|matches-css(?:-before|-after)?|matches-attr|matches-property|xpath|upward|nth-ancestor|if-not|empty-trimmed)\(/i.test(x);
@@ -34,7 +34,7 @@ async function listCosmetics(host,settings){
   // generic lists target page markup; inside self-contained components they mostly hit
   // unrelated widgets (uBO does not apply them there either).
   const component=[...selection.scoped,...baseSelectors.filter(selector=>permitted(selector,false))];
-  const result={genericOff:selection.generic,selectors:Object.freeze(selectors),component:Object.freeze([...new Set(component)]),extended:Object.freeze(CosmeticEngine.extendedSelectors(host,extendedData,settings.webFilters,selection))};
+  const result={genericOff:selection.generic,styles:CosmeticEngine.styleRules(host,extendedData,settings.webFilters,selection),selectors:Object.freeze(selectors),component:Object.freeze([...new Set(component)]),extended:Object.freeze(CosmeticEngine.extendedSelectors(host,extendedData,settings.webFilters,selection))};
   cosmeticCache.set(host,result);if(cosmeticCache.size>64)cosmeticCache.delete(cosmeticCache.keys().next().value);
   return result;
 }
@@ -116,6 +116,7 @@ chrome.webNavigation.onCommitted.addListener(event=>{
   if(event.frameId!==0 || event.tabId<0 || event.documentLifecycle==='prerender')return;
   statsTask(async()=>{const session=await statsSession();session.tabs[event.tabId]={host:A.hostname(event.url),since:Math.floor(event.timeStamp),count:0};await chrome.storage.session.set({statsSession:session});});
 });
+chrome.tabs.onRemoved.addListener(tabId=>openedTabs.delete(tabId));
 chrome.tabs.onRemoved.addListener(tabId=>statsTask(async()=>{const session=await statsSession();if(session.tabs[tabId]){session.tabs[tabId].removed=true;await chrome.storage.session.set({statsSession:session});}}));
 // Hosts that need per-site treatment are learned as the user reaches them. Registering every
 // listed host up front would make the browser test ~25,000 patterns on each frame of each page.
@@ -234,6 +235,32 @@ async function applySettings(settings,listCache){
 const popupRescue=AdShieldPopupRescue.create({api:chrome,A,readState});
 chrome.webNavigation.onCreatedNavigationTarget.addListener(event=>popupRescue.handle(event).catch(error=>console.error('Popup rescue:',error)));
 chrome.tabs.onRemoved.addListener(tabId=>popupRescue.forget(tabId));
+// The lists' $popup rules. declarativeNetRequest cannot tell a popup from a navigation the
+// user asked for, so a tab a page opens is checked here and closed when a rule names it.
+// It is watched for a few seconds: popunders often open blank and navigate afterwards.
+let popupFilter;const openedTabs=new Map();
+const loadPopupFilter=()=>popupFilter ||= fetch(chrome.runtime.getURL('data/engine/popups.json')).then(r=>r.json()).then(rules=>AdShieldPopupFilter.create(rules,{isListed:A.isListed,entityFor:A.entityFor,getDomain:host=>AdShieldDomainUtils.getDomain(host,{allowPrivateDomains:false})}));
+async function checkOpenedTab(tabId,url){
+  const record=openedTabs.get(tabId);if(!record)return;
+  if(Date.now()>record.until){openedTabs.delete(tabId);return;}
+  const [settings,filter]=await Promise.all([readSettings(),loadPopupFilter()]);
+  if(!settings.enabled || !filter.match(url,record.opener,settings.webFilters) || !openedTabs.delete(tabId))return;
+  try{await chrome.tabs.remove(tabId);}catch{} // Already closed.
+}
+chrome.webNavigation.onCreatedNavigationTarget.addListener(async event=>{
+  try{
+    if(!Number.isInteger(event.sourceTabId) || !Number.isInteger(event.tabId) || event.sourceTabId===event.tabId)return;
+    const settings=await readSettings();if(!settings.enabled)return;
+    const opener=A.hostname((await chrome.tabs.get(event.sourceTabId)).url);
+    if(!opener || A.isListed(opener,settings.whitelist) || A.isListed(opener,settings.compatSites) || A.modeFor(opener,settings)==='off')return;
+    openedTabs.set(event.tabId,{opener,until:Date.now()+5000});
+    if(openedTabs.size>64)openedTabs.delete(openedTabs.keys().next().value);
+    await checkOpenedTab(event.tabId,event.url);
+  }catch(error){console.debug('Popup filter:',error.message);}
+});
+for(const name of ['onBeforeNavigate','onCommitted'])chrome.webNavigation[name].addListener(event=>{
+  if(event.frameId===0 && openedTabs.has(event.tabId))checkOpenedTab(event.tabId,event.url).catch(error=>console.debug('Popup filter:',error.message));
+},WEB_ONLY);
 let queue=Promise.resolve();
 function enqueue(task){const result=queue.then(task);queue=result.catch(error=>console.error('Ad Shield:',error));return result;}
 function targetDisappeared(error,target){
@@ -377,7 +404,9 @@ async function resolvePolicy(message,sender){
   // Every frame of a site gets the same text; build it once per cached host.
   const automaticCss=lists?(lists.shadowCss ??= componentSelectors.map(selector=>`${selector} { display: none !important; }`).join('\n')):'';
   const plainCustom=ordinaryCustom.filter(x=>!isExtended(x));
-  const hideAll=list=>[...new Set(list)].map(selector=>`${A.scopedSelector(selector)} { display: none !important; }`).join('\n');
+  // Restyling rules from the lists (selector:style(...)) follow the hiding rules.
+  const restyle=lists?lists.styles.map(([selector,style])=>`${A.scopedSelector(selector)} { ${style} }`):[];
+  const hideAll=list=>[...[...new Set(list)].map(selector=>`${A.scopedSelector(selector)} { display: none !important; }`),...restyle].join('\n');
   const documentCss=lists && !plainCustom.length?(lists.documentCss ??= hideAll(selectors)):hideAll([...selectors,...plainCustom]);
   const css=!documentCss ? '' : A.IS_FIREFOX ? documentCss : `@scope (:root) {\n${documentCss}\n}`;
   const shadowCss=active && settings.hideAds && settings.shadowAds && !compatible ? automaticCss : '';

@@ -47,8 +47,13 @@ export function hidingException(line,A){
   const kinds=[...new Set(types)].sort();
   return {host,include,exclude,generic:kinds.includes('generichide') || kinds.includes('elemhide'),specific:kinds.includes('specifichide') || kinds.includes('elemhide'),badfilter:options.includes('badfilter'),key:JSON.stringify([host || '*',include,exclude,kinds])};
 }
+// Declarations from a list go into a stylesheet verbatim: nothing that could close the rule,
+// start another one, or load a resource.
+export function safeDeclarations(text){
+  return typeof text==='string' && text.length<=600 && !/[{}\\<>@]|\/\*|url\s*\(|image-set|expression\s*\(|[\r\n\f]/i.test(text) && /^\s*[-a-z]+\s*:/i.test(text);
+}
 export function compileCosmetics(lines,A){
-  const entries=[],extended=[],genericOff=[];
+  const entries=[],extended=[],genericOff=[],styles=[];
   let unsupportedCosmetic=0,unsupportedExtended=0,unsupportedExceptions=0;
   for(const line of lines){
     const off=hidingException(line,A);
@@ -60,6 +65,15 @@ export function compileCosmetics(lines,A){
     const values=scope?scope.split(','):[];
     if(values.some(x=>!A.validDomain(x.replace(/^~/,'')) && !(x.endsWith('.*') && A.validDomain(x.replace(/^~/,'').slice(0,-2))))){unsupportedCosmetic++;continue;}
     const include=values.filter(x=>!x.startsWith('~')),exclude=values.filter(x=>x.startsWith('~')).map(x=>x.slice(1));
+    // selector:style(declarations) restyles instead of hiding; lists use it to undo what a
+    // site does when it detects blocking (locked scrolling, blurred text, reserved gaps).
+    const styled=selector.match(/^(.+?):style\((.+)\)\s*$/s);
+    if(styled){
+      const [,target,declarations]=styled;
+      const plainTarget=!forced && !nestedHas(target) && A.safeFilterSelector(target) && balancedNative(target) && !target.startsWith('^') && !/:(?:has-text|contains|-abp-has|-abp-contains|matches-css(?:-before|-after)?|matches-attr|matches-property|xpath|upward|nth-ancestor|if-not|empty-trimmed|remove|watch-attr|not-if|style|others|properties|-abp-properties|matches-path|matches-media|remove-attr|remove-class|shadow)(?:\(|$)/i.test(target);
+      if(!include.length || !plainTarget || !safeDeclarations(declarations)){unsupportedCosmetic++;continue;}
+      styles.push({selector:target.trim(),style:declarations.trim().replace(/;\s*$/,''),include,exclude,exception:!!exception});continue;
+    }
     const procedural=forced || nestedHas(selector) || /:(?:has-text|contains|-abp-has|-abp-contains|matches-css(?:-before|-after)?|matches-attr|matches-property|xpath|upward|nth-ancestor|if-not|empty-trimmed|remove|watch-attr)(?:\(|$)/i.test(selector);
     if(procedural){
       const value=selector.replace(/:remove\(\)\s*$/,'');
@@ -69,5 +83,5 @@ export function compileCosmetics(lines,A){
     if(!A.safeFilterSelector(selector) || !balancedNative(selector) || /:(?:not-if|style|watch-attr|others|properties|-abp-properties|matches-path|remove-attr|remove-class|shadow)(?:\(|$)/.test(selector) || selector.startsWith('^') || ['*','html','body',':root'].includes(selector.trim().toLowerCase())){unsupportedCosmetic++;continue;}
     entries.push({selector,include,exclude,exception:!!exception});
   }
-  return {ordinary:{entries,genericOff},extended:{entries:extended},unsupportedCosmetic,unsupportedExtended,unsupportedExceptions};
+  return {ordinary:{entries,genericOff},extended:{entries:extended,styles},unsupportedCosmetic,unsupportedExtended,unsupportedExceptions};
 }

@@ -124,6 +124,7 @@ html[lang][style^="--main-bg-color"] > body:not([class]):not([id]) > div#contain
 a.poly-title[href^="https://www.polybuzz.ai/"]{display:none!important}
 a[href^="https://www.polybuzz.ai/"] img.responsive-image{display:none!important}
 #teaser3[style^="width: 100%;height:0;text-align: center;display: scroll;position:fixed;"]{display:none!important}
+.flex a[href^="https://tt.culinar9sync.com/"]{display:none!important}
 #adbtm[onclick="badr();"]{display:none!important}
 button.btn[data-openuri*="/4/"]{display:none!important}
 img[width="728"][height="90"]{display:none!important}
@@ -144,3 +145,6 @@ a.tdn[href^="https://landing.brazzersnetwork.com/"]{display:none!important}
 .post-template-default a[href^="https://www.ourdreamersai13.com/"]{display:none!important}
 .wrapper a[rel~="sponsored"][href^="https://"][href*=".com/"][href*="?key="]{display:none!important}
 .code-block a[target="_blank"][href^="https://"][href*=".com/"][href*="?key="]{display:none!important}
+.code-block a[href^="https://ewxerd.site/"]{display:none!important}
+div[data-ad-slot-name]{display:none!important}
+.flex a[href^="https://s.smartfloralab.com/"]{display:none!important}

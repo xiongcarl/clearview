@@ -51,7 +51,7 @@ function uboEquivalent(name,args){
   }
   return null;
 }
-const extended={};const records=[];const functions=new Map();let skippedScriptlets=0,skippedExtended=0;const skippedReasons={};
+const extended={};const records=[];const functions=new Map();let skippedScriptlets=0,skippedExtended=0,removalRules=0;const skippedReasons={};
 for(const id of ids){
   const text=await readFile(new URL(`data/filters/${id}.txt`,root),'utf8');
   const lines=id==='fixes'?preprocess(text,includes):text.split(/\r?\n/);const compiled=compileCosmetics(lines,context.AdShield);extended[id]=compiled.extended;skippedExtended+=compiled.unsupportedExtended;
@@ -77,6 +77,18 @@ for(const id of ids){
           const implementation=fn.name;const code=String(fn);if(functions.has(implementation) && functions.get(implementation)!==code)throw new Error('Conflicting scriptlet implementation');functions.set(implementation,code);records.push({...sc,exception:!!exception,name:callName,implementation,args:callArgs});
         }
       }catch(error){skippedScriptlets++;const reason=error.message.startsWith('Unsupported scriptlet')?'Unsupported scriptlet':error.message;skippedReasons[reason]=(skippedReasons[reason] || 0)+1;}continue;
+    }
+    // uBO's selector:remove-attr(name) and :remove-class(name) are AdGuard's scriptlets of the
+    // same names with the arguments swapped. Only literal names; a pattern has no equivalent.
+    const removal=!exception && !forced && (id==='fixes' || id==='chinese') && selector.match(/^(.+?):remove-(attr|class)\((.+)\)\s*$/s);
+    if(removal){
+      try{
+        const [,target,kind,value]=removal;const sc=scope(raw);
+        if(!sc.include.length || !/^[\w-]+$/.test(value) || !context.AdShield.safeFilterSelector(target) || /:(?:has-text|contains|matches-css|matches-attr|matches-prop|matches-path|matches-media|xpath|upward|nth-ancestor|watch-attr|others|shadow|style|remove)(?:\(|-|$)/i.test(target))throw new Error('Unsupported removal rule');
+        const fn=scriptlets.getScriptletFunction('remove-'+kind);if(!fn)throw new Error('Unsupported removal rule');
+        const code=String(fn);if(functions.has(fn.name) && functions.get(fn.name)!==code)throw new Error('Conflicting scriptlet implementation');
+        functions.set(fn.name,code);records.push({...sc,exception:false,name:'remove-'+kind,implementation:fn.name,args:[value,target.trim()]});removalRules++;
+      }catch(error){skippedScriptlets++;skippedReasons[error.message]=(skippedReasons[error.message] || 0)+1;}
     }
 
   }
@@ -106,6 +118,6 @@ for(let i=0;i<FIX_SHARDS;i++)await writeFile(new URL(`fixes/data-${i}.js`,root),
 await mkdir(new URL('data/engine/',root),{recursive:true});
 await writeFile(new URL('data/engine/fix-keys.json',root),JSON.stringify(fixKeys));
 await writeFile(new URL('data/extended-cosmetics.json',root),JSON.stringify(extended)+'\n');
-const meta={source:'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt',sha256:createHash('sha256').update((await readFile(new URL('data/filters/fixes.txt',root),'utf8'))+JSON.stringify(Object.entries(includes).sort())).digest('hex'),scriptletRules:records.filter(x=>!x.exception).length,scriptletExceptions:exceptions.length,scriptletImplementations:functions.size,skippedScriptlets,skippedReasons,extendedRules:Object.values(extended).reduce((n,x)=>n+x.entries.filter(e=>!e.exception).length,0),skippedExtended};
+const meta={source:'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt',sha256:createHash('sha256').update((await readFile(new URL('data/filters/fixes.txt',root),'utf8'))+JSON.stringify(Object.entries(includes).sort())).digest('hex'),scriptletRules:records.filter(x=>!x.exception).length,removalRules,styleRules:Object.values(extended).reduce((n,x)=>n+x.styles.filter(e=>!e.exception).length,0),scriptletExceptions:exceptions.length,scriptletImplementations:functions.size,skippedScriptlets,skippedReasons,extendedRules:Object.values(extended).reduce((n,x)=>n+x.entries.filter(e=>!e.exception).length,0),skippedExtended};
 await writeFile(new URL('data/advanced-meta.json',root),JSON.stringify(meta)+'\n');
 console.log(meta);

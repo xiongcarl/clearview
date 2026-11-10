@@ -1,6 +1,7 @@
 // Developer maintenance command: validate and rebuild in a staging directory.
 // Installed browser settings are untouched. Chrome must be reloaded afterwards.
-import {readFile,writeFile,mkdtemp,cp,rm,rename,mkdir,access} from 'node:fs/promises';
+import {readFile,writeFile,mkdtemp,cp,rm,rename,mkdir,access,symlink} from 'node:fs/promises';
+import os from 'node:os';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 import {spawnSync} from 'node:child_process';
 import path from 'node:path';
@@ -15,7 +16,9 @@ const backup=path.join(root,'.previous-web-lists');
 // the latest anti-adblock repairs; privacy adds tracker rules not in EasyPrivacy.
 const EXTRA_FIXES=['unbreak.txt','quick-fixes.txt','privacy.txt'];
 const definitions=[['easylist','https://easylist.to/easylist/easylist.txt'],['easyprivacy','https://easylist.to/easylist/easyprivacy.txt'],['chinese','https://filters.adtidy.org/extension/chromium/filters/224.txt'],['annoyances','https://easylist-downloads.adblockplus.org/fanboy-annoyance.txt'],['fixes','https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt']];
-async function download(url){const response=await fetch(url,{signal:AbortSignal.timeout(30000),redirect:'error'});if(!response.ok)throw new Error('Source HTTP '+response.status);const reader=response.body.getReader();let size=0,chunks=[];while(true){const {done,value}=await reader.read();if(done)break;size+=value.length;if(size>6000000){await reader.cancel();throw new Error('Source too large');}chunks.push(value);}return Buffer.concat(chunks).toString('utf8');}
+// The list hosts stall now and then; a stalled transfer is retried before giving up.
+async function download(url){for(let attempt=1;;attempt++){try{return await downloadOnce(url);}catch(error){if(attempt>=4 || !/Timeout|fetch failed|terminated/i.test(error.name+' '+error.message))throw error;console.log('重試下載：'+url);}}}
+async function downloadOnce(url){const response=await fetch(url,{signal:AbortSignal.timeout(60000),redirect:'error'});if(!response.ok)throw new Error('Source HTTP '+response.status);const reader=response.body.getReader();let size=0,chunks=[];while(true){const {done,value}=await reader.read();if(done)break;size+=value.length;if(size>6000000){await reader.cancel();throw new Error('Source too large');}chunks.push(value);}return Buffer.concat(chunks).toString('utf8');}
 const committed=[];let oldBackupMoved=false;
 try{
   for(const name of ['data','vendor','common.js','tools'])await cp(path.join(root,name),path.join(stage,name),{recursive:true,filter:source=>!source.split(path.sep).some(x=>['node_modules','_metadata'].includes(x))});
@@ -28,7 +31,10 @@ try{
     }}
   }
   const env={...process.env,AD_SHIELD_DEPENDENCIES:dependencies.href,AD_SHIELD_CONVERTER:new URL('@adguard/dnr-converter/dist/index.js',dependencies).href};
-  for(const name of ['build-web-filters.mjs','build-advanced.mjs','build-enhanced.mjs','build-local-coverage.mjs','build-cosmetics.mjs','build-engine.mjs']){const result=spawnSync(process.execPath,[path.join(stage,'tools',name)],{env,stdio:'inherit'});if(result.status!==0)throw new Error('Build failed: '+name);}
+  // The regex validator (re2-wasm) aborts when the script path has non-ASCII characters, as
+  // this folder may. The builders run through a plain-named link to the staging directory.
+  const asciiStage=path.join(await mkdtemp(path.join(os.tmpdir(),'clearview-stage-')),'s');await symlink(stage,asciiStage);
+  for(const name of ['build-web-filters.mjs','build-advanced.mjs','build-enhanced.mjs','build-local-coverage.mjs','build-cosmetics.mjs','build-engine.mjs','build-popups.mjs']){const result=spawnSync(process.execPath,['--preserve-symlinks','--preserve-symlinks-main',path.join(asciiStage,'tools',name)],{env,stdio:'inherit'});if(result.status!==0)throw new Error('Build failed: '+name);}
   const result=spawnSync(process.execPath,['--check',path.join(stage,'fixes/lib.js')],{stdio:'inherit'});if(result.status!==0)throw new Error('Generated script syntax invalid');
   const meta=JSON.parse(await readFile(path.join(stage,'data/web-meta.json'),'utf8'));if(meta.length!==5 || meta.some(x=>x.networkRules<100))throw new Error('Incomplete rulesets');
   if(dryRun){console.log('重建驗證成功；原插件未變更。');}

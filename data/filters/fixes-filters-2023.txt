@@ -1091,8 +1091,9 @@ alternativeto.net##+js(json-prune, props.sponsoredAlternative)
 ! https://github.com/uBlockOrigin/uAssets/issues/20358
 alternativeto.net##main > div.flex.justify-center > div.w-full.box-border.flex > div.w-full.container.wide-container
 alternativeto.net##.container > h2[class^="Heading-module-scss-module__"][class^="Heading-module-scss"]:has-text(supported by)
-alternativeto.net##main > section.container.wide-container > div.container > div.mt-10
 alternativeto.net##[href*="aff_c?"]
+! https://github.com/uBlockOrigin/uAssets/issues/35187
+alternativeto.net##.border-official-partner
 
 ! helmiau. com anti adb
 @@||helmiau.com^$script,1p
@@ -1939,7 +1940,7 @@ phineypet.com###content > form[id]:has(> center > button):style(display: block !
 ! https://github.com/AdguardTeam/AdguardFilters/issues/150736
 ! https://www.reddit.com/r/uBlockOrigin/comments/1dgvlmw/blur_issue_on_fapdrop_nsfw/
 fapdrop.com##+js(aost, atob, eval)
-fapdrop.com##+js(no-fetch-if, doubleclick.net/instream/ad_status.js, war:doubleclick_instream_ad_status.js)
+! fapdrop.com##+js(no-fetch-if, doubleclick.net/instream/ad_status.js, war:doubleclick_instream_ad_status.js)
 fapdrop.com##+js(nostif, redURL)
 fapdrop.com##[href^="https://t.crdefault1.com/"]
 fapdrop.com##.king-ads

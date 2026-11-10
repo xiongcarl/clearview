@@ -57,7 +57,17 @@ globalThis.CosmeticEngine=(()=>{
     }
     return [...result];
   }
+  // selector:style(declarations) rules for this host: [selector, declarations] pairs.
+  function styleRules(host,extended,enabled,selection){
+    const found=new Map(),cancelled=new Set();
+    for(const [id,data] of Object.entries(extended))if(enabled[id])for(const entry of data.styles || []){
+      if(!extendedMatches(host,entry))continue;const key=entry.selector+'\n'+entry.style;
+      if(entry.exception)cancelled.add(key);else found.set(key,[entry.selector,entry.style]);
+    }
+    if(selection.specific)return [];
+    return [...found].filter(([key])=>!cancelled.has(key)).map(([,pair])=>pair);
+  }
   // Files that hold the global selectors for the enabled lists.
   async function genericFiles(enabled){const {lists}=await meta();return ['data/engine/generic-base.css',...lists.filter(id=>enabled[id]).map(id=>`data/engine/generic-${id}.css`)];}
-  return {hostKeys,resolve,extendedSelectors,genericFiles,meta};
+  return {hostKeys,resolve,extendedSelectors,styleRules,genericFiles,meta};
 })();

@@ -744,6 +744,8 @@ turkrock.com##+js(acs, $, .show)
 ||googletagmanager.com^$script,domain=foxnews.com,important
 ||imasdk.googleapis.com/js/sdkloader/ima3_debug.js$domain=foxnews.com,important
 foxnews.com##.site-header:style(min-height: 90px !important)
+! https://github.com/uBlockOrigin/uAssets/issues/12543
+/google.funding.choices.js^$script
 
 ! https://github.com/NanoMeow/QuickReports/issues/3995
 @@||85videos.com^$ghide
@@ -1966,9 +1968,6 @@ linuxhint.com,thekitchenmagpie.com##+js(acs, Math, adthrive)
 ! https://github.com/AdguardTeam/AdguardFilters/issues/64220
 bonobono.com##.custom-html-widget
 
-! https://github.com/uBlockOrigin/uAssets/pull/7930
-makefreecallsonline.com##+js(rmnt, script, onerror)
-
 ! https://github.com/NanoMeow/QuickReports/issues/4729
 businesstimes.com.sg##.overlayWhite
 businesstimes.com.sg##html:style(overflow-y: auto !important;)
@@ -2866,8 +2865,8 @@ nypost.com##img[src$="/knewz_300x250.png"]:upward(.widget_text)
 nypost.com##.entry-content > .nyp-video-player
 ! https://github.com/uBlockOrigin/uAssets/issues/33707
 ! https://old.reddit.com/r/uBlockOrigin/comments/1ug4jiw/the_sun_adblock_nag/
-decider.com,nypost.com,pagesix.com,the-sun.com,thescottishsun.co.uk,thesun.co.uk,thesun.ie##+js(rmnt, script, parentNode.removeChild)
-decider.com,nypost.com,pagesix.com,the-sun.com,thescottishsun.co.uk,thesun.co.uk,thesun.ie##+js(acs, atob, parentNode.removeChild)
+decider.com,nypost.com,pagesix.com,the-sun.com,thescottishsun.co.uk,thesun.co.uk,thesun.ie##+js(rmnt, script, /parentNode\.removeChild|textContent=atob/)
+decider.com,nypost.com,pagesix.com,the-sun.com,thescottishsun.co.uk,thesun.co.uk,thesun.ie##+js(acs, atob, /parentNode\.removeChild|textContent=atob/)
 
 ! xmegadrive.com popup
 xmegadrive.com##+js(set, flashvars.adv_pause_html, '')

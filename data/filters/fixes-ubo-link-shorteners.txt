@@ -166,11 +166,6 @@ hit-films.com###btn6:style(display: block !important;)
 hit-films.com###btn6:others()
 
 ! https://v2links.me/MyahST77NaL
-utkarshonlinetest.com,financewada.com##+js(nano-sib, /.?/, *, 0.02)
-utkarshonlinetest.com,financewada.com##+js(rc, no_display)
-utkarshonlinetest.com,financewada.com##h4, .get_btn:others()
-utkarshonlinetest.com,financewada.com##.process, .txt_top
-utkarshonlinetest.com,financewada.com##.no_display:style(display: block!important; opacity: 1!important)
 v2links.me##.banner-page .container.links:style(height: fit-content! important;)
 v2links.me###footer
 
@@ -627,7 +622,7 @@ pahe.plus##+js(aopr, app_vars.force_disable_adblock)
 @@*$xhr,image,script,frame,stylesheet,1p,domain=intercelestial.com|teknoasian.com|linegee.net|pahe.plus
 @@*$ghide,domain=intercelestial.com|teknoasian.com|linegee.net|pahe.plus
 linegee.net,intercelestial.com,teknoasian.com##.right-sidebar.penci_sidebar.container,.penci-home-popular-posts.container,p,ul,li,[href*="s0-greate"],#sidebar,.post-pagination,.single-breadcrumb.penci-breadcrumb.container,.penci-move-title-above.post-image,#footer-section, .post-related, #comments, .post-share.tags-share-box, .alignleft.wp-caption
-linegee.net,intercelestial.com,teknoasian.com##+js(aeld, DOMContentLoaded, onpopstate)
+! linegee.net,intercelestial.com,teknoasian.com##+js(aeld, DOMContentLoaded, onpopstate)
 linegee.net,intercelestial.com,teknoasian.com##+js(nowoif)
 ! From Adguard
 intercelestial.com#@#+js(adjust-setTimeout, '', *, 0.1)
@@ -641,6 +636,12 @@ intercelestial.com#@#+js(adjust-setTimeout, '', *, 0.1)
 linegee.net,intercelestial.com,teknoasian.com,pahe.*##+js(rmnt, script, documentElement)
 linegee.net,intercelestial.com,teknoasian.com,pahe.*##div:has(a[href*="antiadblockcore.com"])
 linegee.net,intercelestial.com,teknoasian.com,pahe.*##html:style(overflow: auto !important;)
+pahe.ink##+js(trusted-replace-outbound-text, decodeURIComponent, /^__x[0-9a-f]{7}$/, document)
+pahe.ink##+js(trusted-replace-outbound-text, decodeURIComponent, /^[0-9a-f]__$/)
+
+! Tpi group
+aii.sh,lnbzi.com,clksz.com,tpi.li,oii.la,srnky.com##+js(trusted-replace-outbound-text, decodeURIComponent, /^__x[0-9a-f]{7}$/, document)
+aii.sh,lnbzi.com,clksz.com,tpi.li,oii.la,srnky.com##+js(trusted-replace-outbound-text, decodeURIComponent, /^[0-9a-f]__$/)
 
 ! https://tpi.li/FKsK
 ! https://oii.la/DQqgX
@@ -832,7 +833,8 @@ trickms.com###tp98, #btn6, #tp-snp2:others()
 ||beixisys.com^$script,domain=tempatwisata.pro|datapendidikan.com|cekresi.me|go.fakta.id|crm.urlwebsite.com
 ||rc.patagonenki.shop^$domain=tempatwisata.pro|datapendidikan.com|cekresi.me|go.fakta.id|crm.urlwebsite.com
 *$script,xhr,redirect-rule=noopjs,domain=tempatwisata.pro|datapendidikan.com|cekresi.me|go.fakta.id|crm.urlwebsite.com
-crm.urlwebsite.com,go.fakta.id,datapendidikan.com,app.cekresi.me,tempatwisata.pro##+js(no-fetch-if, /outbrain\.com|adligature\.com|quantserve\.com|srvtrck\.com|googlesyndication/, {"type": "cors"})
+*$image,redirect-rule=32x32.png,domain=tempatwisata.pro|datapendidikan.com|cekresi.me|go.fakta.id|crm.urlwebsite.com
+crm.urlwebsite.com,go.fakta.id,datapendidikan.com,app.cekresi.me,tempatwisata.pro##+js(no-fetch-if, /outbrain\.com|adligature\.com|quantserve\.com|srvtrck\.com|googlesyndication|pubadx/, {"type": "cors"})
 crm.urlwebsite.com,go.fakta.id,datapendidikan.com,app.cekresi.me,tempatwisata.pro##+js(nowoif, _blank)
 !crm.urlwebsite.com,go.fakta.id,datapendidikan.com,app.cekresi.me,tempatwisata.pro##button[type="button"], #continue, .separator > div > div > h3, .font-semibold.text-white.bg-primary.inline-block.mx-auto, [src*="captcha"]:others()
 !crm.urlwebsite.com,go.fakta.id,datapendidikan.com,app.cekresi.me,tempatwisata.pro##button[x-on\:click="openPopup"]:not([x-bind\:disabled])
@@ -959,14 +961,14 @@ sharclub.in,main.sportswordz.com,wblaxmibhandar.com##+js(rpnt, script, timeLeft 
 lksfy.com##[href="https://telegram.me/linkshortify"] > .button-image
 
 ! https://linkjust.com/6epe7m0l6m
-quest.to-travel.net,yjiur.xyz,journey.to-travel.net,whatgame.xyz,gold-24.net,forexrw7.com##+js(noeval-if, /chp_?ad/)
-quest.to-travel.net,yjiur.xyz,journey.to-travel.net,whatgame.xyz,gold-24.net,forexrw7.com##.btn-success:style(display: block !important;)
-quest.to-travel.net,yjiur.xyz,journey.to-travel.net,whatgame.xyz,gold-24.net,forexrw7.com##+js(nano-stb, /.?/, *, 0.001)
-quest.to-travel.net,yjiur.xyz,journey.to-travel.net,whatgame.xyz,gold-24.net,forexrw7.com##+js(nano-sib, /.?/, *, 0.001)
-quest.to-travel.net,yjiur.xyz,journey.to-travel.net,whatgame.xyz,gold-24.net,forexrw7.com##.btn-success, [id^="next"], [id^="final"]:others()
+quest.to-travel.net,yjiur.xyz,journey.to-travel.net,whatgame.xyz,forexrw7.com##+js(noeval-if, /chp_?ad/)
+quest.to-travel.net,yjiur.xyz,journey.to-travel.net,whatgame.xyz,forexrw7.com##.btn-success:style(display: block !important;)
+quest.to-travel.net,yjiur.xyz,journey.to-travel.net,whatgame.xyz,forexrw7.com##+js(nano-stb, /.?/, *, 0.001)
+quest.to-travel.net,yjiur.xyz,journey.to-travel.net,whatgame.xyz,forexrw7.com##+js(nano-sib, /.?/, *, 0.001)
+quest.to-travel.net,yjiur.xyz,journey.to-travel.net,whatgame.xyz,forexrw7.com##.btn-success, [id^="next"], [id^="final"]:others()
 ! Auto click
-quest.to-travel.net,yjiur.xyz,journey.to-travel.net,whatgame.xyz,gold-24.net,forexrw7.com##+js(trusted-click-element, '1000, #next-timer-btn > .btn-success, 600, #mid-progress-wrapper > .btn-success, 1300, #final-nextbutton', 3500)
-quest.to-travel.net,yjiur.xyz,journey.to-travel.net,whatgame.xyz,gold-24.net,forexrw7.com##+js(trusted-click-element, #next-link-wrapper > .btn-success, , 1600)
+quest.to-travel.net,yjiur.xyz,journey.to-travel.net,whatgame.xyz,forexrw7.com##+js(trusted-click-element, '1000, #next-timer-btn > .btn-success, 600, #mid-progress-wrapper > .btn-success, 1300, #final-nextbutton', 3500)
+quest.to-travel.net,yjiur.xyz,journey.to-travel.net,whatgame.xyz,forexrw7.com##+js(trusted-click-element, #next-link-wrapper > .btn-success, , 1600)
 ||primepropertynow.com^$domain=linkjust.com
 linkjust.com##+js(set, blurred, false)
 
@@ -1029,11 +1031,10 @@ tutwuri.id##+js(nano-sib)
 ! https://github.com/uBlockOrigin/uAssets/issues/9760
 ! https://github.com/AdguardTeam/AdguardFilters/issues/112330
 ! https://github.com/AdguardTeam/AdguardFilters/issues/110385
-downfile.site##+js(rmnt, script, deblocker)
-! azmath.info,azsoft.*,downfile.site,downphanmem.com,expertvn.com,memangbau.com,trangchu.news,aztravels.net##+js(set, count, 0)
-azmath.info,azsoft.*,downfile.site,expertvn.com,trangchu.news##+js(aopr, SMart1)
-azmath.info,azsoft.*,downfile.site,expertvn.com,trangchu.news##+js(noeval-if, chp_ad)
-azmath.info,azsoft.*,downfile.site,expertvn.com,trangchu.news##+js(aeld, DOMContentLoaded, document.documentElement.lang.toLowerCase)
+! azmath.info,azsoft.*,downphanmem.com,expertvn.com,aztravels.net##+js(set, count, 0)
+azmath.info,azsoft.*,expertvn.com##+js(aopr, SMart1)
+azmath.info,azsoft.*,expertvn.com##+js(noeval-if, chp_ad)
+azmath.info,azsoft.*,expertvn.com##+js(aeld, DOMContentLoaded, document.documentElement.lang.toLowerCase)
 expertvn.com##+js(rmnt, script, deblocker)
 trangchu.news##+js(rmnt, script, deblocker)
 trangchu.news##+js(no-xhr-if, /doubleclick|googlesyndication/)
@@ -1042,8 +1043,8 @@ trangchu.news##+js(no-xhr-if, /doubleclick|googlesyndication/)
 @@||expertvn.com^$ghide
 *$script,3p,denyallow=bootstrapcdn.com|cloudflare.com|google.com|googleapis.com|gstatic.com|hwcdn.net|jquery.com,domain=expertvn.com
 ||monetiza.co^$3p
-||vidcrunch.com^$domain=aztravels.net|downfile.site
-@@*$ghide,domain=aztravels.net|downfile.site
+||vidcrunch.com^$domain=aztravels.net
+@@*$ghide,domain=aztravels.net
 *$image,domain=app.trangchu.news|azmath.info,redirect-rule=1x1.gif
 
 ! https://github.com/uBlockOrigin/uAssets/issues/24199
@@ -1900,3 +1901,22 @@ link.snipcash.com##+js(set, blurred, false)
 ! https://github.com/uBlockOrigin/uAssets/issues/34674
 ||zmfcxr.srnky.com^
 ||srnky.com/u1710i/polyfill.
+
+! https://fileroy.com/BnkmWjgqGR0y/file
+@@||fileroy.com/assets/$script,1p
+fileroy.com##main.fr-download-main:style(display:block !important)
+fileroy.com##+js(ra, inert, main.fr-download-main, complete, quitAfter, 10)
+fileroy.com##+js(ra, data-fr-detection, body, complete)
+fileroy.com##.fr-download-guard:remove()
+fileroy.com##+js(adjust-setInterval, counter)
+fileroy.com##+js(rmnt, script, ?key=)
+fileroy.com##div.fr-gate-ad
+
+! https://github.com/uBlockOrigin/uAssets/issues/35169
+||auth.av1core.de5.net/health$xhr
+||uplcm.com^$popup
+av1core.*##+js(no-fetch-if, /outbrain\.com|adligature\.com|quantserve\.com|srvtrck\.com/)
+av1core.*##+js(set, HTMLElement.prototype.offsetHeight, 1)
+av1core.*##+js(nowoif, uplcm.com)
+av1core.*##+js(set, document.hidden, false)
+av1core.*##+js(trusted-set, document.visibilityState, visible)

@@ -22,7 +22,7 @@ import json, pathlib, re, shutil, sys, tempfile, zipfile
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 GECKO_ID = '{4b5c2b8e-6f0a-4d7e-9a43-2f1d6c8e7a51}'
 BACKGROUND = ['vendor/publicsuffix.js', 'i18n.js', 'common.js', 'user-filters.js', 'cosmetic-engine.js',
-              'static-rule-policy.js', 'popup-rescue.js', 'background.js']
+              'static-rule-policy.js', 'popup-rescue.js', 'popup-filter.js', 'background.js']
 EXCLUDE_DIRS = {'tools', 'testing-output', 'verification', '.previous-web-lists', '_metadata', 'node_modules', '.git'}
 EXCLUDE_FILES = {'BENCHMARK.md', 'TESTING.md', 'STORE-LISTING.md', 'HISTORY.md', '.DS_Store', '.gitignore',
                  'web-filtering.js', 'web-cosmetics.json', 'web-actions.json'}
