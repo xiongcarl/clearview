@@ -45,7 +45,7 @@ the tables in the script.
 |---|---|---|
 | `data/web-rules/*.json`, `data/web-cosmetics.json` (build input, not packaged), `data/web-actions.json` (build input, not packaged), `data/badfilter-policy.json` | `tools/build-web-filters.mjs` (uses `build-cosmetics.mjs`, `badfilter-policy.mjs`) | List snapshots in `data/filters/` (EasyList, EasyPrivacy, AdGuard Chinese, uBlock filters, Fanboy Annoyances) |
 | `data/engine/generic-*.css`, `data/engine/meta.json`, `data/engine/s/*.json`, `data/engine/rule-actions.json` | `tools/build-engine.mjs` | `data/web-cosmetics.json`, `data/web-actions.json`, `data/extended-cosmetics.json` |
-| `fixes/lib.js`, `fixes/data-*.js`, `data/engine/fix-keys.json`, `data/extended-cosmetics.json` | `tools/build-advanced.mjs` | Same list snapshots plus `@adguard/scriptlets` 2.5.1 |
+| `fixes/lib.js`, `fixes/data-*.js`, `data/engine/fix-keys.bin`, `data/extended-cosmetics.json` | `tools/build-advanced.mjs` | Same list snapshots plus `@adguard/scriptlets` 2.5.1 |
 | `data/enhanced-rules.json` | `tools/build-enhanced.mjs` | `data/ultimate-domains.txt` (HaGeZi ULTIMATE) |
 | `data/engine/popups.json` | `tools/build-popups.mjs` | `$popup` rules in `data/filters/` |
 | `rules.json`, `data/seed-meta.json` | `tools/build-seed.mjs` | `data/source-domains.txt` (HaGeZi Multi LIGHT) |

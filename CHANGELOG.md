@@ -3,6 +3,11 @@
 每一版的完整說明與量測數據在 [`docs/changes/`](docs/changes/)。
 Full notes and measurements for each version are in [`docs/changes/`](docs/changes/).
 
+## 5.6.4 — 2026-11-15
+- 背景程式的修正索引改成二進位：載入時間 4.9 ms → 1.2 ms，記憶體少約三成；攔截內容不變。
+- The worker's fix index is now binary: loads in 1.2 ms instead of 4.9 ms and uses about 30% less memory. Blocking is unchanged.
+- [詳細 · Details](docs/changes/CHANGES-5.6.4.md)
+
 ## 5.6.3 — 2026-11-11
 - 預設多擋 34 個廣告、追蹤與遙測主機（只擋其他網站對它們的請求）。
 - Blocks 34 more ad, tracker and telemetry hosts as third parties.

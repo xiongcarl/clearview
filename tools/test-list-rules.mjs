@@ -13,7 +13,9 @@ assert.ok(style,'a simple :style() rule exists');
 const popups=await json('data/engine/popups.json');
 const popup=popups.find(x=>x.h && !x.inc && !x.exc && !x.tp && !x.x && !popups.some(y=>y.x && y.h===x.h));assert.ok(popup,'a host popup rule exists');
 const fixData=await Promise.all(Array.from({length:32},(_,i)=>readFile(path.join(root,`fixes/data-${i}.js`),'utf8')));
-let removal;for(const text of fixData){const m=text.match(/^globalThis\.__clearviewFixes\?\.\((\{.*\}),(\[.*\])\);\s*$/s);if(!m)continue;const keys=JSON.parse(m[1]),records=JSON.parse(m[2]);
+// Each data file calls the library's entry point with (keys, records); run it to read them.
+const vm=await import('node:vm');
+let removal;for(const text of fixData){let keys,records;const sandbox=vm.createContext({});sandbox.globalThis=sandbox;sandbox.__clearviewFixes=(k,r)=>{keys=k;records=r;};vm.runInContext(text,sandbox);if(!keys)continue;
   for(const [host,ids] of Object.entries(keys)){if(!plainHost(host))continue;const id=ids.find(i=>records[i][0]==='remove-class' && /^[.#][\w-]+(?:\.[\w-]+)*$/.test(records[i][2][1]) && !records[i][3].length);if(id!==undefined){removal={host,name:records[id][2][0],selector:records[id][2][1]};break;}}
   if(removal)break;}
 assert.ok(removal,'a simple :remove-class() rule exists');

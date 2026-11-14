@@ -132,6 +132,17 @@ chrome.tabs.onRemoved.addListener(tabId=>statsTask(async()=>{const session=await
 // visit also gets the fixes injected at commit. Scriptlets guard against running twice.
 const HOT_LIMIT=400;
 let fixIndex,hotCache;
+// Which list keys have site fixes: sorted 32-bit hashes (tools/fix-index.mjs). shard() is the
+// fixes/data-N.js file for a key, or undefined when the key has none.
+const loadFixIndex=()=>fixIndex ||= fetch(chrome.runtime.getURL('data/engine/fix-keys.bin')).then(r=>r.arrayBuffer()).then(buffer=>{
+  const view=new DataView(buffer),shards=view.getUint32(0,true),count=view.getUint32(4,true);
+  const hashes=new Uint32Array(count);for(let i=0;i<count;i++)hashes[i]=view.getUint32(8+i*4,true);
+  return {size:count,shard(key){
+    let hash=0x811c9dc5;for(let i=0;i<key.length;i++){hash^=key.charCodeAt(i);hash=Math.imul(hash,16777619);}hash>>>=0;
+    let low=0,high=count-1;while(low<=high){const mid=(low+high)>>>1;if(hashes[mid]===hash)return hash%shards;if(hashes[mid]<hash)low=mid+1;else high=mid-1;}
+    return undefined;
+  }};
+});
 const readHot=()=>hotCache ||= chrome.storage.local.get('hot').then(({hot})=>hot || {fixes:{},genericOff:{}});
 const trim=(record,size)=>{const keys=Object.keys(record);if(keys.length>size){const stamp=value=>Array.isArray(value)?value[1]:value;for(const key of keys.sort((a,b)=>stamp(record[a])-stamp(record[b])).slice(0,keys.length-size))delete record[key];}};
 async function registerScripts(settings,hot,ids){
@@ -149,9 +160,9 @@ const KNOWN_HOSTS=['www.youtube.com','m.youtube.com','music.youtube.com','tv.you
 async function seedHot(settings,hot){
   if(!settings.enabled)return;
   const fixes=settings.scriptlets && settings.webFilters.fixes;
-  if(fixes)fixIndex ||= await fetch(chrome.runtime.getURL('data/engine/fix-keys.json')).then(r=>r.json());
+  const index=fixes?await loadFixIndex():null;
   for(const host of KNOWN_HOSTS){
-    if(fixes)for(const key of CosmeticEngine.hostKeys(host))if(fixIndex[key]!==undefined)hot.fixes[`*://*.${key}/*`] ||= [fixIndex[key],Date.now()];
+    if(fixes)for(const key of CosmeticEngine.hostKeys(host)){const shard=index.shard(key);if(shard!==undefined)hot.fixes[`*://*.${key}/*`] ||= [shard,Date.now()];}
     if(settings.hideAds && (await listCosmetics(host,settings)).genericOff)hot.genericOff[`*://${host}/*`] ||= Date.now();
   }
 }
@@ -160,9 +171,9 @@ async function learnHost(host,topFrame,settings){
   if(!settings.enabled || !host || A.isListed(host,settings.whitelist) || A.isListed(host,settings.compatSites))return [];
   const keys=CosmeticEngine.hostKeys(host);const {offKeys}=await CosmeticEngine.meta();
   const fixes=settings.scriptlets && settings.webFilters.fixes;
-  if(fixes)fixIndex ||= await fetch(chrome.runtime.getURL('data/engine/fix-keys.json')).then(r=>r.json());
+  const index=fixes?await loadFixIndex():null;
   offSet ||= new Set(offKeys);
-  const hits=fixes?keys.filter(key=>fixIndex[key]!==undefined):[];
+  const hits=fixes?keys.filter(key=>index.shard(key)!==undefined):[];
   const offHit=topFrame && settings.hideAds && keys.some(key=>offSet.has(key)) && (await listCosmetics(host,settings)).genericOff;
   if(!hits.length && !offHit)return [];
   return enqueue(async()=>{
@@ -170,7 +181,7 @@ async function learnHost(host,topFrame,settings){
     for(const key of hits){
       // An entity key such as example.* is registered for the exact domain being visited.
       const domain=key.endsWith('.*')?key.slice(0,-1)+AdShieldDomainUtils.getPublicSuffix(host,{allowPrivateDomains:false}):key;
-      const pattern=`*://*.${domain}/*`;const shard=fixIndex[key];
+      const pattern=`*://*.${domain}/*`;const shard=index.shard(key);
       if(hot.fixes[pattern]){hot.fixes[pattern][1]=now;continue;}
       hot.fixes[pattern]=[shard,now];changed.add('fix-'+shard);fresh.add(shard);
     }
