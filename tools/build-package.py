@@ -161,10 +161,16 @@ def main():
             size = f'{output.stat().st_size / 1e6:.1f} MB'
         else:
             # Replace the contents in place: the browser identifies an unpacked extension by its folder.
+            # Copy over the old files first and remove leftovers last, so a browser reading the folder
+            # meanwhile never finds it empty. (The browser's own cache, _metadata, is left alone.)
             output.mkdir(parents=True, exist_ok=True)
-            for child in output.iterdir():
-                shutil.rmtree(child) if child.is_dir() else child.unlink()
             shutil.copytree(stage, output, dirs_exist_ok=True)
+            keep = {p.relative_to(stage) for p in stage.rglob('*')}
+            for path in sorted(output.rglob('*'), key=lambda p: len(p.parts), reverse=True):
+                relative = path.relative_to(output)
+                if relative.parts[0] == '_metadata' or relative in keep:
+                    continue
+                shutil.rmtree(path) if path.is_dir() else path.unlink()
             size = f'{sum(p.stat().st_size for p in output.rglob("*") if p.is_file()) / 1e6:.1f} MB unpacked'
     print(f'{output} ({size}); {before} rules -> {after}; dropped {dropped} with unsupported conditions')
 

@@ -1263,6 +1263,7 @@ www.deeplol.gg###summoner_content_box div[class^="sc-"]:not(.bigTooltip, .diamon
 ! https://github.com/uBlockOrigin/uAssets/issues/33031
 ||wispbyte.com/client/scripts/wisp-guard.js$script
 ||wispbyte.com/client/scripts/wisp-cmp-bridge.js$script
+wispbyte.com##.slot-note
 
 ! https://github.com/uBlockOrigin/uAssets/issues/33054
 wizzair.com##+js(set-session-storage-item, bookingSearchAlreadyOpened, true)
@@ -1834,8 +1835,10 @@ selfhostt.com,ssdhostting.com##+js(no-xhr-if, googlesyndication)
 bdjobs.com##+js(json-edit, .bannerConfig..advertise.*)
 
 ! https://www.reddit.com/r/uBlockOrigin/comments/1vwje2a/some_ads_creeping_through_on_goodreads_firefoxubo/
+! https://github.com/uBlockOrigin/uAssets/issues/20510
 ! https://github.com/uBlockOrigin/uAssets/issues/34758
 ! ||goodreads.com/weblab
+goodreads.com##.AdspAdContainer
 
 ! https://www.startuphub.ai/ai-news/artificial-intelligence/2026/brave-accounts-passwordless-login-arrives
 ||startuphub.ai/api/*^placement=
@@ -2446,3 +2449,30 @@ maimuna.to##div[id^="maimunka-ad-"]
 ! https://github.com/uBlockOrigin/uAssets/issues/35275
 erogames.to##+js(set, checkJuicyPopBlocked, noopFunc)
 ||owo.lewd.ninja^$3p
+
+! checktls.com perform https://www.checktls.com/TestReceiver test for email server configuration
+checktls.com##+js(set, adsbygoogle, {})
+checktls.com##+js(set, google_tag_manager, {})
+checktls.com##+js(set, adsbygoogle.loaded, true)
+
+! https://yupflix.com/
+yupflix.com,yupflix.org##+js(rmnt, script, /bait|com\.android\.chrome/)
+
+! https://github.com/uBlockOrigin/uAssets/issues/35339
+fmodpro.com##+js(rmnt, script, /onerror|offsetHeight|no-store/)
+!#if env_chromium
+fmodpro.com###aab-minimal-overlay:remove()
+fmodpro.com##body:style(overflow:auto !important)
+!#endif
+
+! https://github.com/uBlockOrigin/uAssets/issues/35332
+||electronicrepairguide.com/swfobject.js^
+
+! https://github.com/uBlockOrigin/uAssets/issues/35350
+||blackoutcomics.com/build/assets/adblock-wall-
+
+! https://github.com/uBlockOrigin/uAssets/issues/35354
+elektrotanya.com##+js(rmnt, script, !(window.adsbygoogle)
+elektrotanya.com##.ad_kontener
+elektrotanya.com###ad-header4
+elektrotanya.com###ad-header3

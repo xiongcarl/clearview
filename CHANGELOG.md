@@ -3,6 +3,13 @@
 每一版的完整說明與量測數據在 [`docs/changes/`](docs/changes/)。
 Full notes and measurements for each version are in [`docs/changes/`](docs/changes/).
 
+## 5.6.5 — 2026-11-16
+- 修正自用版更新後擴充功能錯誤頁出現的「Failed to fetch」初始化錯誤。
+- 補上 69 條原本被略過的網站修正：X 推廣推文、Facebook 影片廣告與贊助內容、YouTube 手機版 Shorts 廣告、購物網站贊助商品等。
+- 過濾清單更新到 2026-11-14。
+- Fixes a "Failed to fetch" initialization error after an unpacked update; applies 69 site fixes the build used to skip (X promoted posts, Facebook video ads, mobile YouTube Shorts ads, sponsored shop results); lists updated to 2026-11-14.
+- [詳細 · Details](docs/changes/CHANGES-5.6.5.md)
+
 ## 5.6.4 — 2026-11-15
 - 背景程式的修正索引改成二進位：載入時間 4.9 ms → 1.2 ms，記憶體少約三成；攔截內容不變。
 - The worker's fix index is now binary: loads in 1.2 ms instead of 4.9 ms and uses about 30% less memory. Blocking is unchanged.

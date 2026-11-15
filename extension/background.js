@@ -236,7 +236,8 @@ async function applySettings(settings,listCache){
   catch(error){if(/GUARANTEED_MINIMUM_STATIC_RULES|static rules/i.test(error.message))throw new Error(I18N.t('bg_rule_quota'));throw error;}
   logging=settings.logging;
   if(!logging){clearTimeout(flushTimer);logs=[];await chrome.storage.session.remove('diagnosticLogs');}
-  const hot=await readHot();const before=JSON.stringify(hot);await seedHot(settings,hot);
+  // Preseeding only saves known sites a first visit; failing it must not cost the rest.
+  const hot=await readHot();const before=JSON.stringify(hot);await seedHot(settings,hot).catch(error=>console.debug('Seed hosts:',error.message));
   if(JSON.stringify(hot)!==before)await chrome.storage.local.set({hot});
   const hadRecorder=!!(await chrome.scripting.getRegisteredContentScripts({ids:['ad-style']}))[0]?.js?.some(file=>file.endsWith('popup-intent.js'));
   await registerScripts(settings,hot);

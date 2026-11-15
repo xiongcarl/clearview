@@ -31,11 +31,12 @@ try{
   const extensionId=(await send('Extensions.loadUnpacked',{path:root})).id;await sleep(4000);
   const evaluate=async(session,expression)=>{const r=await send('Runtime.evaluate',{expression,awaitPromise:true,returnByValue:true,userGesture:true},session);if(r.exceptionDetails)throw new Error(JSON.stringify(r.exceptionDetails).slice(0,400));return r.result.value;};
   // A tab whose requests to the given hosts are answered locally.
-  async function page(pages){
+  async function page(pages,json={}){
     const {targetId}=await send('Target.createTarget',{url:'about:blank'});const {sessionId}=await send('Target.attachToTarget',{targetId,flatten:true});
     await send('Page.enable',{},sessionId);await send('Fetch.enable',{patterns:[{urlPattern:'https://*'}]},sessionId);
     listeners.push(m=>{if(m.method!=='Fetch.requestPaused' || m.sessionId!==sessionId)return;const host=new URL(m.params.request.url).hostname;const body=pages[host];
-      (body===undefined?send('Fetch.failRequest',{requestId:m.params.requestId,errorReason:'Failed'},sessionId):send('Fetch.fulfillRequest',{requestId:m.params.requestId,responseCode:200,responseHeaders:[{name:'content-type',value:'text/html'}],body:Buffer.from(body).toString('base64')},sessionId)).catch(()=>{});});
+      const custom=Object.keys(json).find(k=>m.params.request.url.includes(k));const api=!!custom || m.params.request.url.includes('/youtubei/');const reply=custom?json[custom]:api?'{"adPlacements":[{"x":1}],"playerAds":[1],"videoDetails":{"videoId":"v"}}':body;
+      (body===undefined?send('Fetch.failRequest',{requestId:m.params.requestId,errorReason:'Failed'},sessionId):send('Fetch.fulfillRequest',{requestId:m.params.requestId,responseCode:200,responseHeaders:[{name:'content-type',value:api?'application/json':'text/html'}],body:Buffer.from(reply).toString('base64')},sessionId)).catch(()=>{});});
     return {targetId,sessionId,go:async url=>{await send('Page.navigate',{url},sessionId);await sleep(2500);}};
   }
   const pageTargets=async()=>(await send('Target.getTargets')).targetInfos.filter(t=>t.type==='page');
@@ -72,6 +73,34 @@ try{
   // Chrome spends the click on the script's window.open, so only the popunder would exist.
   assert.equal(hijacked.filter(t=>t.url.includes(popup.h)).length,0,'a popunder fired from a click on another link is closed');
   console.log('PASS a popunder fired from a click on a different link is closed');
+  // json-prune-fetch-response with uBO's ("propsToMatch", value) pair: YouTube's player requests
+  // made after the first page (moving to another video) lose their ad fields; other requests keep them.
+  const ad='{"adPlacements":[{"x":1}],"playerAds":[1],"videoDetails":{"videoId":"v"}}';
+  const yt=await page({'www.youtube.com':'<!doctype html><title>yt</title><body>video page'});
+  await yt.go('https://www.youtube.com/watch?v=test');await yt.go('https://www.youtube.com/watch?v=test2');
+  const pruned=await evaluate(yt.sessionId,`(async()=>{const make=()=>new Response(${JSON.stringify(ad)},{headers:{'content-type':'application/json'}});
+    // The page's own fetch to these addresses is answered by the test harness.
+    const player=await fetch('/youtubei/v1/player?key=1').then(r=>r.json()).catch(e=>({err:String(e)}));
+    const other=await fetch('/youtubei/v1/next?key=1').then(r=>r.json()).catch(e=>({err:String(e)}));
+    return {player,other};})()`);
+  assert.ok(!('adPlacements' in pruned.player),'player response loses adPlacements: '+JSON.stringify(pruned.player));
+  assert.ok(pruned.player.videoDetails,'player response keeps the video');
+  assert.ok('adPlacements' in pruned.other,'other requests are untouched');
+  console.log('PASS YouTube player requests lose their ad fields; other requests keep them');
+  // A rule only the propsToMatch mapping carries (bilibili.com: ads in the home-feed recommendations).
+  const feed='{"data":{"item":[{"id":1,"business_info":{"ad_desc":"ad"}},{"id":2}]}}';
+  const bili=await page({'www.bilibili.com':'<!doctype html><title>b</title><body>feed'},{'/feed/rcmd':feed});
+  await bili.go('https://www.bilibili.com/');await bili.go('https://www.bilibili.com/?again');
+  const items=await evaluate(bili.sessionId,`fetch('/x/web-interface/wbi/index/top/feed/rcmd?ps=2').then(r=>r.json()).then(j=>j.data.item.map(x=>x.id))`);
+  assert.deepEqual(items,[2],'the advertised feed item is removed: '+JSON.stringify(items));
+  console.log('PASS bilibili feed ads are removed (a propsToMatch rule)');
+  // A rule 5.6.4 dropped: target.com's sponsored search results (uBO's propsToMatch pair).
+  const search='{"data":{"search":{"products":[{"tcin":"1","sponsored_ad":{"ad_source":"x"}},{"tcin":"2"}]}}}';
+  const shop=await page({'www.target.com':'<!doctype html><title>t</title><body>search'},{'/plp_search_v2':search});
+  await shop.go('https://www.target.com/s?searchTerm=x');await shop.go('https://www.target.com/s?searchTerm=y');
+  const products=await evaluate(shop.sessionId,`fetch('/redsky_aggregations/v1/web/plp_search_v2?keyword=x').then(r=>r.json()).then(j=>j.data.search.products.map(p=>p.tcin))`);
+  assert.deepEqual(products,['2'],'the sponsored product is removed: '+JSON.stringify(products));
+  console.log('PASS target.com sponsored results are removed (a rule 5.6.4 dropped)');
   // Popup mode "off" leaves popups alone.
   const {sessionId:ui}=await send('Target.attachToTarget',{targetId:(await send('Target.createTarget',{url:`chrome-extension://${extensionId}/popup.html`})).targetId,flatten:true});await sleep(1000);
   // The worker may be asleep; the first message wakes it and can miss it.

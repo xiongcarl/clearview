@@ -1,9 +1,9 @@
 [
   {
     "id": "easylist",
-    "cosmeticRules": 24099,
-    "cosmeticExceptions": 339,
-    "extendedRules": 294,
+    "cosmeticRules": 24082,
+    "cosmeticExceptions": 340,
+    "extendedRules": 292,
     "hidingExceptions": 153,
     "hidingCancellations": 0,
     "unsupportedCosmetic": 51,
@@ -23,7 +23,7 @@
   },
   {
     "id": "chinese",
-    "cosmeticRules": 7462,
+    "cosmeticRules": 7463,
     "cosmeticExceptions": 251,
     "extendedRules": 273,
     "hidingExceptions": 194,
@@ -34,9 +34,9 @@
   },
   {
     "id": "annoyances",
-    "cosmeticRules": 44399,
+    "cosmeticRules": 44404,
     "cosmeticExceptions": 529,
-    "extendedRules": 399,
+    "extendedRules": 400,
     "hidingExceptions": 61,
     "hidingCancellations": 0,
     "unsupportedCosmetic": 4,
@@ -45,9 +45,9 @@
   },
   {
     "id": "fixes",
-    "cosmeticRules": 5982,
+    "cosmeticRules": 5993,
     "cosmeticExceptions": 370,
-    "extendedRules": 463,
+    "extendedRules": 461,
     "hidingExceptions": 872,
     "hidingCancellations": 2,
     "unsupportedCosmetic": 272,

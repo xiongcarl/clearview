@@ -52,7 +52,7 @@ function uboEquivalent(name,args){
   }
   return null;
 }
-const extended={};const records=[];const functions=new Map();let skippedScriptlets=0,skippedExtended=0,removalRules=0;const skippedReasons={};
+const extended={};const records=[];const functions=new Map();let skippedScriptlets=0,skippedExtended=0,removalRules=0,mappedPrune=0;const skippedReasons={};
 for(const id of ids){
   const text=await readFile(new URL(`data/filters/${id}.txt`,root),'utf8');
   const lines=id==='fixes'?preprocess(text,includes):text.split(/\r?\n/);const compiled=compileCosmetics(lines,context.AdShield);extended[id]=compiled.extended;skippedExtended+=compiled.unsupportedExtended;
@@ -66,8 +66,23 @@ for(const id of ids){
         const domains=original.domains.children;const sc=scope(domains.map(x=>(x.exception?'~':'')+x.value).join(','));
         if(!sc.include.length && !exception)throw new Error('Generic scriptlets disabled');
         if(original.body.children.length===0 || original.body.children[0]?.children.length===0){if(exception)records.push({...sc,exception:true,all:true});continue;}
+        // uBO's json-prune-fetch/xhr-response take the request filter as a named pair
+        // ("propsToMatch", value); AdGuard's take it as the third argument, with the same meaning
+        // (a URL substring or /regex/, or "prop:value" pairs). The generic converter drops the pair,
+        // which lost YouTube's player-request ad pruning among others, so map it here.
+        const rawArgs=original.body.children[0].children.map(x=>x===null?'':QuoteUtils.removeQuotesAndUnescape(x.value));
+        const pruneName=rawArgs[0].replace(/^ubo-/,'').replace(/\.js$/,'');
+        // Both uBO forms: (props, needles, "propsToMatch", value) and (props, "propsToMatch", value).
+        const pair=rawArgs.length===5 && rawArgs[3]==='propsToMatch'?{needles:rawArgs[2],value:rawArgs[4]}:rawArgs.length===4 && rawArgs[2]==='propsToMatch'?{needles:'',value:rawArgs[3]}:null;
+        if(['json-prune-fetch-response','json-prune-xhr-response'].includes(pruneName) && pair && pair.value){
+          const fn=scriptlets.getScriptletFunction(pruneName);if(!fn)throw new Error('Unsupported scriptlet '+pruneName);
+          const code=String(fn);if(functions.has(fn.name) && functions.get(fn.name)!==code)throw new Error('Conflicting scriptlet implementation');functions.set(fn.name,code);
+          records.push({...sc,exception:!!exception,name:pruneName,implementation:fn.name,args:[rawArgs[1],pair.needles,pair.value]});mappedPrune++;continue;
+        }
         for(const converted of convertScriptletToAdg(original)){
-          const ast=CosmeticRuleParser.parse(converted);const args=ast.body.children[0].children.map(x=>QuoteUtils.removeQuotesAndUnescape(x.value));if(args.length!==original.body.children[0].children.length)throw new Error('Lossy argument conversion omitted');const name=args.shift();
+          const ast=CosmeticRuleParser.parse(converted);const args=ast.body.children[0].children.map(x=>QuoteUtils.removeQuotesAndUnescape(x.value));if(args.length!==original.body.children[0].children.length)throw new Error('Lossy argument conversion omitted');
+          // A uBO named pair passed through as positional arguments would be read as data (e.g. a required property literally named "propsToMatch").
+          if(args.slice(2).includes('propsToMatch'))throw new Error('Lossy argument conversion omitted');const name=args.shift();
           if(!name)throw new Error('Empty scriptlet name');
           let fn=scriptlets.getScriptletFunction(name);
           const responseAliases={'ubo-trusted-replace-xhr-response':'trusted-replace-xhr-response','ubo-trusted-replace-fetch-response':'trusted-replace-fetch-response','ubo-trusted-rpfr':'trusted-replace-fetch-response'};
@@ -77,7 +92,7 @@ for(const id of ids){
           if(!fn)throw new Error('Unsupported scriptlet '+name);
           const implementation=fn.name;const code=String(fn);if(functions.has(implementation) && functions.get(implementation)!==code)throw new Error('Conflicting scriptlet implementation');functions.set(implementation,code);records.push({...sc,exception:!!exception,name:callName,implementation,args:callArgs});
         }
-      }catch(error){skippedScriptlets++;const reason=error.message.startsWith('Unsupported scriptlet')?'Unsupported scriptlet':error.message;skippedReasons[reason]=(skippedReasons[reason] || 0)+1;}continue;
+      }catch(error){skippedScriptlets++;const reason=error.message.startsWith('Unsupported scriptlet')?'Unsupported scriptlet':error.message;skippedReasons[reason]=(skippedReasons[reason] || 0)+1;if(process.env.SKIPPED_DETAIL)console.error('SKIP\t'+reason+'\t'+(error.message.startsWith('Unsupported scriptlet')?error.message.slice(21):'')+'\t'+line.slice(0,200));}continue;
     }
     // uBO's selector:remove-attr(name) and :remove-class(name) are AdGuard's scriptlets of the
     // same names with the arguments swapped. Only literal names; a pattern has no equivalent.
@@ -119,6 +134,6 @@ for(let i=0;i<FIX_SHARDS;i++)await writeFile(new URL(`fixes/data-${i}.js`,root),
 await mkdir(new URL('data/engine/',root),{recursive:true});
 await writeFile(new URL('data/engine/fix-keys.bin',root),encodeFixIndex(Object.keys(fixKeys),FIX_SHARDS));
 await writeFile(new URL('data/extended-cosmetics.json',root),JSON.stringify(extended)+'\n');
-const meta={source:'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt',sha256:createHash('sha256').update((await readFile(new URL('data/filters/fixes.txt',root),'utf8'))+JSON.stringify(Object.entries(includes).sort())).digest('hex'),scriptletRules:records.filter(x=>!x.exception).length,removalRules,styleRules:Object.values(extended).reduce((n,x)=>n+x.styles.filter(e=>!e.exception).length,0),scriptletExceptions:exceptions.length,scriptletImplementations:functions.size,skippedScriptlets,skippedReasons,extendedRules:Object.values(extended).reduce((n,x)=>n+x.entries.filter(e=>!e.exception).length,0),skippedExtended};
+const meta={source:'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt',sha256:createHash('sha256').update((await readFile(new URL('data/filters/fixes.txt',root),'utf8'))+JSON.stringify(Object.entries(includes).sort())).digest('hex'),scriptletRules:records.filter(x=>!x.exception).length,removalRules,mappedPrune,styleRules:Object.values(extended).reduce((n,x)=>n+x.styles.filter(e=>!e.exception).length,0),scriptletExceptions:exceptions.length,scriptletImplementations:functions.size,skippedScriptlets,skippedReasons,extendedRules:Object.values(extended).reduce((n,x)=>n+x.entries.filter(e=>!e.exception).length,0),skippedExtended};
 await writeFile(new URL('data/advanced-meta.json',root),JSON.stringify(meta)+'\n');
 console.log(meta);
