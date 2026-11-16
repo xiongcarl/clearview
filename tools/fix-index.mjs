@@ -1,6 +1,7 @@
-// data/engine/fix-keys.bin: which list keys (hostnames, or entities such as example.*) have site
+// data/engine/fix-index.json: which list keys (hostnames, or entities such as example.*) have site
 // fixes. The worker reads it on its first navigation after every wake-up, so it is a sorted array
-// of 32-bit key hashes rather than JSON: nothing to parse, and a fifth of the size.
+// of 32-bit key hashes rather than a key list. build-advanced.mjs stores the bytes as one base64
+// JSON string, because Opera's store review refuses binary files.
 // Layout, little-endian uint32: shard count, key count, then the hashes in ascending order.
 // A key's shard (fixes/data-N.js) is its hash modulo the shard count, as in build-advanced.mjs.
 // Two keys sharing a hash would register one fix file for a site without fixes; the file then

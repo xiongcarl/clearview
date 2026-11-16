@@ -134,8 +134,10 @@ const HOT_LIMIT=400;
 let fixIndex,hotCache;
 // Which list keys have site fixes: sorted 32-bit hashes (tools/fix-index.mjs). shard() is the
 // fixes/data-N.js file for a key, or undefined when the key has none.
-const loadFixIndex=()=>fixIndex ||= fetch(chrome.runtime.getURL('data/engine/fix-keys.bin')).then(r=>r.arrayBuffer()).then(buffer=>{
-  const view=new DataView(buffer),shards=view.getUint32(0,true),count=view.getUint32(4,true);
+const loadFixIndex=()=>fixIndex ||= fetch(chrome.runtime.getURL('data/engine/fix-index.json')).then(r=>r.json()).then(base64=>{
+  // Base64 inside JSON because store review (Opera) refuses binary files in a package.
+  const text=atob(base64),bytes=new Uint8Array(text.length);for(let i=0;i<text.length;i++)bytes[i]=text.charCodeAt(i);
+  const view=new DataView(bytes.buffer),shards=view.getUint32(0,true),count=view.getUint32(4,true);
   const hashes=new Uint32Array(count);for(let i=0;i<count;i++)hashes[i]=view.getUint32(8+i*4,true);
   return {size:count,shard(key){
     let hash=0x811c9dc5;for(let i=0;i<key.length;i++){hash^=key.charCodeAt(i);hash=Math.imul(hash,16777619);}hash>>>=0;

@@ -132,7 +132,7 @@ await mkdir(new URL('fixes/',root),{recursive:true});
 await writeFile(new URL('fixes/lib.js',root),library);
 for(let i=0;i<FIX_SHARDS;i++)await writeFile(new URL(`fixes/data-${i}.js`,root),`globalThis.__clearviewFixes?.(${JSON.stringify(buckets[i].keys)},${JSON.stringify(buckets[i].records)});\n`);
 await mkdir(new URL('data/engine/',root),{recursive:true});
-await writeFile(new URL('data/engine/fix-keys.bin',root),encodeFixIndex(Object.keys(fixKeys),FIX_SHARDS));
+await writeFile(new URL('data/engine/fix-index.json',root),JSON.stringify(Buffer.from(encodeFixIndex(Object.keys(fixKeys),FIX_SHARDS)).toString('base64'))+'\n');
 await writeFile(new URL('data/extended-cosmetics.json',root),JSON.stringify(extended)+'\n');
 const meta={source:'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt',sha256:createHash('sha256').update((await readFile(new URL('data/filters/fixes.txt',root),'utf8'))+JSON.stringify(Object.entries(includes).sort())).digest('hex'),scriptletRules:records.filter(x=>!x.exception).length,removalRules,mappedPrune,styleRules:Object.values(extended).reduce((n,x)=>n+x.styles.filter(e=>!e.exception).length,0),scriptletExceptions:exceptions.length,scriptletImplementations:functions.size,skippedScriptlets,skippedReasons,extendedRules:Object.values(extended).reduce((n,x)=>n+x.entries.filter(e=>!e.exception).length,0),skippedExtended};
 await writeFile(new URL('data/advanced-meta.json',root),JSON.stringify(meta)+'\n');

@@ -3,6 +3,11 @@
 每一版的完整說明與量測數據在 [`docs/changes/`](docs/changes/)。
 Full notes and measurements for each version are in [`docs/changes/`](docs/changes/).
 
+## 5.6.6 — 2026-11-17
+- 修正索引改存成 JSON 裡的 base64 文字（原本是 `.bin` 二進位檔），因為 Opera 商店拒收二進位檔。攔截內容不變，載入多花約 0.15 ms。
+- The fix index is stored as base64 text in JSON instead of a `.bin` file, because the Opera store rejects binary files. Blocking is unchanged.
+- [詳細 · Details](docs/changes/CHANGES-5.6.6.md)
+
 ## 5.6.5 — 2026-11-16
 - 修正自用版更新後擴充功能錯誤頁出現的「Failed to fetch」初始化錯誤。
 - 補上 69 條原本被略過的網站修正：X 推廣推文、Facebook 影片廣告與贊助內容、YouTube 手機版 Shorts 廣告、購物網站贊助商品等。

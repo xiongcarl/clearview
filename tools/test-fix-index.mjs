@@ -1,12 +1,12 @@
-// The worker's fix index (data/engine/fix-keys.bin) must name exactly the keys the fix data
+// The worker's fix index (data/engine/fix-index.json) must name exactly the keys the fix data
 // files hold, each in its own file, and nothing else.
 import assert from 'node:assert/strict';import {readFile} from 'node:fs/promises';import vm from 'node:vm';
 const root=new URL('../extension/',import.meta.url);
 // Run the worker's own loader, not a copy of it.
 const source=await readFile(new URL('background.js',root),'utf8');
 const loader=source.match(/const loadFixIndex=\(\)=>fixIndex \|\|= ([\s\S]*?\n\}\);)/);assert.ok(loader,'loader found in background.js');
-const bin=await readFile(new URL('data/engine/fix-keys.bin',root));
-const context=vm.createContext({fetch:async()=>({arrayBuffer:async()=>bin.buffer.slice(bin.byteOffset,bin.byteOffset+bin.byteLength)}),chrome:{runtime:{getURL:x=>x}},DataView,Uint32Array});
+const text=await readFile(new URL('data/engine/fix-index.json',root),'utf8');
+const context=vm.createContext({fetch:async()=>({json:async()=>JSON.parse(text)}),chrome:{runtime:{getURL:x=>x}},DataView,Uint32Array,Uint8Array,atob});
 const index=await vm.runInContext('('+loader[1].replace(/;$/,'')+')',context);
 let keys=0;const all=new Set();
 for(let shard=0;shard<32;shard++){
